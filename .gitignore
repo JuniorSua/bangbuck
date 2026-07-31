@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# Broad on purpose: a plain `.env` must never be committable in a shared repo.
+.env
+.env.*
+!.env.example

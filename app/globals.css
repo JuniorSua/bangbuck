@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/*
+ * Dark-only. Values are the validated dark steps from the design system's
+ * reference palette, chosen for the dark surface rather than flipped from light.
+ */
+:root {
+  color-scheme: dark;
+
+  --page: #0b0b0d;
+  --surface-1: #17171a;
+  --surface-2: #1e1e22;
+
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+
+  --gridline: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Categorical slots 1-3, used only to mark the top three ranked models.
+     Everything else stays neutral ink — 18 models cannot each hold a hue that
+     survives colourblind separation, so identity rests on the direct labels.
+     These three are the documented dark-mode steps and are the only trio that
+     clears all-pairs CVD separation on this surface; do not substitute. */
+  --accent: #3987e5;
+  --rank-2: #d95926;
+  --rank-3: #199e70;
+  --accent-dim: #256abf;
+
+  --good: #0ca30c;
+  --warning: #fab219;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+/* A single very soft light source behind the page. Keeps the surface from
+   reading as flat black without introducing any hue of its own. */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background-image:
+    radial-gradient(900px 600px at 50% -10%, rgba(255, 255, 255, 0.055), transparent 70%),
+    radial-gradient(600px 400px at 90% 5%, rgba(57, 135, 229, 0.05), transparent 70%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/*
+ * One elevated surface treatment, used for every panel. The inset top highlight
+ * is what reads as a physical edge catching the light; without it a bordered
+ * rectangle on a dark background just looks like an outline.
+ */
+.card {
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.012) 100%),
+    var(--surface-1);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 16px 40px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* Nested panels sit *inside* a card, so they get depth without a second shadow. */
+.card-inset {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.card-inset-hover {
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+.card-inset-hover:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.tight {
+  letter-spacing: -0.021em;
+}
+
+/* Segmented control for the capability-floor presets. */
+.seg {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 3px;
+  display: inline-flex;
+  gap: 3px;
+}
+.seg button {
+  border-radius: 7px;
+  padding: 5px 11px;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+  white-space: nowrap;
+}
+.seg button:hover {
+  color: var(--text-secondary);
+}
+.seg button[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--text-primary);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
+    0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* Range inputs: recessive track, accent thumb. */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--baseline);
+  border-radius: 3px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--page);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  transition: transform 140ms ease;
+}
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--page);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
