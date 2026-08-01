@@ -45,6 +45,14 @@ export interface ArenaEntry {
   contextLength: number | null;
 }
 
+/** One arena.ai leaderboard: a slug plus its ranked entries. */
+export interface ArenaBoard {
+  sourceUrl: string;
+  /** Which arena leaderboard these entries came from. */
+  slug: string;
+  entries: ArenaEntry[];
+}
+
 export interface Snapshot {
   /** When this snapshot was captured by scripts/refresh.ts. */
   capturedAt: string;
@@ -56,10 +64,11 @@ export interface Snapshot {
     sourceUrl: string;
     configs: DeepSweConfig[];
   };
-  arena: {
-    sourceUrl: string;
-    /** Which arena leaderboard these entries came from. */
-    slug: string;
-    entries: ArenaEntry[];
-  } | null;
+  /** Human-preference Elo over general chat. Context only — never scored. */
+  arena: ArenaBoard | null;
+  /**
+   * Human-preference Elo over WEB DEVELOPMENT. This one is load-bearing: it is
+   * the Craft axis, and a config with no entry here cannot be ranked.
+   */
+  arenaWebdev: ArenaBoard | null;
 }

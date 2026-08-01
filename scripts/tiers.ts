@@ -1,20 +1,39 @@
+/**
+ * Prints the full ranking for each named tier. The quickest way to see whether a
+ * change to lib/score.ts moved an answer it should not have.
+ *
+ *   npx tsx scripts/tiers.ts
+ */
 import snapshot from "../data/snapshot.json";
-import { computeRanking, DEFAULT_SETTINGS } from "../lib/score";
+import { computeRanking, craftEloOf, DEFAULT_SETTINGS, TIER_PRESETS } from "../lib/score";
 import type { Snapshot } from "../lib/types";
+
 const snap = snapshot as unknown as Snapshot;
 
-for (const floor of [0.65, 0.725]) {
-  const r = computeRanking(snap, { ...DEFAULT_SETTINGS, floor });
-  console.log(`\n=== floor ${(floor * 100).toFixed(1)}%  —  ${r.qualified.length} configs qualify ===`);
+for (const tier of TIER_PRESETS) {
+  const r = computeRanking(snap, {
+    ...DEFAULT_SETTINGS,
+    shipFloor: tier.shipFloor,
+    craftFloor: tier.craftFloor,
+  });
+  console.log(
+    `\n=== ${tier.label}  —  ship >= ${(tier.shipFloor * 100).toFixed(1)}%, ` +
+      `craft >= ${(tier.craftFloor * 100).toFixed(0)}%  —  ${r.qualified.length} qualify ===`,
+  );
   r.qualified.forEach((s, i) =>
     console.log(
-      `  ${i + 1}. ${s.label.padEnd(24)} ${(s.config.passAt1 * 100).toFixed(1)}%  $${s.config.meanCostUsd
-        .toFixed(2)
-        .padStart(6)}  ${(s.config.meanOutputTokens / 1000).toFixed(0).padStart(3)}k  ${s.config.meanAgentSteps
-        .toFixed(0)
-        .padStart(3)} steps   BB ${s.bb.toFixed(2)}   ~${Math.round(s.solvedPer100)} solved/$100`,
+      `  ${String(i + 1).padStart(2)}. ${s.label.padEnd(24)} BB ${s.bb.toFixed(2).padStart(6)}` +
+        `  ship ${(s.ship * 100).toFixed(1)}%  craft ${((s.craft ?? 0) * 100).toFixed(0)}%` +
+        ` (${craftEloOf(s).toFixed(0)}, ${s.craftMatch.kind})  $${s.config.meanCostUsd.toFixed(2).padStart(6)}`,
     ),
   );
   const i = r.insights!;
-  console.log(`  -> winner ${i.winner.label}, leads by ${i.leadMultiple?.toFixed(2)}x`);
+  console.log(`  -> ${i.winner.label}, leading by ${i.leadMultiple?.toFixed(2)}x`);
+  if (i.bestExcludedOnCraft) {
+    console.log(
+      `     craft gate removed ${i.bestExcludedOnCraft.label} ` +
+        `($${i.bestExcludedOnCraft.config.meanCostUsd.toFixed(2)}); winner preferred ` +
+        `${((i.winnerPreferredOverExcluded ?? 0) * 100).toFixed(0)}% of the time`,
+    );
+  }
 }

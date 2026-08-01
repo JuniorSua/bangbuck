@@ -1,4 +1,5 @@
 import type { Insights } from "@/lib/score";
+import { craftEloOf } from "@/lib/score";
 import { multiple, pct, steps, tokens, usdPrecise } from "@/lib/format";
 import { VendorMark } from "./VendorMark";
 
@@ -11,7 +12,7 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
     return (
       <div className="card p-8 text-center">
         <p style={{ color: "var(--text-secondary)" }}>
-          No model clears that capability floor. Lower it to see results.
+          No config clears both floors. Lower the Ship or Craft floor to see results.
         </p>
       </div>
     );
@@ -55,10 +56,11 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
         </div>
 
         <p className="mt-4 max-w-2xl text-[15px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          It solves{" "}
+          It finishes{" "}
           <strong style={{ color: "var(--text-primary)" }}>
-            {pct(c.passAt1, 1)} of DeepSWE tasks at {usdPrecise(c.meanCostUsd)} each
-          </strong>
+            {pct(w.ship, 1)} of real repo tasks at {usdPrecise(c.meanCostUsd)} each
+          </strong>, and humans prefer its web work to a typical model&rsquo;s{" "}
+          <strong style={{ color: "var(--text-primary)" }}>{pct(w.craft ?? 0, 0)} of the time</strong>
           {insights.leadMultiple && insights.runnerUp && (
             <>
               {" "}
@@ -100,8 +102,9 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
             </div>
           </div>
 
-          <Stat label="BangBuck score" value={w.bb.toFixed(1)} accent />
-          <Stat label="Pass@1" value={pct(c.passAt1, 1)} sub={`±${((c.ciHi - c.ciLo) / 2 * 100).toFixed(0)}%`} />
+          <Stat label="BangBuck score" value={w.bb.toFixed(2)} accent />
+          <Stat label="Ship" value={pct(w.ship, 1)} sub={`±${((c.ciHi - c.ciLo) / 2 * 100).toFixed(0)}%`} />
+          <Stat label="Craft" value={pct(w.craft ?? 0, 0)} sub={`${craftEloOf(w).toFixed(0)} Elo`} />
           <Stat label="Avg cost / task" value={usdPrecise(c.meanCostUsd)} />
           <Stat label="Output tokens" value={tokens(c.meanOutputTokens)} />
           <Stat label="Agent steps" value={steps(c.meanAgentSteps)} />
@@ -127,33 +130,48 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
             {multiple(insights.cheaperThanFrontier)} cheaper.
           </Reason>
 
+          {insights.bestExcludedOnCraft && insights.winnerPreferredOverExcluded && (
+            <Reason>
+              <strong style={{ color: "var(--text-primary)" }}>
+                The cheap answer was considered, and rejected.
+              </strong>{" "}
+              On completion and price alone the winner would be{" "}
+              {insights.bestExcludedOnCraft.label} at{" "}
+              {usdPrecise(insights.bestExcludedOnCraft.config.meanCostUsd)} per task. It is out
+              because humans prefer this model&rsquo;s web work{" "}
+              {pct(insights.winnerPreferredOverExcluded, 0)} of the time — finishing a task and
+              writing code worth keeping are not the same skill.
+            </Reason>
+          )}
+
           {insights.cheapestBetter && (
             <Reason>
               <strong style={{ color: "var(--text-primary)" }}>
-                Beating it on score costs {multiple(insights.cheapestBetterPriceMultiple!)} more.
+                Beating it on capability costs {multiple(insights.cheapestBetterPriceMultiple!)} more.
               </strong>{" "}
-              The cheapest config that scores higher is {insights.cheapestBetter.label} — just{" "}
-              +{insights.cheapestBetterPointsGained!.toFixed(1)} points, for{" "}
-              +{usdPrecise(insights.cheapestBetterExtraCost!)} per task.
+              The cheapest config stronger on the two axes combined is{" "}
+              {insights.cheapestBetter.label}, at +
+              {usdPrecise(insights.cheapestBetterExtraCost!)} per task.
             </Reason>
           )}
 
           {insights.bestCheaper && (
             <Reason>
-              <strong style={{ color: "var(--text-primary)" }}>Going cheaper costs you a lot.</strong>{" "}
-              The best option under {usdPrecise(c.meanCostUsd)} is {insights.bestCheaper.label}: it
-              saves {usdPrecise(insights.bestCheaperSaving!)} per task but gives up{" "}
-              {insights.bestCheaperPointsLost!.toFixed(1)} points of score.
+              <strong style={{ color: "var(--text-primary)" }}>Going cheaper costs you.</strong>{" "}
+              The strongest option under {usdPrecise(c.meanCostUsd)} is {insights.bestCheaper.label}:
+              it saves {usdPrecise(insights.bestCheaperSaving!)} per task, at{" "}
+              {pct(insights.bestCheaper.ship, 1)} ship and {pct(insights.bestCheaper.craft ?? 0, 0)}{" "}
+              craft against this model&rsquo;s {pct(w.ship, 1)} and {pct(w.craft ?? 0, 0)}.
             </Reason>
           )}
 
           <Reason>
-            <strong style={{ color: "var(--text-primary)" }}>
-              It clears the capability floor.
-            </strong>{" "}
-            {insights.qualifiedCount} of {insights.totalCount} configs score high enough to be worth
-            running at all; among those, this one is the cheapest per unit of work.
+            <strong style={{ color: "var(--text-primary)" }}>It clears both bars.</strong>{" "}
+            {insights.qualifiedCount} of {insights.totalCount} configs are good enough on completion{" "}
+            <em>and</em> on judged code quality to be worth running; among those, this one costs the
+            least per unit of work. Arena rates it exactly, not by inheritance from a sibling.
           </Reason>
+
         </ul>
       </div>
     </section>

@@ -41,6 +41,59 @@ export function arenaFor(
   return index.get(familyKey(config.model)) ?? null;
 }
 
+/** Reasoning efforts in ascending order, used to measure "nearness" between configs. */
+export const EFFORT_ORDER = ["low", "medium", "high", "xhigh", "max"] as const;
+
+/** Where a config's Craft rating came from, so the UI can be honest about it. */
+export type CraftMatch =
+  /** Arena rates this exact model AND effort. */
+  | { kind: "exact"; entry: ArenaEntry }
+  /** Arena rates the family but not this effort; nearest effort was used. */
+  | { kind: "family"; entry: ArenaEntry; borrowedFrom: string }
+  | { kind: "none" };
+
+/**
+ * Resolves a DeepSWE config to a WebDev Elo, preferring an exact model+effort match
+ * and otherwise borrowing the family's nearest-effort entry.
+ *
+ * Borrowing is defensible because the two axes divide the work cleanly: reasoning
+ * effort shows up on the Ship axis, which is measured per config, while Craft is
+ * mostly a property of the model itself — its taste in code does not change when
+ * you let it think longer. Nearest-effort rather than best-rated matters, though:
+ * taking the family's top entry would hand a [low] config its [max] sibling's
+ * rating, which flatters exactly the configs least deserving of it.
+ *
+ * Only 12 of 50 configs match exactly, so the distinction is not academic and
+ * every row surfaces its own provenance.
+ */
+export function craftFor(config: DeepSweConfig, entries: ArenaEntry[]): CraftMatch {
+  const family = familyKey(config.model);
+  const candidates = entries
+    .map((entry) => ({ entry, ...describe(entry.modelDisplayName) }))
+    .filter((c) => c.family === family);
+  if (!candidates.length) return { kind: "none" };
+
+  const exact = candidates.find((c) => c.effort === config.effort);
+  if (exact) return { kind: "exact", entry: exact.entry };
+
+  const target = EFFORT_ORDER.indexOf(config.effort as (typeof EFFORT_ORDER)[number]);
+  const nearest = candidates.slice().sort((a, b) => distance(a, target) - distance(b, target) || b.entry.rating - a.entry.rating)[0];
+  return { kind: "family", entry: nearest.entry, borrowedFrom: nearest.effort ?? "unrated" };
+}
+
+function distance(c: { effort: string | null }, target: number): number {
+  if (c.effort === null || target === -1) return 9;
+  return Math.abs(EFFORT_ORDER.indexOf(c.effort as (typeof EFFORT_ORDER)[number]) - target);
+}
+
+/** Splits an Arena display name into its family key and its effort suffix, if any. */
+function describe(displayName: string): { family: string; effort: string | null } {
+  const withoutHarness = displayName.replace(/\s*\(.*\)\s*$/, "").toLowerCase();
+  const match = /^(.*?)[-_](low|medium|high|xhigh|max)$/.exec(withoutHarness);
+  const base = (match ? match[1] : withoutHarness).replace(/[-_]thinking$/, "");
+  return { family: base.replace(/[^a-z0-9]/g, ""), effort: match ? match[2] : null };
+}
+
 /** "gpt-5.6-luna [max]" */
 export function configLabel(c: DeepSweConfig): string {
   return c.effort ? `${c.modelDisplay} [${c.effort}]` : c.modelDisplay;

@@ -2,7 +2,14 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
-import { LOG_COST_TICKS, METRICS, linearTicks, metricById, type MetricId } from "@/lib/metrics";
+import {
+  LOG_COST_TICKS,
+  METRICS,
+  linearTicks,
+  metricById,
+  rangeTicks,
+  type MetricId,
+} from "@/lib/metrics";
 import { pct, steps as fmtSteps, tokens as fmtTokens, usdPrecise } from "@/lib/format";
 
 /**
@@ -39,7 +46,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   const winner = ranking.qualified[0] ?? null;
 
   const { x, y, families, ticks } = useMemo(() => {
-    const values = all.map((s) => metric.get(s.config));
+    const values = all.map((s) => metric.get(s));
     const max = Math.max(...values);
     const min = Math.min(...values);
 
@@ -52,6 +59,13 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
       const hi = Math.log10(max * 1.25);
       x = (v) => PAD.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
       ticks = LOG_COST_TICKS.filter((t) => Math.log10(t) >= lo && Math.log10(t) <= hi);
+    } else if (metric.higherIsBetter) {
+      // Fitted domain, not zero-anchored — see rangeTicks.
+      const span = max - min || 1;
+      const lo = min - span * 0.12;
+      const hi = max + span * 0.08;
+      x = (v) => PAD.left + plotW * ((v - lo) / (hi - lo));
+      ticks = rangeTicks(lo, hi);
     } else {
       const hi = max * 1.06;
       x = (v) => PAD.left + plotW * (1 - v / hi);
@@ -69,7 +83,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
 
     const families = [...byModel.entries()].map(([model, configs]) => {
       // Sort along the CURRENT axis so lines stay monotone in x on every tab.
-      const sorted = [...configs].sort((a, b) => metric.get(a.config) - metric.get(b.config));
+      const sorted = [...configs].sort((a, b) => metric.get(a) - metric.get(b));
       // Anchor the label at the setting of this model actually worth running.
       // Anchoring at peak score pinned 17 of 18 labels into the left third,
       // because every model peaks at max effort. Only QUALIFIED configs may
@@ -121,7 +135,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     const items = families
       .map((f) => {
         const isWinner = f.model === winner?.config.model;
-        const cx = x(metric.get(f.anchor.config));
+        const cx = x(metric.get(f.anchor));
         const side: "start" | "end" = cx < 200 ? "start" : "end";
         const dx = side === "end" ? -11 : 11;
         const width = f.display.length * 6.05 + (isWinner ? 14 : 0);
@@ -163,7 +177,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     return items;
   }, [families, x, y, winner, metric]);
 
-  const floorY = y(ranking.settings.floor);
+  const floorY = y(ranking.settings.shipFloor);
   const dim = (model: string) => focus !== null && focus !== model;
 
   /**
@@ -185,7 +199,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     let best: ScoredConfig | null = null;
     let bestDist = HIT_RADIUS;
     for (const s of all) {
-      const dist = Math.hypot(x(metric.get(s.config)) - px, y(s.config.passAt1) - py);
+      const dist = Math.hypot(x(metric.get(s)) - px, y(s.config.passAt1) - py);
       if (dist < bestDist) {
         bestDist = dist;
         best = s;
@@ -312,6 +326,35 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             </text>
           ))}
 
+          {/* On the Craft tab both gates are visible at once: everything below the
+              horizontal line cannot finish the job, everything left of the
+              vertical one writes code humans reject. Only the upper-right
+              quadrant competes, which is the entire argument in one picture. */}
+          {metric.id === "craft" && (
+            <>
+              <line
+                x1={x(ranking.settings.craftFloor)}
+                x2={x(ranking.settings.craftFloor)}
+                y1={PAD.top}
+                y2={H - PAD.bottom}
+                stroke="var(--warning)"
+                strokeWidth={1.25}
+                strokeDasharray="4 5"
+                opacity={0.7}
+              />
+              <text
+                x={x(ranking.settings.craftFloor) - 7}
+                y={PAD.top + 12}
+                textAnchor="end"
+                fontSize={10.5}
+                fill="var(--warning)"
+                opacity={0.85}
+              >
+                worth keeping — {pct(ranking.settings.craftFloor, 0)}
+              </text>
+            </>
+          )}
+
           <line
             x1={PAD.left}
             x2={W - PAD.right}
@@ -330,7 +373,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             fill="var(--warning)"
             opacity={0.85}
           >
-            good enough to use — {pct(ranking.settings.floor, 0)}
+            finishes the job — {pct(ranking.settings.shipFloor, 0)}
           </text>
 
           <text
@@ -355,7 +398,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               <polyline
                 key={`line-${f.model}`}
                 points={f.configs
-                  .map((s) => `${x(metric.get(s.config))},${y(s.config.passAt1)}`)
+                  .map((s) => `${x(metric.get(s))},${y(s.config.passAt1)}`)
                   .join(" ")}
                 fill="none"
                 stroke={tier ? tier.color : "var(--text-muted)"}
@@ -373,7 +416,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             const isHover = hover?.label === s.label;
             const medalled = podium.byConfig.get(s.label);
             const tier = podium.byModel.get(s.config.model);
-            const cx = x(metric.get(s.config));
+            const cx = x(metric.get(s));
             const cy = y(s.config.passAt1);
             return (
               <g key={s.label} opacity={dim(s.config.model) ? 0.18 : 1}>
@@ -442,7 +485,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                     style={{ paintOrder: "stroke", stroke: "var(--surface-1)", strokeWidth: 4 }}
                   >
                     {l.anchor.config.effort} · {pct(l.anchor.config.passAt1, 1)} ·{" "}
-                    {metric.format(metric.get(l.anchor.config))}
+                    {metric.format(metric.get(l.anchor))}
                   </text>
                 )}
               </g>
@@ -466,7 +509,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             style={{
               borderColor: "var(--border)",
               background: "var(--surface-2)",
-              left: `${(x(metric.get(hover.config)) / W) * 100}%`,
+              left: `${(x(metric.get(hover)) / W) * 100}%`,
               top: `${(y(hover.config.passAt1) / H) * 100}%`,
               transform: "translate(-50%, calc(-100% - 16px))",
               minWidth: 186,

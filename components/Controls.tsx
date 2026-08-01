@@ -1,7 +1,7 @@
 "use client";
 
 import type { Settings } from "@/lib/score";
-import { DEFAULT_SETTINGS, FLOOR_PRESETS } from "@/lib/score";
+import { DEFAULT_SETTINGS, TIER_PRESETS } from "@/lib/score";
 import { pct } from "@/lib/format";
 
 /**
@@ -15,35 +15,40 @@ export function Controls({
   settings: Settings;
   onChange: (s: Settings) => void;
 }) {
-  const isDefault =
-    settings.floor === DEFAULT_SETTINGS.floor &&
-    settings.beta === DEFAULT_SETTINGS.beta &&
-    settings.gamma === DEFAULT_SETTINGS.gamma;
+  const isDefault = (Object.keys(DEFAULT_SETTINGS) as (keyof Settings)[]).every(
+    (k) => settings[k] === DEFAULT_SETTINGS[k],
+  );
 
-  const activePreset = FLOOR_PRESETS.find((p) => Math.abs(p.floor - settings.floor) < 0.001);
+  const activePreset = TIER_PRESETS.find(
+    (p) =>
+      Math.abs(p.shipFloor - settings.shipFloor) < 0.001 &&
+      Math.abs(p.craftFloor - settings.craftFloor) < 0.001,
+  );
 
   return (
     <section className="card p-6">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="tight text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-            How much capability do you need?
+            How good does it have to be?
           </h2>
           <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
-            {activePreset?.blurb ?? "Custom floor — set below."}
+            {activePreset?.blurb ?? "Custom floors — set below."}
           </p>
         </div>
         <div className="flex items-center gap-3">
           {/* Two named tiers for the two questions people actually arrive with;
               the slider underneath stays available for anything in between. */}
           <div className="seg" role="group" aria-label="Capability tier">
-            {FLOOR_PRESETS.map((p) => (
+            {TIER_PRESETS.map((p) => (
               <button
                 key={p.id}
                 aria-pressed={activePreset?.id === p.id}
-                onClick={() => onChange({ ...settings, floor: p.floor })}
+                onClick={() =>
+                  onChange({ ...settings, shipFloor: p.shipFloor, craftFloor: p.craftFloor })
+                }
               >
-                {p.label} · {pct(p.floor, p.floor * 100 % 1 === 0 ? 0 : 1)}
+                {p.label}
               </button>
             ))}
           </div>
@@ -59,16 +64,26 @@ export function Controls({
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <Slider
-          label="Capability floor"
-          value={settings.floor}
-          display={pct(settings.floor, 0)}
+          label="Ship floor"
+          value={settings.shipFloor}
+          display={pct(settings.shipFloor, 1)}
           min={0.1}
           max={0.75}
+          step={0.005}
+          onChange={(shipFloor) => onChange({ ...settings, shipFloor })}
+          help="Minimum share of real repo tasks it has to finish. This is what stops cheap-but-unreliable models winning on price alone."
+        />
+        <Slider
+          label="Craft floor"
+          value={settings.craftFloor}
+          display={pct(settings.craftFloor, 0)}
+          min={0.3}
+          max={0.9}
           step={0.01}
-          onChange={(floor) => onChange({ ...settings, floor })}
-          help="Minimum pass rate a model must hit to be considered at all. This is what stops cheap-but-unreliable models from winning on price."
+          onChange={(craftFloor) => onChange({ ...settings, craftFloor })}
+          help="How often a human must prefer its web work over a typical model's. Drop this below 70% and gpt-5.6-luna [max] comes back — cheapest on the board, and judged worse than everything above it."
         />
         <Slider
           label="Output-token penalty"
@@ -94,11 +109,13 @@ export function Controls({
 
       <p className="mt-5 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
         <span className="font-mono">
-          BangBuck = pass@1 ÷ (cost × tokens^{settings.beta.toFixed(2)} × steps^
+          BangBuck = ship^{(1 - settings.craftWeight).toFixed(1)} × craft^
+          {settings.craftWeight.toFixed(1)} ÷ (cost × tokens^{settings.beta.toFixed(2)} × steps^
           {settings.gamma.toFixed(2)})
         </span>
-        , computed only for configs at or above the floor. Token and step penalties are relative to
-        the leanest config in the set.
+        , computed only for configs clearing <em>both</em> floors. The two capability terms multiply
+        rather than average, so being good at one cannot cover for being weak at the other. Token and
+        step penalties are relative to the leanest config in the set.
       </p>
     </section>
   );

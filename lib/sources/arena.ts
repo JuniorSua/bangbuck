@@ -1,23 +1,40 @@
-import type { ArenaEntry } from "../types";
+import type { ArenaBoard, ArenaEntry } from "../types";
 
-const SOURCE_URL = "https://arena.ai/leaderboard";
+const BASE = "https://arena.ai/leaderboard";
 
 /**
- * Scrapes arena.ai's human-preference leaderboard.
+ * Arena's board slugs. "" is the general chat board; "code" is the WebDev board —
+ * note that /leaderboard/code and /leaderboard/code/webdev serve byte-identical
+ * entries and the page titles itself "WebDev AI Leaderboard", so there is exactly
+ * one coding board here, not a parent with children.
+ */
+export const ARENA_BOARDS = {
+  text: { slug: "text-overall", path: "" },
+  webdev: { slug: "code-webdev", path: "/code" },
+} as const;
+
+/**
+ * Scrapes an arena.ai human-preference leaderboard.
  *
- * Arena has NO measured cost, output tokens, or agent steps — it is human-vote Elo.
- * It cannot drive a bang-for-buck ranking; it is a second opinion only. It does carry
- * useful extras: list price per million tokens, vote counts, license, context length.
+ * Arena has NO measured cost, output tokens, or agent steps — it is human-vote Elo,
+ * so it can never drive the cost side of the ranking. What it does supply is the
+ * one thing DeepSWE cannot: whether a human actually prefers the code that came
+ * out. That is the Craft axis. See lib/score.ts for why that is a separate gate.
  *
  * Data lives in the Next.js RSC flight payload, split across many
  * self.__next_f.push([1,"<chunk>"]) calls that must be concatenated first.
  */
-export async function fetchArena(html?: string) {
-  const source = html ?? (await fetchText(SOURCE_URL));
+export async function fetchArena(
+  board: keyof typeof ARENA_BOARDS = "text",
+  html?: string,
+): Promise<ArenaBoard> {
+  const { slug, path } = ARENA_BOARDS[board];
+  const sourceUrl = `${BASE}${path}`;
+  const source = html ?? (await fetchText(sourceUrl));
   const flight = reassembleFlight(source);
   const entries = extractEntries(flight);
   validate(entries);
-  return { sourceUrl: SOURCE_URL, slug: "text-overall", entries };
+  return { sourceUrl, slug, entries };
 }
 
 async function fetchText(url: string): Promise<string> {

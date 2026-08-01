@@ -25,19 +25,26 @@ async function main() {
   const deepswe = await fetchDeepSwe();
   console.log(`${deepswe.configs.length} configs, benchmark generated ${deepswe.generatedAt.slice(0, 10)}`);
 
-  // Arena is a second opinion only. If it breaks, the DeepSWE-driven ranking must
-  // still refresh, so a failure here degrades to null rather than aborting.
-  process.stdout.write("  Arena    ... ");
+  // The WebDev board is the Craft axis, so it is load-bearing: without it there is
+  // no ranking at all, only half of one. A failure here must abort rather than
+  // quietly write a snapshot that scores every config on capability alone — that
+  // is precisely the mistake this version exists to correct.
+  process.stdout.write("  WebDev   ... ");
+  const arenaWebdev = await fetchArena("webdev");
+  console.log(`${arenaWebdev.entries.length} entries (Craft axis)`);
+
+  // The general chat board is context only and never scored, so it may degrade.
+  process.stdout.write("  Chat     ... ");
   let arena: Snapshot["arena"] = null;
   try {
-    arena = await fetchArena();
+    arena = await fetchArena("text");
     console.log(`${arena.entries.length} entries`);
   } catch (err) {
     console.log(`FAILED (${(err as Error).message})`);
-    console.log("           continuing without Arena — ranking is unaffected");
+    console.log("           continuing without it — ranking is unaffected");
   }
 
-  const next: Snapshot = { capturedAt: new Date().toISOString(), deepswe, arena };
+  const next: Snapshot = { capturedAt: new Date().toISOString(), deepswe, arena, arenaWebdev };
 
   const luna = deepswe.configs.find((c) => c.model === "gpt-5-6-luna" && c.effort === "max");
   console.log(

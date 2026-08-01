@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
+import { craftEloOf } from "@/lib/score";
 import { pct, steps, tokens, usdPrecise } from "@/lib/format";
 import { VendorMark } from "./VendorMark";
 
-type SortKey = "bb" | "passAt1" | "cost" | "tokens" | "steps" | "arena";
+type SortKey = "bb" | "ship" | "craft" | "cost" | "tokens" | "steps";
 
 /**
- * All 50 configs. Below-floor rows stay visible but dimmed rather than being
- * hidden — seeing what got excluded, and by how little, is what makes the ranking
- * trustworthy rather than a black box.
+ * All 50 configs. Gated-out rows stay visible but dimmed rather than hidden —
+ * seeing what got excluded, and by how little, is what makes the ranking
+ * trustworthy rather than a black box. The specific value that failed is drawn in
+ * the warning colour, so "why is this greyed out" is answerable at a glance.
  */
 export function RankTable({ ranking }: { ranking: Ranking }) {
   const [sort, setSort] = useState<SortKey>("bb");
@@ -39,7 +41,7 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
           All {ranking.all.length} configurations
         </h2>
         <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-          {ranking.qualified.length} clear the floor · dimmed rows do not
+          {ranking.qualified.length} clear both floors · dimmed rows do not
         </p>
       </div>
 
@@ -52,8 +54,11 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
               <Th sortable active={sort === "bb"} desc={desc} onClick={() => toggle("bb")}>
                 BangBuck
               </Th>
-              <Th sortable active={sort === "passAt1"} desc={desc} onClick={() => toggle("passAt1")}>
-                Pass@1
+              <Th sortable active={sort === "ship"} desc={desc} onClick={() => toggle("ship")}>
+                Ship
+              </Th>
+              <Th sortable active={sort === "craft"} desc={desc} onClick={() => toggle("craft")}>
+                Craft
               </Th>
               <Th sortable active={sort === "cost"} desc={desc} onClick={() => toggle("cost")}>
                 Cost
@@ -63,9 +68,6 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
               </Th>
               <Th sortable active={sort === "steps"} desc={desc} onClick={() => toggle("steps")}>
                 Steps
-              </Th>
-              <Th sortable active={sort === "arena"} desc={desc} onClick={() => toggle("arena")}>
-                Arena Elo
               </Th>
             </tr>
           </thead>
@@ -78,9 +80,14 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
       </div>
 
       <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-        Pass@1, cost, output tokens and agent steps are measured by DeepSWE across 113 tasks. Arena
-        Elo is a separate human-preference rating and is shown per model family, so it does not vary
-        by reasoning effort — it is a sanity check, not part of the BangBuck score.
+        <strong style={{ color: "var(--text-secondary)" }}>Ship</strong> is DeepSWE pass@1 across 113
+        real repo tasks, measured per configuration.{" "}
+        <strong style={{ color: "var(--text-secondary)" }}>Craft</strong> is how often a human picks
+        this model&rsquo;s web work over a typical model&rsquo;s, from Arena&rsquo;s WebDev board.
+        Craft marked <span className="font-mono">~</span> is borrowed from the nearest reasoning
+        effort of the same model, because Arena rates only{" "}
+        {ranking.all.filter((s) => s.craftMatch.kind === "exact").length} of these {ranking.all.length}{" "}
+        configurations directly — effort shows up on Ship, which is measured per configuration.
       </p>
     </section>
   );
@@ -128,18 +135,35 @@ function Row({ s, isWinner }: { s: ScoredConfig; isWinner: boolean }) {
         </span>
       </td>
       <Td accent={isWinner} bold>
-        {s.qualified ? s.bb.toFixed(1) : "—"}
+        {s.qualified ? s.bb.toFixed(2) : "—"}
       </Td>
-      <Td>
-        {pct(c.passAt1, 1)}
+      <Td warn={s.failed === "ship" || s.failed === "both"}>
+        {pct(s.ship, 1)}
         <span className="ml-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
           ±{(((c.ciHi - c.ciLo) / 2) * 100).toFixed(0)}
         </span>
       </Td>
+      <Td warn={s.failed === "craft" || s.failed === "both"}>
+        {s.craft === null ? (
+          "—"
+        ) : (
+          <span title={`${craftEloOf(s).toFixed(0)} Elo on Arena WebDev`}>
+            {pct(s.craft, 0)}
+            {s.craftMatch.kind === "family" && (
+              <span
+                className="ml-0.5 font-mono text-[10px]"
+                style={{ color: "var(--text-muted)" }}
+                title={`Borrowed from the ${s.craftMatch.borrowedFrom} variant — Arena does not rate this effort`}
+              >
+                ~
+              </span>
+            )}
+          </span>
+        )}
+      </Td>
       <Td>{usdPrecise(c.meanCostUsd)}</Td>
       <Td>{tokens(c.meanOutputTokens)}</Td>
       <Td>{steps(c.meanAgentSteps)}</Td>
-      <Td muted>{s.arena ? Math.round(s.arena.rating) : "—"}</Td>
     </tr>
   );
 }
@@ -183,17 +207,26 @@ function Td({
   accent,
   bold,
   muted,
+  warn,
 }: {
   children: React.ReactNode;
   accent?: boolean;
   bold?: boolean;
   muted?: boolean;
+  /** This is the value that failed its floor — the reason the row is dimmed. */
+  warn?: boolean;
 }) {
   return (
     <td
       className={`whitespace-nowrap px-3 py-2.5 text-right tnum ${bold ? "font-semibold" : ""}`}
       style={{
-        color: accent ? "var(--accent)" : muted ? "var(--text-muted)" : "var(--text-secondary)",
+        color: accent
+          ? "var(--accent)"
+          : warn
+            ? "var(--warning)"
+            : muted
+              ? "var(--text-muted)"
+              : "var(--text-secondary)",
       }}
     >
       {children}
@@ -205,15 +238,15 @@ function value(s: ScoredConfig, key: SortKey): number {
   switch (key) {
     case "bb":
       return s.qualified ? s.bb : -1;
-    case "passAt1":
-      return s.config.passAt1;
+    case "ship":
+      return s.ship;
+    case "craft":
+      return s.craft ?? -1;
     case "cost":
       return s.config.meanCostUsd;
     case "tokens":
       return s.config.meanOutputTokens;
     case "steps":
       return s.config.meanAgentSteps;
-    case "arena":
-      return s.arena?.rating ?? -1;
   }
 }

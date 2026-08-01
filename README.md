@@ -3,43 +3,82 @@
 **Which AI coding model gives you the most work per dollar?**
 
 Leaderboards rank models by raw capability, so the most expensive model always wins. BangBuck ranks
-them by how much real work you get per dollar — using *measured benchmark cost*, not list price.
+coding models by how much work you get per dollar — using *measured benchmark cost*, not list price.
 
-Currently: **gpt-5.6-luna [max]** — 67.2% of DeepSWE tasks at $0.61 each. Per $100 of spend that's
-~111 tasks solved, against ~6 for the top-scoring model.
+Currently: **claude-opus-5 [high]** — finishes 72.8% of real repo tasks at $6.08 each, and humans
+prefer its web work to a typical model's 82% of the time. It leads the high-power tier by 1.36×.
 
 ---
 
 ## The formula
 
-Two stages. The capability floor is the whole idea — it's what stops cheap-but-useless models from
-winning on price.
+A model has to clear **two** bars, then price decides among the survivors.
 
 ```
-1. Capability floor       qualified = configs where pass@1 >= floor
-2. Efficiency, over qualified configs only
-                          BangBuck = pass@1 / (cost × tokens^beta × steps^gamma)
+SHIP   DeepSWE pass@1          measured     can it finish the job?
+CRAFT  Arena WebDev Elo -> P(win)  human-judged  is the result worth keeping?
+
+1. Gate       qualified = ship >= shipFloor AND craft >= craftFloor
+2. Capability K = ship^(1-craftWeight) * craft^craftWeight     (geometric, conjunctive)
+3. Efficiency BangBuck = K / (cost × tokens^beta × steps^gamma)
 ```
 
-Defaults: `floor 0.65`, `beta 0.20`, `gamma 0.20`. All three are sliders in the UI and live in one
-place, `DEFAULT_SETTINGS` in `lib/score.ts`.
+Defaults: `shipFloor 0.725`, `craftFloor 0.75`, `craftWeight 0.60`, `beta 0.20`, `gamma 0.20` —
+all in `DEFAULT_SETTINGS` in `lib/score.ts`, all sliders in the UI.
 
-**Why a floor rather than plain score ÷ cost.** Plain `score/cost` crowns gpt-5.6-luna [high] — 44%
-pass rate at $0.16. A model that fails 9 tasks in 10 is not a bargain. The floor says "I need work
-that actually completes"; among what clears that bar, price decides.
+### Why two axes
+
+Version 1 had one capability number and crowned **gpt-5.6-luna [max]**: 67.2% of tasks at $0.61,
+unbeatable on price. That was wrong. DeepSWE measures whether an agent can close a real issue; it
+says nothing about whether the code is any good. On Arena's WebDev board luna sits at 1523 Elo
+against claude-opus-5's 1703 — a human prefers Opus's work **74% of the time**. Luna could finish
+the job and hand you something you would not ship.
+
+**The two terms multiply rather than average.** A geometric mean is conjunctive: a hole on one axis
+cannot be filled in by a spike on the other. An arithmetic mean would let luna's cheap, capable
+agentic score paper over its weak code, which is the exact failure being corrected.
+
+### Why the floors are hard gates, and the weight is nearly decoration
+
+Worth knowing before tuning anything — `npx tsx scripts/sensitivity.ts` prints the evidence:
+
+- Sweeping `craftWeight` from **0 to 1** never changes the winner. Scores move ~2%, because across
+  qualifying configs craft spans ~1.3× while cost spans ~20×. Cost dominates; capability is
+  second-order.
+- Sweeping `craftFloor` flips the winner **twice**: at 65% it is luna [max], at 70% gpt-5.6-sol
+  [high], at 80% claude-opus-5 [medium].
+
+So a soft "bias toward coding" does not work — weighting alone would still crown luna. The **gate**
+is what changes the answer. That is why both floors are plain percentages: they are the knobs that
+actually carry the judgment.
+
+### Craft coverage — read this before trusting a row
+
+Arena rates only **12 of the 50** configurations exactly. The other 38 borrow the nearest reasoning
+effort of the same model, and every table row marks this with `~`.
+
+Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
+measured per configuration, while Craft is mostly a property of the model — its taste in code does
+not change when you let it think longer. **Nearest** effort matters though, not the family's best:
+taking the top rating would hand a `[low]` config its `[max]` sibling's score, flattering exactly
+the configs least entitled to it. See `craftFor` in `lib/normalize.ts`.
+
+### Tiers
+
+**High power** (ship ≥72.5%, craft ≥75%) is the default — 4 configs qualify and `claude-opus-5
+[high]` wins by 1.36×, rated exactly rather than by inheritance. **Everyday** (ship ≥65%, craft
+≥70%) is a genuine tie: `gpt-5.6-sol [high]` and `claude-opus-5 [medium]` land 4% apart, which is
+noise, and the UI says so rather than pretending it is a ranking.
 
 **Why tokens and steps barely matter (exponent 0.20).** Dollars are already fully captured by cost.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
-At 0.20 they act as a tiebreaker between configs of similar score and price.
+At 0.20 they act as a tiebreaker between configs of similar capability and price.
 
-Two named tiers ship as presets: **Everyday (65%)** and **High power (72.5%)**. The high-power tier
-admits only four configurations and is won by `claude-opus-5 [high]` — 0.8 points below the absolute
-frontier at 51% of its price.
-
-The chart has **metric tabs** (Cost / Output tokens / Agent steps) which are not decoration: those
-are exactly the three inputs the formula consumes, so switching tabs shows *which* of them is
-carrying a given model's rank. All three axes run better-to-the-right, so a tab change never flips
-the reader's sense of which direction is good.
+The chart's **metric tabs** are not decoration. Cost / Output tokens / Agent steps are exactly the
+inputs the formula consumes, so switching tabs shows *which* one carries a given model's rank. The
+fourth tab, Craft, plots the two capability axes against each other and draws both floors — only
+the upper-right quadrant competes, which is the whole argument in one picture. Every axis runs
+better-to-the-right, so a tab change never flips the reader's sense of which way is good.
 
 ---
 
@@ -89,12 +128,12 @@ polling on a timer is wasted work. The plan is event-driven instead — see *Not
 
 ```
 lib/score.ts            The formula. PURE — no I/O. This is the piece that encodes the judgment call.
-lib/score.test.ts       28 golden tests. The numbers here were verified by hand before any code existed.
+lib/score.test.ts       40 golden tests. The numbers here were verified by hand before any code existed.
 lib/sources/deepswe.ts  Scrapes the live SSR page (seroval-serialised TanStack payload). Read the trap above.
-lib/sources/arena.ts    Scrapes arena.ai's RSC flight payload. Second opinion only.
+lib/sources/arena.ts    Scrapes arena.ai's RSC flight payloads — both boards. See ARENA_BOARDS.
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
-lib/normalize.ts        Joins DeepSWE and Arena naming at the model-family level.
-lib/metrics.ts          The three chart axes + readable tick generation.
+lib/normalize.ts        Name joining. craftFor() resolves a config to a WebDev Elo + its provenance.
+lib/metrics.ts          The four chart axes + readable tick generation (zero-anchored and fitted).
 lib/vendors.ts          Canonical vendor names + aliases. Asserted against the data by a test.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
                         Hero.tsx is the oversized wordmark and meta strip.
@@ -165,8 +204,16 @@ BangBuck does not run benchmarks. It reads published results and applies a cost-
 - **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 50 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
-- **[arena.ai](https://arena.ai/leaderboard)** — human-preference Elo and list pricing. Used as a
-  second opinion only; it has no measured cost, tokens, or steps, so it does not affect the score.
+- **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on
+  web development. This is the Craft axis. Note the URL: `/leaderboard/code` **is** the WebDev
+  board — it and `/leaderboard/code/webdev` serve byte-identical entries and the page titles itself
+  "WebDev AI Leaderboard". There is one coding board here, not a parent with children.
+- **[Arena chat](https://arena.ai/leaderboard)** — general-conversation Elo and list pricing. Shown
+  for context and deliberately kept **out** of the score: a model's chat ranking says little about
+  its code, which is the mistake this ranking was rebuilt to avoid.
+
+Arena has no measured cost, tokens, or steps, so it only ever decides whether a model is good enough
+to compete — never how cheap it is.
 
 Both are scraped from public pages. Model names, scores, and pricing belong to their respective
 projects and vendors.
@@ -179,7 +226,10 @@ projects and vendors.
   cost appear, then notify and stop. `lib/sources/*` and `lib/diff.ts` are the whole engine already;
   v2 adds scheduling and a notification channel.
 - Price-change history (would have caught luna's 5× cut automatically — needs storage).
-- More sources behind the same `lib/sources/*` interface.
+- **A second Craft source.** Today the Craft axis rests on one human-vote board.
+  [Artificial Analysis](https://artificialanalysis.ai/agents/coding-agents) publishes a Coding Agent
+  Index averaging cost-per-task across DeepSWE, Terminal-Bench v2 and SWE-Atlas-QnA — the natural
+  next axis behind the same `lib/sources/*` interface.
 - Personal-budget mode: "I spend $200/month — here's what to switch to and what you'd save."
 
 ---

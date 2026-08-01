@@ -16,14 +16,22 @@ export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
         <Source
           name="DeepSWE"
           href={snapshot.deepswe.sourceUrl}
-          detail={`${snapshot.deepswe.configs.length} configurations across ${snapshot.deepswe.nTasksInSet} long-horizon software engineering tasks. Provides every measured figure used in the ranking: pass@1, cost, output tokens and agent steps.`}
+          detail={`${snapshot.deepswe.configs.length} configurations across ${snapshot.deepswe.nTasksInSet} long-horizon software engineering tasks. Supplies the Ship axis and every measured cost figure: pass@1, cost per task, output tokens and agent steps.`}
           asOf={`Benchmark data as of ${shortDate(snapshot.deepswe.generatedAt)}`}
         />
+        {snapshot.arenaWebdev && (
+          <Source
+            name="Arena WebDev"
+            href={snapshot.arenaWebdev.sourceUrl}
+            detail={`${snapshot.arenaWebdev.entries.length} models rated by human preference votes on web development specifically. Supplies the Craft axis. Arena measures no cost, tokens or steps, so it decides only whether a model is good enough to compete — never how cheap it is.`}
+            asOf="Human-preference Elo"
+          />
+        )}
         {snapshot.arena && (
           <Source
-            name="arena.ai"
+            name="Arena chat"
             href={snapshot.arena.sourceUrl}
-            detail={`${snapshot.arena.entries.length} models ranked by human preference votes. Used only as a second opinion on quality — it has no measured cost, tokens or steps, so it does not affect the BangBuck score.`}
+            detail={`${snapshot.arena.entries.length} models ranked on general conversation. Shown for context only and deliberately kept out of the score — a model's chat ranking says little about its code, which is the mistake this ranking was rebuilt to avoid.`}
             asOf="Human-preference Elo, list pricing"
           />
         )}
