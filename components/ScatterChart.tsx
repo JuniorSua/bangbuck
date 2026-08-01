@@ -2,42 +2,36 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
-import { pct, steps, tokens, usdPrecise } from "@/lib/format";
+import { LOG_COST_TICKS, METRICS, linearTicks, metricById, type MetricId } from "@/lib/metrics";
+import { pct, steps as fmtSteps, tokens as fmtTokens, usdPrecise } from "@/lib/format";
 
 /**
- * Score vs cost, one line per model.
+ * Score against one of three cost axes, one line per model.
  *
- * Each line traces a single model through its reasoning-effort settings, cheapest
- * to most expensive — so the line shows what buying more effort from that model
- * actually gets you, and where it stops being worth it. Every model is named on the
- * plot; nothing important requires a hover.
+ * Each line traces a single model through its reasoning-effort settings, so it
+ * shows what buying more effort from that model actually gets you. The metric
+ * tabs switch the x-axis between the three inputs the formula consumes, which
+ * makes it possible to see *which* of them is driving a rank.
  *
- * Colour is NOT the identity channel here. Eighteen models cannot each get a hue
- * that stays distinguishable for colourblind readers, so identity is carried by the
- * direct labels, and colour is spent only on the podium — the top three ranked
- * models, in descending prominence.
- *
- * The three hues are the documented dark-mode categorical slots and are the only
- * trio that clears all-pairs colourblind separation on this surface. Two rules keep
- * that validation true and must not be quietly undone:
+ * Colour is NOT the identity channel. Eighteen models cannot each hold a hue that
+ * survives colourblind separation, so identity is carried by direct labels and
+ * colour is spent only on the podium. Two rules keep the validated palette true:
  *   1. Ranks 2 and 3 carry labels in their OWN colour. Orange vs aqua is legally
- *      separable for a deuteranope but not comfortably so, and the coloured label
- *      is the secondary encoding that makes it safe.
+ *      separable for a deuteranope but not comfortably so; the coloured label is
+ *      the secondary encoding that makes it safe.
  *   2. The grey field never renders at full opacity. Aqua collides with raw
  *      --text-muted; it only separates once that grey is composited down.
- *
- * The x-axis MUST stay logarithmic: costs run $0.014–$26.40 and a linear axis
- * crushes everything interesting into the left edge.
  */
 const W = 860;
 const H = 600;
 const PAD = { top: 34, right: 30, bottom: 58, left: 56 };
-/** Minimum vertical gap between two labels before they read as one blob. */
 const LABEL_GAP = 14.5;
 
 export function ScatterChart({ ranking }: { ranking: Ranking }) {
   const [hover, setHover] = useState<ScoredConfig | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
+  const [metricId, setMetricId] = useState<MetricId>("cost");
+  const metric = metricById(metricId);
 
   const all = ranking.all;
   const plotW = W - PAD.left - PAD.right;
@@ -45,16 +39,27 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   const winner = ranking.qualified[0] ?? null;
 
   const { x, y, families, ticks } = useMemo(() => {
-    const costs = all.map((s) => s.config.meanCostUsd);
-    const lo = Math.log10(Math.min(...costs) * 0.75);
-    const hi = Math.log10(Math.max(...costs) * 1.25);
+    const values = all.map((s) => metric.get(s.config));
+    const max = Math.max(...values);
+    const min = Math.min(...values);
 
-    // Cost decreases to the right so "better" is up-and-right, matching the
-    // orientation of the source leaderboard people arrive from.
-    const x = (c: number) => PAD.left + plotW * (1 - (Math.log10(c) - lo) / (hi - lo));
+    // Every metric runs better-to-the-right, so switching tabs never flips the
+    // reader's sense of which direction is good.
+    let x: (v: number) => number;
+    let ticks: number[];
+    if (metric.scale === "log") {
+      const lo = Math.log10(min * 0.75);
+      const hi = Math.log10(max * 1.25);
+      x = (v) => PAD.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
+      ticks = LOG_COST_TICKS.filter((t) => Math.log10(t) >= lo && Math.log10(t) <= hi);
+    } else {
+      const hi = max * 1.06;
+      x = (v) => PAD.left + plotW * (1 - v / hi);
+      ticks = linearTicks(max);
+    }
+
     const y = (p: number) => PAD.top + plotH * (1 - p / 0.8);
 
-    // config.model is the family; effort is the variant along its line.
     const byModel = new Map<string, ScoredConfig[]>();
     for (const s of all) {
       const list = byModel.get(s.config.model) ?? [];
@@ -62,34 +67,23 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
       byModel.set(s.config.model, list);
     }
 
-    const families = [...byModel.entries()]
-      .map(([model, configs]) => {
-        const sorted = [...configs].sort((a, b) => a.config.meanCostUsd - b.config.meanCostUsd);
-        // Anchor the label at the setting of this model actually worth running,
-        // not its most expensive one. Anchoring at peak score pinned 17 of 18
-        // labels into the left third of the plot, because every model peaks at
-        // max effort — which is exactly where the crowding came from.
-        //
-        // Only QUALIFIED configs may anchor. BangBuck is computed for everything,
-        // and a near-free config that fails 9 tasks in 10 scores enormously on it,
-        // so ranking by raw bb would label each model at its cheapest junk setting.
-        // Models with nothing above the floor fall back to their best score.
-        const qualified = sorted.filter((s) => s.qualified);
-        const anchor = (qualified.length ? qualified : sorted).reduce((a, b) =>
-          qualified.length ? (b.bb > a.bb ? b : a) : b.config.passAt1 > a.config.passAt1 ? b : a,
-        );
-        return { model, display: sorted[0].config.modelDisplay, configs: sorted, anchor };
-      });
+    const families = [...byModel.entries()].map(([model, configs]) => {
+      // Sort along the CURRENT axis so lines stay monotone in x on every tab.
+      const sorted = [...configs].sort((a, b) => metric.get(a.config) - metric.get(b.config));
+      // Anchor the label at the setting of this model actually worth running.
+      // Anchoring at peak score pinned 17 of 18 labels into the left third,
+      // because every model peaks at max effort. Only QUALIFIED configs may
+      // anchor: BangBuck is computed for everything, and a near-free config that
+      // fails nine tasks in ten scores enormously on it.
+      const qualified = sorted.filter((s) => s.qualified);
+      const anchor = (qualified.length ? qualified : sorted).reduce((a, b) =>
+        qualified.length ? (b.bb > a.bb ? b : a) : b.config.passAt1 > a.config.passAt1 ? b : a,
+      );
+      return { model, display: sorted[0].config.modelDisplay, configs: sorted, anchor };
+    });
 
-    return {
-      x,
-      y,
-      families,
-      ticks: [0.02, 0.05, 0.1, 0.5, 1, 5, 10, 25].filter(
-        (t) => Math.log10(t) >= lo && Math.log10(t) <= hi,
-      ),
-    };
-  }, [all, plotW, plotH]);
+    return { x, y, families, ticks };
+  }, [all, plotW, plotH, metric]);
 
   /**
    * Colour is spent only on the podium — the first three DISTINCT models in the
@@ -115,16 +109,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   }, [ranking.qualified]);
 
   /**
-   * Nudge labels apart vertically and draw a leader line back to the point.
-   *
-   * Three things this has to get right, each of which was wrong before:
-   *  - Only separate labels whose text actually OVERLAPS horizontally. Two names
-   *    at opposite ends of the plot share a row happily; forcing them apart was
-   *    what smeared the stack down the left edge.
-   *  - Push symmetrically around the midpoint rather than always downward, so no
-   *    single label gets dragged 45px away from its own data point.
-   *  - Reserve the winner's true height. Its label is two lines, so budgeting one
-   *    line for it let neighbours overlap the most important text on the chart.
+   * Nudge labels apart vertically, with a leader line back to the point. Three
+   * things this has to get right: only separate labels that actually overlap
+   * horizontally; push symmetrically rather than always downward; and reserve
+   * the winner's true two-line height.
    */
   const labels = useMemo(() => {
     const top = PAD.top + 8;
@@ -133,8 +121,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     const items = families
       .map((f) => {
         const isWinner = f.model === winner?.config.model;
-        const cx = x(f.anchor.config.meanCostUsd);
-        // Text runs left from the point; flip right only near the y-axis.
+        const cx = x(metric.get(f.anchor.config));
         const side: "start" | "end" = cx < 200 ? "start" : "end";
         const dx = side === "end" ? -11 : 11;
         const width = f.display.length * 6.05 + (isWinner ? 14 : 0);
@@ -174,19 +161,16 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
       for (const l of items) l.ly = Math.min(bottom, Math.max(top, l.ly));
     }
     return items;
-  }, [families, x, y, winner]);
+  }, [families, x, y, winner, metric]);
 
   const floorY = y(ranking.settings.floor);
   const dim = (model: string) => focus !== null && focus !== model;
 
   /**
-   * Hover resolves to the NEAREST point to the cursor, measured across the whole
-   * plot — not to whichever mark happens to be on top.
-   *
-   * Per-mark hit targets made densely packed configs unreachable: a small dot
-   * drawn earlier sits underneath a larger one drawn later, so claude-opus-5
-   * [high] simply could not be hovered because gpt-5.6-terra covered it. Nearest
-   * -point has no z-order at all, so every one of the 50 configs is reachable.
+   * Hover resolves to the NEAREST point to the cursor, not to whichever mark is
+   * on top. Per-mark hit targets made dense configs unreachable — a small dot
+   * drawn earlier sits under a larger one drawn later, so claude-opus-5 [high]
+   * simply could not be hovered because gpt-5.6-terra covered it.
    */
   const svgRef = useRef<SVGSVGElement>(null);
   const HIT_RADIUS = 26;
@@ -201,9 +185,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     let best: ScoredConfig | null = null;
     let bestDist = HIT_RADIUS;
     for (const s of all) {
-      const dx = x(s.config.meanCostUsd) - px;
-      const dy = y(s.config.passAt1) - py;
-      const dist = Math.hypot(dx, dy);
+      const dist = Math.hypot(x(metric.get(s.config)) - px, y(s.config.passAt1) - py);
       if (dist < bestDist) {
         bestDist = dist;
         best = s;
@@ -222,29 +204,44 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
 
   return (
     <figure className="m-0">
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <figcaption className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>
+          <figcaption
+            className="text-lg font-semibold tight"
+            style={{ color: "var(--text-primary)" }}
+          >
             What each model costs to run well
           </figcaption>
-          <p className="mt-1 max-w-lg text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-            Every line is one model traced through its reasoning-effort settings, cheapest to most
-            expensive. A line that climbs steeply is a model where paying more actually buys you
-            score; a flat one is money wasted.
+          <p className="mt-1.5 max-w-lg text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+            Every line is one model traced through its reasoning-effort settings. A line that climbs
+            steeply is a model where paying more actually buys score; a flat one is money wasted.
           </p>
         </div>
-        {/* Four keys, matching exactly the four things colour encodes. A legend
-            that named fewer states than the chart shows would be lying. */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-          <Key color="var(--accent)" ring>
-            👑 Best value
-          </Key>
-          <Key color="var(--rank-2)">🥈 Runner-up</Key>
-          <Key color="var(--rank-3)">🥉 Third</Key>
-          <Key color="var(--text-muted)" faded>
-            Everything else
-          </Key>
+
+        {/* The three tabs are the three inputs to the formula. Switching them
+            shows which one is carrying a given model's rank. */}
+        <div className="seg" role="group" aria-label="Chart metric">
+          {METRICS.map((m) => (
+            <button
+              key={m.id}
+              aria-pressed={metricId === m.id}
+              onClick={() => setMetricId(m.id)}
+            >
+              {m.tab}
+            </button>
+          ))}
         </div>
+      </div>
+
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+        <Key color="var(--accent)" ring>
+          👑 Best value
+        </Key>
+        <Key color="var(--rank-2)">🥈 Runner-up</Key>
+        <Key color="var(--rank-3)">🥉 Third</Key>
+        <Key color="var(--text-muted)" faded>
+          Everything else
+        </Key>
       </div>
 
       <div className="relative">
@@ -255,7 +252,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           onMouseMove={handleMove}
           onMouseLeave={clearHover}
           role="img"
-          aria-label={`Score against cost per task for each model across its reasoning-effort settings.${
+          aria-label={`Score against ${metric.axis} for each model across its reasoning-effort settings.${
             winner ? ` Best value: ${winner.label}.` : ""
           }`}
         >
@@ -311,7 +308,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               fill="var(--text-muted)"
               className="tnum"
             >
-              ${t}
+              {metric.tickLabel(t)}
             </text>
           ))}
 
@@ -344,15 +341,12 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             fill="var(--text-muted)"
             style={{ letterSpacing: "0.08em" }}
           >
-            CHEAPER →
+            MORE EFFICIENT →
           </text>
 
-          {/* One polyline per model, through its effort levels. Three weight
-              tiers: winner, podium, field. Ranks 2-3 stay THINNER than the
-              winner — a saturated hue already reads heavier than blue, so they
-              buy their prominence with colour rather than with width. The field
-              never renders at full opacity; aqua only separates from grey once
-              that grey is composited down. */}
+          {/* One polyline per model. Three weight tiers: winner, podium, field.
+              Ranks 2-3 stay THINNER than the winner — a saturated hue already
+              reads heavier than blue, so they buy prominence with colour. */}
           {families.map((f) => {
             if (f.configs.length < 2) return null;
             const isWinner = f.model === winner?.config.model;
@@ -361,7 +355,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               <polyline
                 key={`line-${f.model}`}
                 points={f.configs
-                  .map((s) => `${x(s.config.meanCostUsd)},${y(s.config.passAt1)}`)
+                  .map((s) => `${x(metric.get(s.config))},${y(s.config.passAt1)}`)
                   .join(" ")}
                 fill="none"
                 stroke={tier ? tier.color : "var(--text-muted)"}
@@ -379,7 +373,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             const isHover = hover?.label === s.label;
             const medalled = podium.byConfig.get(s.label);
             const tier = podium.byModel.get(s.config.model);
-            const cx = x(s.config.meanCostUsd);
+            const cx = x(metric.get(s.config));
             const cy = y(s.config.passAt1);
             return (
               <g key={s.label} opacity={dim(s.config.model) ? 0.18 : 1}>
@@ -412,24 +406,14 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           })}
 
           {labels.map((l) => {
-            const isWinner = l.isWinner;
-            const anchor = l.side;
-            const dx = l.dx;
-            // Ranks 2 and 3 MUST carry their own colour here. Orange vs aqua is
-            // only marginally separable for a deuteranope; the coloured label is
-            // the secondary encoding that makes the palette safe.
             const color = podium.byModel.get(l.model)?.color ?? "var(--text-secondary)";
             return (
-              <g
-                key={`lab-${l.model}`}
-                opacity={dim(l.model) ? 0.2 : 1}
-                style={{ pointerEvents: "none" }}
-              >
+              <g key={`lab-${l.model}`} opacity={dim(l.model) ? 0.2 : 1} style={{ pointerEvents: "none" }}>
                 {Math.abs(l.ly - l.cy) > 1.5 && (
                   <line
-                    x1={l.cx + (anchor === "end" ? -6 : 6)}
+                    x1={l.cx + (l.side === "end" ? -6 : 6)}
                     y1={l.cy}
-                    x2={l.cx + dx}
+                    x2={l.cx + l.dx}
                     y2={l.ly}
                     stroke={color}
                     strokeWidth={1}
@@ -437,28 +421,28 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                   />
                 )}
                 <text
-                  x={l.cx + dx}
-                  y={l.ly + (isWinner ? -3 : 4)}
-                  textAnchor={anchor}
-                  fontSize={isWinner ? 13 : 11.5}
-                  fontWeight={isWinner ? 600 : 400}
+                  x={l.cx + l.dx}
+                  y={l.ly + (l.isWinner ? -3 : 4)}
+                  textAnchor={l.side}
+                  fontSize={l.isWinner ? 13 : 11.5}
+                  fontWeight={l.isWinner ? 600 : 400}
                   fill={color}
                   style={{ paintOrder: "stroke", stroke: "var(--surface-1)", strokeWidth: 4 }}
                 >
                   {l.display}
                 </text>
-                {isWinner && (
+                {l.isWinner && (
                   <text
-                    x={l.cx + dx}
+                    x={l.cx + l.dx}
                     y={l.ly + 11}
-                    textAnchor={anchor}
+                    textAnchor={l.side}
                     fontSize={10.5}
                     fill="var(--text-secondary)"
                     className="tnum"
                     style={{ paintOrder: "stroke", stroke: "var(--surface-1)", strokeWidth: 4 }}
                   >
                     {l.anchor.config.effort} · {pct(l.anchor.config.passAt1, 1)} ·{" "}
-                    {usdPrecise(l.anchor.config.meanCostUsd)}
+                    {metric.format(metric.get(l.anchor.config))}
                   </text>
                 )}
               </g>
@@ -472,7 +456,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             fontSize={11}
             fill="var(--text-muted)"
           >
-            Avg cost per task
+            {metric.axis}
           </text>
         </svg>
 
@@ -482,7 +466,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             style={{
               borderColor: "var(--border)",
               background: "var(--surface-2)",
-              left: `${(x(hover.config.meanCostUsd) / W) * 100}%`,
+              left: `${(x(metric.get(hover.config)) / W) * 100}%`,
               top: `${(y(hover.config.passAt1) / H) * 100}%`,
               transform: "translate(-50%, calc(-100% - 16px))",
               minWidth: 186,
@@ -493,8 +477,8 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             </div>
             <Row k="Pass@1" v={pct(hover.config.passAt1, 1)} />
             <Row k="Cost / task" v={usdPrecise(hover.config.meanCostUsd)} />
-            <Row k="Output tokens" v={tokens(hover.config.meanOutputTokens)} />
-            <Row k="Agent steps" v={steps(hover.config.meanAgentSteps)} />
+            <Row k="Output tokens" v={fmtTokens(hover.config.meanOutputTokens)} />
+            <Row k="Agent steps" v={fmtSteps(hover.config.meanAgentSteps)} />
             <div className="mt-1.5 border-t pt-1.5" style={{ borderColor: "var(--border)" }}>
               <Row
                 k="BangBuck"
@@ -513,13 +497,11 @@ function Key({
   color,
   children,
   ring,
-  ringed,
   faded,
 }: {
   color: string;
   children: React.ReactNode;
   ring?: boolean;
-  ringed?: boolean;
   faded?: boolean;
 }) {
   return (
@@ -531,11 +513,7 @@ function Key({
           height: ring ? 10 : 8,
           background: color,
           opacity: faded ? 0.4 : 1,
-          boxShadow: ring
-            ? `0 0 0 3px color-mix(in srgb, ${color} 25%, transparent)`
-            : ringed
-              ? `0 0 0 1.5px ${color}`
-              : undefined,
+          boxShadow: ring ? `0 0 0 3px color-mix(in srgb, ${color} 25%, transparent)` : undefined,
         }}
       />
       {children}

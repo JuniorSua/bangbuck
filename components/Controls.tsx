@@ -26,7 +26,7 @@ export function Controls({
     <section className="card p-6">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-[15px] font-medium tight" style={{ color: "var(--text-primary)" }}>
+          <h2 className="tight text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
             How much capability do you need?
           </h2>
           <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>

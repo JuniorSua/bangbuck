@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import snapshot from "../data/snapshot.json";
 import { computeRanking, DEFAULT_SETTINGS, valueFrontier } from "./score";
 import { familyKey } from "./normalize";
+import { linearTicks } from "./metrics";
 import type { Snapshot } from "./types";
 
 const snap = snapshot as unknown as Snapshot;
@@ -244,5 +245,22 @@ describe("familyKey", () => {
     expect(familyKey("gpt-5.6-luna-xhigh")).toBe("gpt56luna");
     expect(familyKey("gpt-5.6-luna-xhigh (codex-harness)")).toBe("gpt56luna");
     expect(familyKey("claude-opus-5-max")).toBe(familyKey("claude-opus-5"));
+  });
+});
+
+describe("linearTicks", () => {
+  it("gives readable steps near the target count", () => {
+    // 276k output tokens: the naive 'first step >= max/target' rule produced a
+    // 100k step and only three labels.
+    expect(linearTicks(276000)).toEqual([0, 50000, 100000, 150000, 200000, 250000]);
+    expect(linearTicks(268)).toEqual([0, 50, 100, 150, 200, 250]);
+  });
+
+  it("always starts at zero and never overshoots the max", () => {
+    for (const max of [12, 268, 5000, 276000]) {
+      const t = linearTicks(max);
+      expect(t[0]).toBe(0);
+      expect(t[t.length - 1]).toBeLessThanOrEqual(max);
+    }
   });
 });

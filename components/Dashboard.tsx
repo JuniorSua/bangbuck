@@ -8,7 +8,7 @@ import { Controls } from "./Controls";
 import { RankTable } from "./RankTable";
 import { ScatterChart } from "./ScatterChart";
 import { DataProvenance } from "./DataProvenance";
-import { Wordmark } from "./Logo";
+import { Hero } from "./Hero";
 
 /**
  * Holds the tuning state. The ranking is recomputed client-side from the snapshot,
@@ -20,25 +20,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
 
   return (
     <main className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
-      <header className="mb-9">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Wordmark />
-          <span
-            className="rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.1em]"
-            style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}
-          >
-            most work per dollar
-          </span>
-        </div>
-        <p
-          className="mt-5 max-w-2xl text-[15px] leading-relaxed"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          Leaderboards rank models by raw capability, so the most expensive model always wins. This
-          ranks them by how much real work you get per dollar — using measured benchmark cost, not
-          list price.
-        </p>
-      </header>
+      <Hero snapshot={snapshot} />
 
       <div className="space-y-8">
         <WinnerCard insights={ranking.insights} />

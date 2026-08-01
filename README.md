@@ -32,7 +32,14 @@ that actually completes"; among what clears that bar, price decides.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
 At 0.20 they act as a tiebreaker between configs of similar score and price.
 
-Two named tiers ship as presets: **Everyday (65%)** and **High power (72.5%)**.
+Two named tiers ship as presets: **Everyday (65%)** and **High power (72.5%)**. The high-power tier
+admits only four configurations and is won by `claude-opus-5 [high]` — 0.8 points below the absolute
+frontier at 51% of its price.
+
+The chart has **metric tabs** (Cost / Output tokens / Agent steps) which are not decoration: those
+are exactly the three inputs the formula consumes, so switching tabs shows *which* of them is
+carrying a given model's rank. All three axes run better-to-the-right, so a tab change never flips
+the reader's sense of which direction is good.
 
 ---
 
@@ -55,7 +62,7 @@ Leave that guard in.
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm test             # 26 golden tests
+npm test             # 28 golden tests
 npm run build        # production build; all routes prerender static
 ```
 
@@ -82,12 +89,14 @@ polling on a timer is wasted work. The plan is event-driven instead — see *Not
 
 ```
 lib/score.ts            The formula. PURE — no I/O. This is the piece that encodes the judgment call.
-lib/score.test.ts       26 golden tests. The numbers here were verified by hand before any code existed.
+lib/score.test.ts       28 golden tests. The numbers here were verified by hand before any code existed.
 lib/sources/deepswe.ts  Scrapes the live SSR page (seroval-serialised TanStack payload). Read the trap above.
 lib/sources/arena.ts    Scrapes arena.ai's RSC flight payload. Second opinion only.
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
 lib/normalize.ts        Joins DeepSWE and Arena naming at the model-family level.
+lib/metrics.ts          The three chart axes + readable tick generation.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
+                        Hero.tsx is the oversized wordmark and meta strip.
 data/snapshot.json      The source of truth. Committed.
 scripts/                refresh.ts plus three throwaway analysis scripts (hindsight, sensitivity, tiers).
 ```
@@ -111,7 +120,7 @@ Two tests are worth understanding before you touch anything:
 
 `components/ScatterChart.tsx` has three rules that look like style but are load-bearing:
 
-1. **The x-axis must stay logarithmic.** Costs span $0.014–$26.40; a linear axis crushes everything
+1. **The cost axis must stay logarithmic.** Costs span $0.014–$26.40; a linear axis crushes everything
    interesting into the left edge.
 2. **Ranks 2 and 3 must carry labels in their own colour.** Orange vs aqua clears colourblind
    separation only marginally; the coloured label is the secondary encoding that makes it safe. The

@@ -30,15 +30,15 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
         </div>
 
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h1
-            className="text-3xl font-semibold sm:text-4xl"
+          <h2
+            className="tight text-[2.1rem] font-semibold leading-none sm:text-[3rem]"
             style={{ color: "var(--accent)" }}
           >
             {c.modelDisplay}
-          </h1>
+          </h2>
           {c.effort && (
             <span
-              className="font-mono text-sm uppercase tracking-[0.08em]"
+              className="font-mono text-sm uppercase tracking-[0.1em]"
               style={{ color: "var(--text-secondary)" }}
             >
               {c.effort}
@@ -76,7 +76,10 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
               Tasks solved per $100 spent
             </div>
             <div className="flex items-end gap-4">
-              <div className="text-5xl font-semibold tnum sm:text-6xl" style={{ color: "var(--accent)" }}>
+              <div
+                className="tight text-[3.5rem] font-semibold leading-none tnum sm:text-[4.5rem]"
+                style={{ color: "var(--accent)" }}
+              >
                 {Math.round(w.solvedPer100)}
               </div>
               <div className="pb-2 text-sm" style={{ color: "var(--text-secondary)" }}>
