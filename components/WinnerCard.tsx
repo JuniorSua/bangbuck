@@ -1,5 +1,6 @@
 import type { Insights } from "@/lib/score";
 import { multiple, pct, steps, tokens, usdPrecise } from "@/lib/format";
+import { VendorMark } from "./VendorMark";
 
 /**
  * The headline. This component is essentially the whole product: it names one
@@ -44,8 +45,12 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
               {c.effort}
             </span>
           )}
-          <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-            · {w.organization}
+          <span
+            className="flex items-center gap-1.5 text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <VendorMark organization={w.organization} size={13} />
+            {w.organization}
           </span>
         </div>
 

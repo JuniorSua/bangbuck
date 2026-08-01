@@ -46,14 +46,19 @@ export function configLabel(c: DeepSweConfig): string {
   return c.effort ? `${c.modelDisplay} [${c.effort}]` : c.modelDisplay;
 }
 
+/**
+ * Fallback only — Arena's own `organization` wins when present. These match
+ * Arena's values so the two paths agree: grok ships under "SpaceXAI" and
+ * muse-spark under "Meta", neither of which you would guess from the name.
+ */
 const ORG_BY_PREFIX: [RegExp, string][] = [
   [/^claude/, "Anthropic"],
   [/^gpt/, "OpenAI"],
   [/^gemini/, "Google"],
   [/^kimi/, "Moonshot"],
-  [/^grok/, "xAI"],
+  [/^grok/, "SpaceXAI"],
   [/^glm/, "Z.ai"],
-  [/^muse/, "Muse"],
+  [/^muse/, "Meta"],
 ];
 
 export function organizationFor(c: DeepSweConfig, arena: ArenaEntry | null): string {

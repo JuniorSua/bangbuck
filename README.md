@@ -95,8 +95,10 @@ lib/sources/arena.ts    Scrapes arena.ai's RSC flight payload. Second opinion on
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
 lib/normalize.ts        Joins DeepSWE and Arena naming at the model-family level.
 lib/metrics.ts          The three chart axes + readable tick generation.
+lib/vendors.ts          Canonical vendor names + aliases. Asserted against the data by a test.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
                         Hero.tsx is the oversized wordmark and meta strip.
+                        VendorMark.tsx draws the company marks — see the note below.
 data/snapshot.json      The source of truth. Committed.
 scripts/                refresh.ts plus three throwaway analysis scripts (hindsight, sensitivity, tiers).
 ```
@@ -131,6 +133,18 @@ Two tests are worth understanding before you touch anything:
 
 Hover uses nearest-point detection rather than per-mark hit targets, so no mark can occlude another.
 Marks have `pointerEvents: none` on purpose.
+
+### Vendor marks
+
+`components/VendorMark.tsx` contains simplified geometric renderings drawn in this repo. They are
+**not official brand assets** — nothing is copied from or hotlinked to a vendor's site or to
+DeepSWE's icon directory. They inherit `currentColor` rather than carrying brand colours, for the
+same reason ranks 4-18 stay grey.
+
+Vendor names come from Arena and two are not guessable from the model prefix: grok ships under
+**"SpaceXAI"** and muse-spark under **"Meta"**. `lib/vendors.ts` holds the canonical list, and a test
+asserts every organization in the data resolves to a mark — a missing one degrades to a generic
+circle, which reads as a design choice rather than a gap.
 
 ---
 

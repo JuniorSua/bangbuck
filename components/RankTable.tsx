@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
 import { pct, steps, tokens, usdPrecise } from "@/lib/format";
+import { VendorMark } from "./VendorMark";
 
 type SortKey = "bb" | "passAt1" | "cost" | "tokens" | "steps" | "arena";
 
@@ -101,20 +102,30 @@ function Row({ s, isWinner }: { s: ScoredConfig; isWinner: boolean }) {
         {s.rank ?? "—"}
       </td>
       <td className="whitespace-nowrap px-3 py-2.5">
-        <span
-          className="font-medium"
-          style={{ color: isWinner ? "var(--accent)" : "var(--text-primary)" }}
-        >
-          {c.modelDisplay}
-        </span>
-        {c.effort && (
+        <span className="flex items-center gap-2">
+          {/* Vendor first, so the column can be scanned by company without
+              reading a single model name. Inherits the row's colour. */}
           <span
-            className="ml-2 font-mono text-[10px] uppercase tracking-[0.08em]"
-            style={{ color: "var(--text-muted)" }}
+            className="flex shrink-0 items-center"
+            style={{ color: isWinner ? "var(--accent)" : "var(--text-muted)" }}
           >
-            {c.effort}
+            <VendorMark organization={s.organization} />
           </span>
-        )}
+          <span
+            className="font-medium"
+            style={{ color: isWinner ? "var(--accent)" : "var(--text-primary)" }}
+          >
+            {c.modelDisplay}
+          </span>
+          {c.effort && (
+            <span
+              className="font-mono text-[10px] uppercase tracking-[0.08em]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {c.effort}
+            </span>
+          )}
+        </span>
       </td>
       <Td accent={isWinner} bold>
         {s.qualified ? s.bb.toFixed(1) : "—"}

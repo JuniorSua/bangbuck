@@ -3,6 +3,7 @@ import snapshot from "../data/snapshot.json";
 import { computeRanking, DEFAULT_SETTINGS, valueFrontier } from "./score";
 import { familyKey } from "./normalize";
 import { linearTicks } from "./metrics";
+import { canonicalVendor } from "./vendors";
 import type { Snapshot } from "./types";
 
 const snap = snapshot as unknown as Snapshot;
@@ -262,5 +263,17 @@ describe("linearTicks", () => {
       expect(t[0]).toBe(0);
       expect(t[t.length - 1]).toBeLessThanOrEqual(max);
     }
+  });
+});
+
+describe("vendor marks", () => {
+  it("has a mark for every organization present in the data", () => {
+    // A missing mark silently degrades to a generic circle, which looks like a
+    // design choice rather than a gap. Arena's names are not guessable from the
+    // model prefix — grok is "SpaceXAI", muse-spark is "Meta".
+    const orgs = new Set(
+      computeRanking(snap, DEFAULT_SETTINGS).all.map((s) => s.organization),
+    );
+    expect([...orgs].filter((o) => canonicalVendor(o) === null)).toEqual([]);
   });
 });
