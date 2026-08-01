@@ -132,7 +132,16 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     const top = PAD.top + 8;
     const bottom = H - PAD.bottom - 8;
 
-    const items = families
+    // Only models that actually cleared the gate carry a permanent label. At the
+    // high-power tier that is three lines instead of eighteen, and the density
+    // now tracks the tier the reader chose rather than staying maximal always.
+    // Everything else names itself on hover, where `focus` has already dimmed
+    // the field down to the one line being read.
+    const relevant = families.filter(
+      (f) => f.configs.some((s) => s.qualified) || f.model === focus,
+    );
+
+    const items = relevant
       .map((f) => {
         const isWinner = f.model === winner?.config.model;
         const cx = x(metric.get(f.anchor));
@@ -175,7 +184,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
       for (const l of items) l.ly = Math.min(bottom, Math.max(top, l.ly));
     }
     return items;
-  }, [families, x, y, winner, metric]);
+  }, [families, x, y, winner, metric, focus]);
 
   const floorY = y(ranking.settings.shipFloor);
   const dim = (model: string) => focus !== null && focus !== model;
@@ -254,8 +263,11 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
         <Key color="var(--rank-2)">🥈 Runner-up</Key>
         <Key color="var(--rank-3)">🥉 Third</Key>
         <Key color="var(--text-muted)" faded>
-          Everything else
+          {all.length - ranking.qualified.length} gated out
         </Key>
+        <span className="ml-auto" style={{ color: "var(--text-muted)" }}>
+          Hover any line to name it
+        </span>
       </div>
 
       <div className="relative">
@@ -281,12 +293,24 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             </radialGradient>
           </defs>
 
+          {/* Two zones, not one. The accent wash marks where a config is still in
+              contention; the flat scrim below the floor pushes the gated-out
+              majority visually behind it, which is most of what made this chart
+              feel crowded — 46 of 50 marks live down there. */}
           <rect
             x={PAD.left}
             y={PAD.top}
             width={plotW}
             height={Math.max(0, floorY - PAD.top)}
             fill="url(#bb-zone)"
+          />
+          <rect
+            x={PAD.left}
+            y={floorY}
+            width={plotW}
+            height={Math.max(0, H - PAD.bottom - floorY)}
+            fill="var(--page)"
+            opacity={0.35}
           />
 
           {[0, 0.2, 0.4, 0.6, 0.8].map((t) => (
@@ -424,9 +448,9 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                 <circle
                   cx={cx}
                   cy={cy}
-                  r={isWinner ? 7 : medalled ? 5.5 : isHover ? 6 : tier ? 4.5 : 3.5}
+                  r={isWinner ? 7 : medalled ? 5.5 : isHover ? 6 : tier ? 4.5 : s.qualified ? 4 : 3}
                   fill={tier ? tier.color : "var(--text-secondary)"}
-                  fillOpacity={medalled ? 1 : tier ? 0.8 : 0.45}
+                  fillOpacity={medalled ? 1 : tier ? 0.8 : s.qualified ? 0.55 : 0.3}
                   stroke="var(--surface-1)"
                   strokeWidth={1.75}
                   // Hover is resolved by nearest-point on the SVG, so marks must
@@ -503,15 +527,27 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           </text>
         </svg>
 
-        {hover && (
+        {hover && (() => {
+          // The medal sits ABOVE its point, so a fixed offset put the card right
+          // on top of the crown — hovering the winner hid the very thing that
+          // marks it. Clear the medal's own height, and flip the card below the
+          // point when there is not enough room above it.
+          const medal = podium.byConfig.get(hover.label);
+          const isWinnerHover = winner?.label === hover.label;
+          const clearance = medal ? (isWinnerHover ? 36 : 30) : 16;
+          const py = y(hover.config.passAt1);
+          const below = py < 190;
+          return (
           <div
             className="pointer-events-none absolute z-10 rounded-md border px-3 py-2 text-xs shadow-xl"
             style={{
               borderColor: "var(--border)",
               background: "var(--surface-2)",
               left: `${(x(metric.get(hover)) / W) * 100}%`,
-              top: `${(y(hover.config.passAt1) / H) * 100}%`,
-              transform: "translate(-50%, calc(-100% - 16px))",
+              top: `${(py / H) * 100}%`,
+              transform: below
+                ? `translate(-50%, ${medal ? 14 : 16}px)`
+                : `translate(-50%, calc(-100% - ${clearance}px))`,
               minWidth: 186,
             }}
           >
@@ -530,7 +566,8 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               />
             </div>
           </div>
-        )}
+          );
+        })()}
       </div>
     </figure>
   );

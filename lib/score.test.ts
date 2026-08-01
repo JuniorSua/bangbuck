@@ -3,6 +3,7 @@ import snapshot from "../data/snapshot.json";
 import {
   computeRanking,
   craftElo,
+  craftFloorRegimes,
   craftEloOf,
   craftProbability,
   DEFAULT_SETTINGS,
@@ -126,6 +127,56 @@ describe("the Craft gate — the reason this version exists", () => {
     const at = (w: number) =>
       computeRanking(snap, { ...DEFAULT_SETTINGS, craftWeight: w }).qualified[0].bb;
     expect(Math.abs(at(0.7) / at(0.5) - 1)).toBeLessThan(0.05);
+  });
+});
+
+describe("craftFloorRegimes", () => {
+  it("collapses the whole Craft sweep into a handful of stable answers", () => {
+    const r = craftFloorRegimes(snap, EVERYDAY);
+    expect(r.map((x) => x.winner?.label)).toEqual([
+      "gpt-5.6-luna [max]",
+      "gpt-5.6-sol [high]",
+      "claude-opus-5 [medium]",
+      "kimi-k3 [max]",
+      "claude-opus-5 [xhigh]",
+    ]);
+  });
+
+  it("covers 0..1 with no gaps and no overlaps", () => {
+    // The bands are a partition, not a sample — a gap would mean some floor the
+    // reader can select has no answer shown for it.
+    for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
+      const r = craftFloorRegimes(snap, settings);
+      expect(r[0].from).toBe(0);
+      expect(r[r.length - 1].to).toBe(1);
+      for (let i = 1; i < r.length; i++) expect(r[i].from).toBe(r[i - 1].to);
+    }
+  });
+
+  it("never lists the same winner in two adjacent bands", () => {
+    for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
+      const r = craftFloorRegimes(snap, settings);
+      for (let i = 1; i < r.length; i++) {
+        expect(r[i].winner?.label).not.toBe(r[i - 1].winner?.label);
+      }
+    }
+  });
+
+  it("agrees with computeRanking at every band's own floor", () => {
+    // The exhibit is a control as well as a picture: clicking a band sets that
+    // floor, so the band's claim and the resulting ranking must not disagree.
+    for (const band of craftFloorRegimes(snap, EVERYDAY)) {
+      const r = computeRanking(snap, { ...EVERYDAY, craftFloor: band.from });
+      expect(r.qualified[0]?.label).toBe(band.winner?.label);
+      expect(r.qualified).toHaveLength(band.qualifiedCount);
+    }
+  });
+
+  it("shrinks the qualifying field monotonically as the bar rises", () => {
+    const r = craftFloorRegimes(snap, EVERYDAY);
+    for (let i = 1; i < r.length; i++) {
+      expect(r[i].qualifiedCount).toBeLessThan(r[i - 1].qualifiedCount);
+    }
   });
 });
 

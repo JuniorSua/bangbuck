@@ -373,6 +373,53 @@ function buildInsights(all: ScoredConfig[], qualified: ScoredConfig[]): Insights
   };
 }
 
+/** One band of Craft floors over which the winner does not change. */
+export interface CraftRegime {
+  /** Inclusive lower bound of the band, 0..1. */
+  from: number;
+  /** Exclusive upper bound. */
+  to: number;
+  winner: ScoredConfig | null;
+  qualifiedCount: number;
+}
+
+/**
+ * The Craft floor swept end to end, collapsed into the bands where the answer is
+ * actually stable.
+ *
+ * This exists because the single most useful thing learned while building the
+ * two-axis version is invisible in any one ranking: the winner is not a fact
+ * about the data, it is a fact about how much you demand. Raise the bar past a
+ * threshold and the answer changes identity — and those thresholds are few and
+ * far apart, which is worth showing rather than asserting.
+ *
+ * Breakpoints can only occur AT a craft value present in the data: between two
+ * adjacent values no config enters or leaves, so the qualified set is fixed.
+ * Evaluating at each distinct value therefore gives exact bands in ~30 passes
+ * rather than approximating with a fine scan.
+ */
+export function craftFloorRegimes(snapshot: Snapshot, settings: Settings): CraftRegime[] {
+  const base = computeRanking(snapshot, { ...settings, craftFloor: 0 });
+  const values = [...new Set(base.all.map((s) => s.craft).filter((c): c is number => c !== null))]
+    .sort((a, b) => a - b);
+  if (!values.length) return [];
+
+  const points = [0, ...values];
+  const out: CraftRegime[] = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const from = points[i];
+    const to = i + 1 < points.length ? points[i + 1] : 1;
+    const r = computeRanking(snapshot, { ...settings, craftFloor: from });
+    const winner = r.qualified[0] ?? null;
+    const last = out[out.length - 1];
+    // Merge into the previous band when the answer has not moved.
+    if (last && last.winner?.label === winner?.label) last.to = to;
+    else out.push({ from, to, winner, qualifiedCount: r.qualified.length });
+  }
+  return out;
+}
+
 /** The raw WebDev Elo behind a config's Craft score. */
 export function craftEloOf(s: ScoredConfig): number {
   return s.craftMatch.kind === "none" ? 0 : s.craftMatch.entry.rating;

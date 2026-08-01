@@ -74,11 +74,39 @@ noise, and the UI says so rather than pretending it is a ranking.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
 At 0.20 they act as a tiebreaker between configs of similar capability and price.
 
+### The regime bar
+
+`craftFloorRegimes` sweeps the Craft floor end to end and collapses it into the few bands where the
+winner does not change. At the everyday bar that is the whole history of this project in one row:
+
+```
+any–67%  gpt-5.6-luna [max]        15 qualify   <- what v1 answered
+67%–78%  gpt-5.6-sol [high]        12 qualify
+78%–82%  claude-opus-5 [medium]     9 qualify   <- the original hand-pick
+82%–84%  kimi-k3 [max]              3 qualify
+84%–100% claude-opus-5 [xhigh]      2 qualify
+```
+
+Breakpoints can only fall ON a craft value present in the data — between two adjacent values no
+config enters or leaves — so the bands are computed exactly in ~30 passes rather than approximated
+by a fine scan. The bands are clickable and set the floor, so the exhibit doubles as the fastest
+control on the page.
+
 The chart's **metric tabs** are not decoration. Cost / Output tokens / Agent steps are exactly the
 inputs the formula consumes, so switching tabs shows *which* one carries a given model's rank. The
 fourth tab, Craft, plots the two capability axes against each other and draws both floors — only
 the upper-right quadrant competes, which is the whole argument in one picture. Every axis runs
 better-to-the-right, so a tab change never flips the reader's sense of which way is good.
+
+---
+
+## Sharing a tuned view
+
+Settings live in the query string, so "here is the same data under my assumptions" is a link:
+`?s=` ship floor, `c=` craft floor, `w=` craft weight, `b=` beta, `g=` gamma. Only knobs moved off
+default appear. Values outside 0..1 are ignored rather than trusted, so a hand-edited URL cannot
+render a nonsense ranking. Written with `replaceState` so dragging a slider does not fill the back
+button.
 
 ---
 
@@ -136,6 +164,8 @@ lib/normalize.ts        Name joining. craftFor() resolves a config to a WebDev E
 lib/metrics.ts          The four chart axes + readable tick generation (zero-anchored and fitted).
 lib/vendors.ts          Canonical vendor names + aliases. Asserted against the data by a test.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
+                        TradeoffBar.tsx is the regime bar; BudgetStrip.tsx converts to $/month.
+                        Dashboard.tsx owns tuning state and mirrors it into the URL.
                         Hero.tsx is the oversized wordmark and meta strip.
                         VendorMark.tsx draws the company marks — see the note below.
 data/snapshot.json      The source of truth. Committed.
