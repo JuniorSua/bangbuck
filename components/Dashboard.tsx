@@ -7,10 +7,9 @@ import { WinnerCard } from "./WinnerCard";
 import { Controls } from "./Controls";
 import { RankTable } from "./RankTable";
 import { ScatterChart } from "./ScatterChart";
-import { TradeoffBar } from "./TradeoffBar";
-import { BudgetStrip } from "./BudgetStrip";
 import { DataProvenance } from "./DataProvenance";
 import { Hero } from "./Hero";
+import { SectionHead } from "./SectionHead";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -69,16 +68,41 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
     <main className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
       <Hero snapshot={snapshot} />
 
-      <div className="space-y-8">
-        <WinnerCard insights={ranking.insights} />
-        <Controls settings={settings} onChange={setSettings} />
-        <TradeoffBar snapshot={snapshot} settings={settings} onChange={setSettings} />
-        <div className="card p-6 sm:p-7">
+      {/* One argument in order, not five widgets: the answer, the bar it had to
+          clear, what paying more buys, everything that lost, and the receipts. */}
+      <div className="space-y-14">
+        <section>
+          <SectionHead n={1} title="The answer" aside="at the bar set below" />
+          <WinnerCard insights={ranking.insights} />
+        </section>
+
+        <section>
+          <SectionHead n={2} title="Set your bar" aside="the formula is a judgment call" />
+          <Controls settings={settings} onChange={setSettings} />
+        </section>
+
+        <section>
+          <SectionHead
+            n={3}
+            title="What paying more actually buys"
+            aside={`${ranking.qualified.length} of ${ranking.all.length} still standing`}
+          />
           <ScatterChart ranking={ranking} />
-        </div>
-        <BudgetStrip ranking={ranking} />
-        <RankTable ranking={ranking} />
-        <DataProvenance snapshot={snapshot} />
+        </section>
+
+        <section>
+          <SectionHead
+            n={4}
+            title="Every configuration, winners and losers"
+            aside="dimmed rows failed a floor"
+          />
+          <RankTable ranking={ranking} />
+        </section>
+
+        <section>
+          <SectionHead n={5} title="Where the numbers come from" aside="nothing here is measured by us" />
+          <DataProvenance snapshot={snapshot} />
+        </section>
       </div>
 
       <footer className="mt-10 border-t pt-6 text-xs" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>

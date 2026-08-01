@@ -36,15 +36,6 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
 
   return (
     <section>
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="tight text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-          All {ranking.all.length} configurations
-        </h2>
-        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-          {ranking.qualified.length} clear both floors · dimmed rows do not
-        </p>
-      </div>
-
       <div className="card overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

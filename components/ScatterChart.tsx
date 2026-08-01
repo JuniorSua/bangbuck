@@ -228,18 +228,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   return (
     <figure className="m-0">
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <figcaption
-            className="text-lg font-semibold tight"
-            style={{ color: "var(--text-primary)" }}
-          >
-            What each model costs to run well
-          </figcaption>
-          <p className="mt-1.5 max-w-lg text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-            Every line is one model traced through its reasoning-effort settings. A line that climbs
-            steeply is a model where paying more actually buys score; a flat one is money wasted.
-          </p>
-        </div>
+        <figcaption className="max-w-lg text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          Every line is one model traced through its reasoning-effort settings. A line that climbs
+          steeply is a model where paying more actually buys score; a flat one is money wasted.
+        </figcaption>
 
         {/* The three tabs are the three inputs to the formula. Switching them
             shows which one is carrying a given model's rank. */}

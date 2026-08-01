@@ -232,6 +232,168 @@ describe("the floors", () => {
   });
 });
 
+describe("invariants that must hold at any setting", () => {
+  // Swept rather than spot-checked: the floors are user-controllable, so a
+  // setting nobody chose by hand still has to produce a coherent ranking.
+  const sweep = [0.5, 0.6, 0.65, 0.7, 0.725, 0.75].flatMap((shipFloor) =>
+    [0.5, 0.6, 0.7, 0.75, 0.8].map((craftFloor) =>
+      computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor, craftFloor }),
+    ),
+  );
+
+  it("never produces a NaN or infinite score", () => {
+    for (const r of sweep) {
+      for (const s of r.all) {
+        expect(Number.isFinite(s.bb)).toBe(true);
+        expect(Number.isFinite(s.ship)).toBe(true);
+        if (s.capability !== null) expect(Number.isFinite(s.capability)).toBe(true);
+      }
+    }
+  });
+
+  it("keeps combined capability inside 0..1", () => {
+    // Both inputs are probabilities, so their geometric blend must be one too.
+    // A capability above 1 would mean a term escaped its scale.
+    for (const r of sweep) {
+      for (const s of r.all) {
+        if (s.capability === null) continue;
+        expect(s.capability).toBeGreaterThan(0);
+        expect(s.capability).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
+  it("admits nothing that fails either floor", () => {
+    for (const r of sweep) {
+      for (const s of r.qualified) {
+        expect(s.ship).toBeGreaterThanOrEqual(r.settings.shipFloor);
+        expect(s.craft!).toBeGreaterThanOrEqual(r.settings.craftFloor);
+        expect(s.failed).toBeNull();
+      }
+    }
+  });
+
+  it("returns qualified configs in descending BangBuck order", () => {
+    for (const r of sweep) {
+      for (let i = 1; i < r.qualified.length; i++) {
+        expect(r.qualified[i - 1].bb).toBeGreaterThanOrEqual(r.qualified[i].bb);
+        expect(r.qualified[i].rank).toBe(i + 1);
+      }
+    }
+  });
+
+  it("never grows the field when a floor is raised", () => {
+    // Monotonicity is the property that makes the floors mean what they say.
+    const at = (shipFloor: number, craftFloor: number) =>
+      computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor, craftFloor }).qualified.length;
+    for (const cf of [0.5, 0.7, 0.8]) {
+      const counts = [0.5, 0.6, 0.65, 0.7, 0.725, 0.75].map((sf) => at(sf, cf));
+      for (let i = 1; i < counts.length; i++) expect(counts[i]).toBeLessThanOrEqual(counts[i - 1]);
+    }
+    for (const sf of [0.5, 0.65, 0.725]) {
+      const counts = [0.5, 0.6, 0.7, 0.75, 0.8].map((cf) => at(sf, cf));
+      for (let i = 1; i < counts.length; i++) expect(counts[i]).toBeLessThanOrEqual(counts[i - 1]);
+    }
+  });
+
+  it("never crowns a dominated config at the high-power tier", () => {
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const w = r.qualified[0];
+    const dominated = r.qualified.some(
+      (o) => o !== w && o.config.meanCostUsd <= w.config.meanCostUsd && o.capability! > w.capability!,
+    );
+    expect(dominated).toBe(false);
+  });
+
+  it("DOES crown a dominated config at the everyday tier — a known weakness", () => {
+    // Pinned deliberately rather than hidden. gpt-5.6-sol [high] wins the
+    // everyday tier while claude-opus-5 [medium] is BOTH cheaper ($3.29 vs
+    // $3.47) and more capable (0.762 vs 0.740). Sol only wins on the token and
+    // step penalties — 28k/37 against 37k/52 — which means a tiebreaker meant
+    // to stand in for wall-clock time is overturning both axes the formula
+    // claims to rank on.
+    //
+    // Left as-is because the penalties are the user's stated judgment and the
+    // gap is 4%, which the UI already reports as a tie rather than a ranking.
+    // If this test ever starts failing, the penalties were retuned and the
+    // everyday answer moved to claude-opus-5 [medium] — check that was intended.
+    const r = computeRanking(snap, EVERYDAY);
+    const [winner, second] = r.qualified;
+    expect(winner.label).toBe("gpt-5.6-sol [high]");
+    expect(second.label).toBe("claude-opus-5 [medium]");
+    expect(second.config.meanCostUsd).toBeLessThan(winner.config.meanCostUsd);
+    expect(second.capability!).toBeGreaterThan(winner.capability!);
+    expect(winner.bb / second.bb).toBeLessThan(1.05);
+  });
+
+  it("puts claude-opus-5 [medium] first once the penalties are switched off", () => {
+    // The same finding from the other side: with beta and gamma at zero, the
+    // everyday tier ranks on capability and price alone and the order reverses.
+    const r = computeRanking(snap, { ...EVERYDAY, beta: 0, gamma: 0 });
+    expect(r.qualified[0].label).toBe("claude-opus-5 [medium]");
+  });
+
+  it("is deterministic", () => {
+    const a = computeRanking(snap, DEFAULT_SETTINGS).all.map((s) => `${s.label}:${s.bb}`);
+    const b = computeRanking(snap, DEFAULT_SETTINGS).all.map((s) => `${s.label}:${s.bb}`);
+    expect(a).toEqual(b);
+  });
+
+  it("carries confidence bounds that actually bracket the score", () => {
+    for (const c of snap.deepswe.configs) {
+      expect(c.ciLo).toBeLessThanOrEqual(c.passAt1);
+      expect(c.ciHi).toBeGreaterThanOrEqual(c.passAt1);
+    }
+  });
+});
+
+describe("robustness of the two headline answers", () => {
+  const winnerAt = (s: Partial<typeof DEFAULT_SETTINGS>, base = DEFAULT_SETTINGS) =>
+    computeRanking(snap, { ...base, ...s }).qualified[0]?.label;
+
+  it("holds claude-opus-5 [high] at high power across every penalty setting", () => {
+    for (const b of [0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.6]) {
+      expect(winnerAt({ beta: b, gamma: b })).toBe("claude-opus-5 [high]");
+    }
+  });
+
+  it("holds it across every craft weight from 0 to 1", () => {
+    for (const w of [0, 0.2, 0.4, 0.5, 0.6, 0.8, 1]) {
+      expect(winnerAt({ craftWeight: w })).toBe("claude-opus-5 [high]");
+    }
+  });
+
+  it("keeps the everyday top two a tie under any craft weight", () => {
+    // Reported as a tie on the site, so it has to stay one — if some weight
+    // separated them, the copy would be wrong rather than cautious.
+    for (const craftWeight of [0, 0.3, 0.6, 1]) {
+      const r = computeRanking(snap, { ...EVERYDAY, craftWeight });
+      const gap = r.qualified[0].bb / r.qualified[1].bb;
+      expect(gap).toBeLessThan(1.1);
+      expect([r.qualified[0].label, r.qualified[1].label].sort()).toEqual([
+        "claude-opus-5 [medium]",
+        "gpt-5.6-sol [high]",
+      ]);
+    }
+  });
+
+  it("agrees with the winner's own arithmetic", () => {
+    // Recompute the headline from raw snapshot fields, bypassing every helper.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const w = r.qualified[0];
+    const minTok = Math.min(...snap.deepswe.configs.map((c) => c.meanOutputTokens));
+    const minStep = Math.min(...snap.deepswe.configs.map((c) => c.meanAgentSteps));
+    const craft = 1 / (1 + Math.pow(10, (r.referenceElo - craftEloOf(w)) / 400));
+    const k = Math.pow(w.config.passAt1, 0.4) * Math.pow(craft, 0.6);
+    const bb =
+      (k * 100) /
+      (w.config.meanCostUsd *
+        Math.pow(w.config.meanOutputTokens / minTok, 0.2) *
+        Math.pow(w.config.meanAgentSteps / minStep, 0.2));
+    expect(w.bb).toBeCloseTo(bb, 10);
+  });
+});
+
 describe("why-it-won insights", () => {
   const { insights } = computeRanking(snap, DEFAULT_SETTINGS);
 

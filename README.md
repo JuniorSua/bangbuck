@@ -74,10 +74,26 @@ noise, and the UI says so rather than pretending it is a ranking.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
 At 0.20 they act as a tiebreaker between configs of similar capability and price.
 
+### A known weakness, pinned by a test
+
+At the everyday tier the winner is **dominated**: `claude-opus-5 [medium]` is both cheaper ($3.29 vs
+$3.47) and more capable (0.762 vs 0.740) than `gpt-5.6-sol [high]`, which wins only on the token and
+step penalties (28k/37 against 37k/52). A tiebreaker standing in for wall-clock time is overturning
+both axes the formula claims to rank on.
+
+Left as-is: the penalties are a deliberate judgment call, the gap is 4%, and the UI reports it as a
+tie rather than a ranking. Set `beta = gamma = 0` and the order reverses. Two tests pin this so it
+stays a decision rather than an accident — if they start failing, the penalties were retuned and the
+everyday answer moved.
+
+The high-power tier has no such problem: `claude-opus-5 [high]` is dominated by nothing, and holds
+first place across every penalty setting from 0 to 0.6 and every craft weight from 0 to 1.
+
 ### The regime bar
 
 `craftFloorRegimes` sweeps the Craft floor end to end and collapses it into the few bands where the
-winner does not change. At the everyday bar that is the whole history of this project in one row:
+winner does not change — printed by `npx tsx scripts/tiers.ts`. At the everyday bar that is the
+whole history of this project in one row:
 
 ```
 any–67%  gpt-5.6-luna [max]        15 qualify   <- what v1 answered
@@ -89,8 +105,7 @@ any–67%  gpt-5.6-luna [max]        15 qualify   <- what v1 answered
 
 Breakpoints can only fall ON a craft value present in the data — between two adjacent values no
 config enters or leaves — so the bands are computed exactly in ~30 passes rather than approximated
-by a fine scan. The bands are clickable and set the floor, so the exhibit doubles as the fastest
-control on the page.
+by a fine scan.
 
 The chart's **metric tabs** are not decoration. Cost / Output tokens / Agent steps are exactly the
 inputs the formula consumes, so switching tabs shows *which* one carries a given model's rank. The
@@ -156,7 +171,7 @@ polling on a timer is wasted work. The plan is event-driven instead — see *Not
 
 ```
 lib/score.ts            The formula. PURE — no I/O. This is the piece that encodes the judgment call.
-lib/score.test.ts       40 golden tests. The numbers here were verified by hand before any code existed.
+lib/score.test.ts       59 golden tests. The numbers here were verified by hand before any code existed.
 lib/sources/deepswe.ts  Scrapes the live SSR page (seroval-serialised TanStack payload). Read the trap above.
 lib/sources/arena.ts    Scrapes arena.ai's RSC flight payloads — both boards. See ARENA_BOARDS.
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
@@ -164,8 +179,8 @@ lib/normalize.ts        Name joining. craftFor() resolves a config to a WebDev E
 lib/metrics.ts          The four chart axes + readable tick generation (zero-anchored and fitted).
 lib/vendors.ts          Canonical vendor names + aliases. Asserted against the data by a test.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
-                        TradeoffBar.tsx is the regime bar; BudgetStrip.tsx converts to $/month.
                         Dashboard.tsx owns tuning state and mirrors it into the URL.
+                        SectionHead.tsx numbers the page so it reads as one argument.
                         Hero.tsx is the oversized wordmark and meta strip.
                         VendorMark.tsx draws the company marks — see the note below.
 data/snapshot.json      The source of truth. Committed.

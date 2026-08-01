@@ -5,7 +5,13 @@
  *   npx tsx scripts/tiers.ts
  */
 import snapshot from "../data/snapshot.json";
-import { computeRanking, craftEloOf, DEFAULT_SETTINGS, TIER_PRESETS } from "../lib/score";
+import {
+  computeRanking,
+  craftEloOf,
+  craftFloorRegimes,
+  DEFAULT_SETTINGS,
+  TIER_PRESETS,
+} from "../lib/score";
 import type { Snapshot } from "../lib/types";
 
 const snap = snapshot as unknown as Snapshot;
@@ -34,6 +40,20 @@ for (const tier of TIER_PRESETS) {
       `     craft gate removed ${i.bestExcludedOnCraft.label} ` +
         `($${i.bestExcludedOnCraft.config.meanCostUsd.toFixed(2)}); winner preferred ` +
         `${((i.winnerPreferredOverExcluded ?? 0) * 100).toFixed(0)}% of the time`,
+    );
+  }
+}
+
+// How much does the answer depend on the Craft floor rather than on the data?
+// Collapsed into the bands where the winner is stable, which is the fastest way
+// to see whether a retune moved a threshold it should not have.
+console.log("\n=== Craft floor sweep, ship held at each tier ===");
+for (const tier of TIER_PRESETS) {
+  console.log(`\n  ${tier.label} (ship >= ${(tier.shipFloor * 100).toFixed(1)}%)`);
+  for (const r of craftFloorRegimes(snap, { ...DEFAULT_SETTINGS, shipFloor: tier.shipFloor })) {
+    console.log(
+      `    craft ${(r.from * 100).toFixed(0).padStart(3)}%-${(r.to * 100).toFixed(0).padStart(3)}%` +
+        `  ->  ${(r.winner?.label ?? "nothing qualifies").padEnd(24)} (${r.qualifiedCount} qualify)`,
     );
   }
 }

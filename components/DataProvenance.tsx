@@ -7,11 +7,7 @@ import { shortDate } from "@/lib/format";
  */
 export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
   return (
-    <section className="card p-6">
-      <h2 className="mb-4 tight text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-        Where these numbers come from
-      </h2>
-
+    <section>
       <div className="grid gap-4 sm:grid-cols-2">
         <Source
           name="DeepSWE"

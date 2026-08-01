@@ -29,10 +29,7 @@ export function Controls({
     <section className="card p-6">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="tight text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-            How good does it have to be?
-          </h2>
-          <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
             {activePreset?.blurb ?? "Custom floors — set below."}
           </p>
         </div>
