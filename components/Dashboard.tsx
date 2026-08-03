@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { computeRanking, DEFAULT_SETTINGS, type Settings } from "@/lib/score";
 import type { Snapshot } from "@/lib/types";
 import { WinnerCard } from "./WinnerCard";
@@ -10,6 +10,7 @@ import { ScatterChart } from "./ScatterChart";
 import { DataProvenance } from "./DataProvenance";
 import { Hero } from "./Hero";
 import { SectionHead } from "./SectionHead";
+import { StickyAnswer } from "./StickyAnswer";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -64,14 +65,18 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
     window.history.replaceState(null, "", next ? `?${next}` : window.location.pathname);
   }, [settings]);
 
+  // Watched by the sticky bar, which reveals itself once this scrolls past.
+  const answerRef = useRef<HTMLElement>(null);
+
   return (
     <main className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
+      <StickyAnswer ranking={ranking} watch={answerRef} />
       <Hero snapshot={snapshot} />
 
       {/* One argument in order, not five widgets: the answer, the bar it had to
           clear, what paying more buys, everything that lost, and the receipts. */}
       <div className="space-y-14">
-        <section>
+        <section ref={answerRef}>
           <SectionHead n={1} title="The answer" aside="at the bar set below" />
           <WinnerCard insights={ranking.insights} />
         </section>

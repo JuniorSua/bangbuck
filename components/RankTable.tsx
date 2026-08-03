@@ -26,6 +26,10 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
     return desc ? -v : v;
   });
 
+  // The bars are drawn against the best score, not the widest visible one, so a
+  // re-sort never rescales them and the winner's bar always reads as full.
+  const topBb = Math.max(...ranking.qualified.map((s) => s.bb), 0);
+
   const toggle = (k: SortKey) => {
     if (k === sort) setDesc(!desc);
     else {
@@ -36,10 +40,16 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
 
   return (
     <section>
-      <div className="card overflow-x-auto">
+      {/* max-h + sticky thead: fifty rows is longer than any viewport, and a
+          header that scrolls away turns the lower two-thirds into unlabelled
+          numbers. */}
+      <div className="card max-h-[70vh] overflow-auto">
         <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b" style={{ borderColor: "var(--border)" }}>
+          <thead
+            className="sticky top-0 z-10"
+            style={{ background: "var(--surface-1)", boxShadow: "0 1px 0 0 var(--border)" }}
+          >
+            <tr>
               <Th>#</Th>
               <Th align="left">Model</Th>
               <Th sortable active={sort === "bb"} desc={desc} onClick={() => toggle("bb")}>
@@ -54,17 +64,17 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
               <Th sortable active={sort === "cost"} desc={desc} onClick={() => toggle("cost")}>
                 Cost
               </Th>
-              <Th sortable active={sort === "tokens"} desc={desc} onClick={() => toggle("tokens")}>
+              <Th sortable active={sort === "tokens"} desc={desc} onClick={() => toggle("tokens")} hideOnPhone>
                 Out tok
               </Th>
-              <Th sortable active={sort === "steps"} desc={desc} onClick={() => toggle("steps")}>
+              <Th sortable active={sort === "steps"} desc={desc} onClick={() => toggle("steps")} hideOnPhone>
                 Steps
               </Th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((s) => (
-              <Row key={s.label} s={s} isWinner={s.rank === 1} />
+              <Row key={s.label} s={s} isWinner={s.rank === 1} topBb={topBb} />
             ))}
           </tbody>
         </table>
@@ -84,19 +94,22 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
   );
 }
 
-function Row({ s, isWinner }: { s: ScoredConfig; isWinner: boolean }) {
+function Row({ s, isWinner, topBb }: { s: ScoredConfig; isWinner: boolean; topBb: number }) {
   const c = s.config;
   const dim = !s.qualified;
   return (
     <tr
-      className="border-b last:border-0"
+      className="row border-b last:border-0"
       style={{
         borderColor: "var(--border)",
         opacity: dim ? 0.42 : 1,
         background: isWinner ? "rgba(57,135,229,0.08)" : undefined,
       }}
     >
-      <td className="px-3 py-2.5 tnum text-xs" style={{ color: "var(--text-muted)" }}>
+      <td
+        className="px-3 py-2.5 tnum text-xs"
+        style={{ color: isWinner ? "var(--accent)" : "var(--text-muted)" }}
+      >
         {s.rank ?? "—"}
       </td>
       <td className="whitespace-nowrap px-3 py-2.5">
@@ -125,9 +138,38 @@ function Row({ s, isWinner }: { s: ScoredConfig; isWinner: boolean }) {
           )}
         </span>
       </td>
-      <Td accent={isWinner} bold>
-        {s.qualified ? s.bb.toFixed(2) : "—"}
-      </Td>
+      {/* The number and its share of the best score, together. Fifty rows of
+          bare figures do not rank themselves; a bar the eye can run down does
+          the comparing before any of them are actually read. */}
+      <td className="whitespace-nowrap px-3 py-2.5 text-right">
+        <span
+          className="tnum text-sm font-semibold"
+          style={{ color: isWinner ? "var(--accent)" : "var(--text-secondary)" }}
+        >
+          {s.qualified ? s.bb.toFixed(2) : "—"}
+        </span>
+        <span
+          className="mt-1 block h-[3px] overflow-hidden rounded-full"
+          style={{ background: s.qualified ? "var(--baseline)" : "transparent" }}
+          aria-hidden="true"
+        >
+          {s.qualified && topBb > 0 && (
+            <span
+              className="bb-bar"
+              style={{
+                // Rounded, and not only for tidiness. The browser truncates CSS
+                // percentages when it parses them, so a raw float renders as
+                // 73.54960673390156% on the client and reads back as 73.5496%
+                // from the server's HTML — which React reports as a hydration
+                // mismatch. Two decimals is already finer than a 116px bar can
+                // draw.
+                width: `${Math.max(2, (s.bb / topBb) * 100).toFixed(2)}%`,
+                background: isWinner ? "var(--accent)" : "var(--text-muted)",
+              }}
+            />
+          )}
+        </span>
+      </td>
       <Td warn={s.failed === "ship" || s.failed === "both"}>
         {pct(s.ship, 1)}
         <span className="ml-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
@@ -153,8 +195,8 @@ function Row({ s, isWinner }: { s: ScoredConfig; isWinner: boolean }) {
         )}
       </Td>
       <Td>{usdPrecise(c.meanCostUsd)}</Td>
-      <Td>{tokens(c.meanOutputTokens)}</Td>
-      <Td>{steps(c.meanAgentSteps)}</Td>
+      <Td hideOnPhone>{tokens(c.meanOutputTokens)}</Td>
+      <Td hideOnPhone>{steps(c.meanAgentSteps)}</Td>
     </tr>
   );
 }
@@ -166,10 +208,12 @@ function Th({
   active,
   desc,
   onClick,
+  hideOnPhone,
 }: {
   children: React.ReactNode;
   align?: "left" | "right";
   sortable?: boolean;
+  hideOnPhone?: boolean;
   active?: boolean;
   desc?: boolean;
   onClick?: () => void;
@@ -178,7 +222,7 @@ function Th({
     <th
       className={`px-3 py-2.5 text-xs font-medium uppercase tracking-[0.08em] ${
         align === "left" ? "text-left" : "text-right"
-      }`}
+      } ${hideOnPhone ? "hidden sm:table-cell" : ""}`}
       style={{ color: active ? "var(--text-secondary)" : "var(--text-muted)" }}
     >
       {sortable ? (
@@ -199,17 +243,21 @@ function Td({
   bold,
   muted,
   warn,
+  hideOnPhone,
 }: {
   children: React.ReactNode;
   accent?: boolean;
   bold?: boolean;
   muted?: boolean;
+  hideOnPhone?: boolean;
   /** This is the value that failed its floor — the reason the row is dimmed. */
   warn?: boolean;
 }) {
   return (
     <td
-      className={`whitespace-nowrap px-3 py-2.5 text-right tnum ${bold ? "font-semibold" : ""}`}
+      className={`whitespace-nowrap px-3 py-2.5 text-right tnum ${bold ? "font-semibold" : ""} ${
+        hideOnPhone ? "hidden sm:table-cell" : ""
+      }`}
       style={{
         color: accent
           ? "var(--accent)"

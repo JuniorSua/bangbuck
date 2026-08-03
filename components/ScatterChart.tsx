@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
 import {
   LOG_COST_TICKS,
@@ -35,14 +35,52 @@ const PAD = { top: 34, right: 30, bottom: 58, left: 56 };
 const LABEL_GAP = 14.5;
 
 export function ScatterChart({ ranking }: { ranking: Ranking }) {
+  /**
+   * The SVG has a fixed 860-unit viewBox scaled to fit its container, so on a
+   * 390px phone every label was rendering at about 4.8 real pixels — legible in
+   * the code, invisible on the device. Font sizes are therefore multiplied by the
+   * inverse of that scale, which keeps them at a constant PHYSICAL size no matter
+   * how wide the chart is drawn.
+   *
+   * Enlarging type inside a fixed viewBox costs room, so past a threshold the
+   * chart also thins itself out: fewer ticks, no legend, and only the winner
+   * keeps a label. A phone gets the shape of the argument, not the whole atlas.
+   */
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      const px = el.getBoundingClientRect().width;
+      if (px > 0) setScale(Math.min(2.4, Math.max(1, W / px)));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const fs = (base: number) => Math.round(base * scale * 10) / 10;
+  const narrow = scale > 1.45;
+  // Gutters have to grow with the type or the enlarged axis labels clip.
+  const pad = useMemo(
+    () => ({
+      top: PAD.top * (narrow ? 1.15 : 1),
+      right: PAD.right * (narrow ? 1.4 : 1),
+      bottom: PAD.bottom * (narrow ? 1.25 : 1),
+      left: PAD.left * (narrow ? 1.45 : 1),
+    }),
+    [narrow],
+  );
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
   const [hover, setHover] = useState<ScoredConfig | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
   const [metricId, setMetricId] = useState<MetricId>("cost");
   const metric = metricById(metricId);
 
   const all = ranking.all;
-  const plotW = W - PAD.left - PAD.right;
-  const plotH = H - PAD.top - PAD.bottom;
   const winner = ranking.qualified[0] ?? null;
 
   const { x, y, families, ticks } = useMemo(() => {
@@ -57,22 +95,22 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     if (metric.scale === "log") {
       const lo = Math.log10(min * 0.75);
       const hi = Math.log10(max * 1.25);
-      x = (v) => PAD.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
+      x = (v) => pad.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
       ticks = LOG_COST_TICKS.filter((t) => Math.log10(t) >= lo && Math.log10(t) <= hi);
     } else if (metric.higherIsBetter) {
       // Fitted domain, not zero-anchored — see rangeTicks.
       const span = max - min || 1;
       const lo = min - span * 0.12;
       const hi = max + span * 0.08;
-      x = (v) => PAD.left + plotW * ((v - lo) / (hi - lo));
+      x = (v) => pad.left + plotW * ((v - lo) / (hi - lo));
       ticks = rangeTicks(lo, hi);
     } else {
       const hi = max * 1.06;
-      x = (v) => PAD.left + plotW * (1 - v / hi);
+      x = (v) => pad.left + plotW * (1 - v / hi);
       ticks = linearTicks(max);
     }
 
-    const y = (p: number) => PAD.top + plotH * (1 - p / 0.8);
+    const y = (p: number) => pad.top + plotH * (1 - p / 0.8);
 
     const byModel = new Map<string, ScoredConfig[]>();
     for (const s of all) {
@@ -97,7 +135,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
     });
 
     return { x, y, families, ticks };
-  }, [all, plotW, plotH, metric]);
+  }, [all, plotW, plotH, metric, pad]);
 
   /**
    * Colour is spent only on the podium — the first three DISTINCT models in the
@@ -129,16 +167,18 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
    * the winner's true two-line height.
    */
   const labels = useMemo(() => {
-    const top = PAD.top + 8;
-    const bottom = H - PAD.bottom - 8;
+    const top = pad.top + 8;
+    const bottom = H - pad.bottom - 8;
 
     // Only models that actually cleared the gate carry a permanent label. At the
     // high-power tier that is three lines instead of eighteen, and the density
     // now tracks the tier the reader chose rather than staying maximal always.
     // Everything else names itself on hover, where `focus` has already dimmed
     // the field down to the one line being read.
-    const relevant = families.filter(
-      (f) => f.configs.some((s) => s.qualified) || f.model === focus,
+    const relevant = families.filter((f) =>
+      narrow
+        ? f.model === winner?.config.model || f.model === focus
+        : f.configs.some((s) => s.qualified) || f.model === focus,
     );
 
     const items = relevant
@@ -184,7 +224,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
       for (const l of items) l.ly = Math.min(bottom, Math.max(top, l.ly));
     }
     return items;
-  }, [families, x, y, winner, metric, focus]);
+  }, [families, x, y, winner, metric, focus, narrow, pad]);
 
   const floorY = y(ranking.settings.shipFloor);
   const dim = (model: string) => focus !== null && focus !== model;
@@ -248,7 +288,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
         </div>
       </div>
 
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+      <div className={`mb-3 flex-wrap items-center gap-x-4 gap-y-2 text-xs ${narrow ? "hidden" : "flex"}`}>
         <Key color="var(--accent)" ring>
           👑 Best value
         </Key>
@@ -262,7 +302,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
         </span>
       </div>
 
-      <div className="relative">
+      <div className="relative" ref={wrapRef}>
         <svg
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
@@ -290,36 +330,36 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               majority visually behind it, which is most of what made this chart
               feel crowded — 46 of 50 marks live down there. */}
           <rect
-            x={PAD.left}
-            y={PAD.top}
+            x={pad.left}
+            y={pad.top}
             width={plotW}
-            height={Math.max(0, floorY - PAD.top)}
+            height={Math.max(0, floorY - pad.top)}
             fill="url(#bb-zone)"
           />
           <rect
-            x={PAD.left}
+            x={pad.left}
             y={floorY}
             width={plotW}
-            height={Math.max(0, H - PAD.bottom - floorY)}
+            height={Math.max(0, H - pad.bottom - floorY)}
             fill="var(--page)"
             opacity={0.35}
           />
 
-          {[0, 0.2, 0.4, 0.6, 0.8].map((t) => (
+          {(narrow ? [0, 0.4, 0.8] : [0, 0.2, 0.4, 0.6, 0.8]).map((t) => (
             <g key={t}>
               <line
-                x1={PAD.left}
-                x2={W - PAD.right}
+                x1={pad.left}
+                x2={W - pad.right}
                 y1={y(t)}
                 y2={y(t)}
                 stroke="var(--gridline)"
                 strokeWidth={1}
               />
               <text
-                x={PAD.left - 12}
+                x={pad.left - 12}
                 y={y(t) + 4}
                 textAnchor="end"
-                fontSize={11}
+                fontSize={fs(11)}
                 fill="var(--text-muted)"
                 className="tnum"
               >
@@ -328,13 +368,13 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             </g>
           ))}
 
-          {ticks.map((t) => (
+          {(narrow ? ticks.filter((_, i) => i % 2 === 0) : ticks).map((t) => (
             <text
               key={t}
               x={x(t)}
-              y={H - PAD.bottom + 21}
+              y={H - pad.bottom + 21}
               textAnchor="middle"
-              fontSize={11}
+              fontSize={fs(11)}
               fill="var(--text-muted)"
               className="tnum"
             >
@@ -351,8 +391,8 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               <line
                 x1={x(ranking.settings.craftFloor)}
                 x2={x(ranking.settings.craftFloor)}
-                y1={PAD.top}
-                y2={H - PAD.bottom}
+                y1={pad.top}
+                y2={H - pad.bottom}
                 stroke="var(--warning)"
                 strokeWidth={1.25}
                 strokeDasharray="4 5"
@@ -360,9 +400,9 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
               />
               <text
                 x={x(ranking.settings.craftFloor) - 7}
-                y={PAD.top + 12}
+                y={pad.top + 12}
                 textAnchor="end"
-                fontSize={10.5}
+                fontSize={fs(10.5)}
                 fill="var(--warning)"
                 opacity={0.85}
               >
@@ -372,8 +412,8 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           )}
 
           <line
-            x1={PAD.left}
-            x2={W - PAD.right}
+            x1={pad.left}
+            x2={W - pad.right}
             y1={floorY}
             y2={floorY}
             stroke="var(--warning)"
@@ -382,10 +422,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             opacity={0.7}
           />
           <text
-            x={W - PAD.right}
+            x={W - pad.right}
             y={floorY + 15}
             textAnchor="end"
-            fontSize={10.5}
+            fontSize={fs(10.5)}
             fill="var(--warning)"
             opacity={0.85}
           >
@@ -393,10 +433,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           </text>
 
           <text
-            x={W - PAD.right}
-            y={PAD.top - 13}
+            x={W - pad.right}
+            y={pad.top - 13}
             textAnchor="end"
-            fontSize={10.5}
+            fontSize={fs(10.5)}
             fill="var(--text-muted)"
             style={{ letterSpacing: "0.08em" }}
           >
@@ -454,7 +494,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                     x={cx}
                     y={cy - (isWinner ? 13 : 11)}
                     textAnchor="middle"
-                    fontSize={isWinner ? 16 : 13}
+                    fontSize={fs(isWinner ? 16 : 13)}
                     style={{ pointerEvents: "none" }}
                   >
                     {medalled.medal}
@@ -483,7 +523,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                   x={l.cx + l.dx}
                   y={l.ly + (l.isWinner ? -3 : 4)}
                   textAnchor={l.side}
-                  fontSize={l.isWinner ? 13 : 11.5}
+                  fontSize={fs(l.isWinner ? 13 : 11.5)}
                   fontWeight={l.isWinner ? 600 : 400}
                   fill={color}
                   style={{ paintOrder: "stroke", stroke: "var(--surface-1)", strokeWidth: 4 }}
@@ -495,7 +535,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                     x={l.cx + l.dx}
                     y={l.ly + 11}
                     textAnchor={l.side}
-                    fontSize={10.5}
+                    fontSize={fs(10.5)}
                     fill="var(--text-secondary)"
                     className="tnum"
                     style={{ paintOrder: "stroke", stroke: "var(--surface-1)", strokeWidth: 4 }}
@@ -509,10 +549,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           })}
 
           <text
-            x={PAD.left + plotW / 2}
+            x={pad.left + plotW / 2}
             y={H - 8}
             textAnchor="middle"
-            fontSize={11}
+            fontSize={fs(11)}
             fill="var(--text-muted)"
           >
             {metric.axis}

@@ -181,6 +181,7 @@ lib/vendors.ts          Canonical vendor names + aliases. Asserted against the d
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
                         Dashboard.tsx owns tuning state and mirrors it into the URL.
                         SectionHead.tsx numbers the page so it reads as one argument.
+                        StickyAnswer.tsx carries the winner once its card scrolls away.
                         Hero.tsx is the oversized wordmark and meta strip.
                         VendorMark.tsx draws the company marks — see the note below.
 data/snapshot.json      The source of truth. Committed.
@@ -199,6 +200,22 @@ Two tests are worth understanding before you touch anything:
   drifted away from the judgment it was built to encode.
 - **`valueFrontier`** — every config excluded from the frontier must be genuinely dominated by
   something on it.
+
+---
+
+## Two traps in the UI
+
+**Chart type does not scale with the chart.** The SVG has a fixed 860-unit viewBox fitted to its
+container, so on a 390px phone a 10.5px label rendered at 4.8 real pixels — legible in the source,
+invisible on the device. `ScatterChart` measures its container and multiplies every font size by the
+inverse of that scale, holding type at a constant *physical* size. Past a threshold it also thins
+out: fewer ticks, no legend, winner-only labels. If you add text to that chart, size it through
+`fs()`.
+
+**Never put a raw float in a CSS value.** The browser truncates percentages when parsing, so a bar
+width of `73.54960673390156%` comes back out of the server HTML as `73.5496%` and React reports a
+hydration mismatch. Round before interpolating — see the comment on the BangBuck bar in
+`RankTable.tsx`.
 
 ---
 

@@ -164,6 +164,44 @@ input[type="range"]::-moz-range-thumb {
   border: 2px solid var(--page);
 }
 
+/* The BangBuck bar's fill. Static properties live here rather than inline so
+   React has one style property to diff per row instead of four. */
+.bb-bar {
+  display: block;
+  height: 100%;
+  margin-left: auto;
+  border-radius: 9999px;
+  transition: width 220ms ease;
+}
+
+/* Row hover in a fifty-row table. Faint on purpose: it is a reading aid for
+   tracking across columns, not a selection state. */
+.row {
+  transition: background 120ms ease;
+}
+.row:hover {
+  background: rgba(255, 255, 255, 0.035) !important;
+}
+
+/* Keyboard focus is the one state the design had no answer for. A ring in the
+   accent rather than the browser default, and only for keyboard users so it
+   never fires on a mouse click. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.seg button:focus-visible {
+  outline-offset: -1px;
+}
+
+/* Nothing should ever scroll the page sideways; a stray wide child on a phone
+   is a layout bug, not something to let the user pan around. */
+html,
+body {
+  overflow-x: clip;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
