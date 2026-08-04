@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-08-01T20:36:16.531Z",
+  "capturedAt": "2026-08-04T00:40:56.392Z",
   "deepswe": {
     "generatedAt": "2026-07-25T03:13:49.273952+00:00",
     "nTasksInSet": 113,
@@ -973,6 +973,20 @@
       },
       {
         "rank": 5,
+        "modelDisplayName": "qwen3.8-max",
+        "rating": 1495.784156349593,
+        "ratingLower": 1485.4076032717774,
+        "ratingUpper": 1506.1607094274088,
+        "votes": 3327,
+        "organization": "Alibaba",
+        "license": "Proprietary",
+        "modelUrl": "https://www.qwencloud.com/models/qwen3.8-max",
+        "inputPricePerMillion": 2,
+        "outputPricePerMillion": 6,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 6,
         "modelDisplayName": "claude-opus-4-7",
         "rating": 1492.4088628749344,
         "ratingLower": 1488.3758321207902,
@@ -986,7 +1000,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 6,
+        "rank": 7,
         "modelDisplayName": "claude-opus-5-high",
         "rating": 1491.8152138159082,
         "ratingLower": 1485.3530749154872,
@@ -1000,7 +1014,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 7,
+        "rank": 8,
         "modelDisplayName": "claude-opus-5-max",
         "rating": 1490.3576855166657,
         "ratingLower": 1481.5794079528557,
@@ -1014,7 +1028,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 8,
+        "rank": 9,
         "modelDisplayName": "muse-spark-1.1",
         "rating": 1489.6717711717752,
         "ratingLower": 1483.4299970817426,
@@ -1028,7 +1042,7 @@
         "contextLength": null
       },
       {
-        "rank": 9,
+        "rank": 10,
         "modelDisplayName": "muse-spark",
         "rating": 1487.880175406169,
         "ratingLower": 1482.0033399123033,
@@ -1042,7 +1056,7 @@
         "contextLength": null
       },
       {
-        "rank": 10,
+        "rank": 11,
         "modelDisplayName": "gemini-3-pro",
         "rating": 1485.7345017961663,
         "ratingLower": 1481.8899734899774,
@@ -1056,7 +1070,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 11,
+        "rank": 12,
         "modelDisplayName": "gemini-3.1-pro-preview",
         "rating": 1485.44012617644,
         "ratingLower": 1482.0101448387693,
@@ -1070,7 +1084,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 12,
+        "rank": 13,
         "modelDisplayName": "kimi-k3-max",
         "rating": 1485.3456563756524,
         "ratingLower": 1475.317183428952,
@@ -1084,7 +1098,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 13,
+        "rank": 14,
         "modelDisplayName": "claude-opus-4-8-thinking",
         "rating": 1483.6444089136933,
         "ratingLower": 1478.809538488482,
@@ -1098,7 +1112,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 14,
+        "rank": 15,
         "modelDisplayName": "gpt-5.6-sol-xhigh",
         "rating": 1482.7714560605514,
         "ratingLower": 1476.3050067265074,
@@ -1112,7 +1126,7 @@
         "contextLength": null
       },
       {
-        "rank": 15,
+        "rank": 16,
         "modelDisplayName": "gemini-3.6-flash",
         "rating": 1482.6823774380555,
         "ratingLower": 1475.5811724290566,
@@ -1126,7 +1140,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 16,
+        "rank": 17,
         "modelDisplayName": "gpt-5.5-high",
         "rating": 1482.4428932101575,
         "ratingLower": 1478.2154543068295,
@@ -1140,7 +1154,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 17,
+        "rank": 18,
         "modelDisplayName": "gpt-5.4-high",
         "rating": 1476.965519765294,
         "ratingLower": 1473.0577171438151,
@@ -1154,7 +1168,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 18,
+        "rank": 19,
         "modelDisplayName": "gemini-3.5-flash-high",
         "rating": 1476.3958154748645,
         "ratingLower": 1469.8524238242817,
@@ -1168,7 +1182,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 19,
+        "rank": 20,
         "modelDisplayName": "gpt-5.5",
         "rating": 1476.3335343579292,
         "ratingLower": 1472.1124157658458,
@@ -1182,7 +1196,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 20,
+        "rank": 21,
         "modelDisplayName": "gpt-5.2-chat-latest-20260210",
         "rating": 1476.1225158191107,
         "ratingLower": 1471.967302881526,
@@ -1196,7 +1210,21 @@
         "contextLength": 128000
       },
       {
-        "rank": 21,
+        "rank": 22,
+        "modelDisplayName": "gemini-3.5-flash-high",
+        "rating": 1474.7082842060963,
+        "ratingLower": 1468.2109700640797,
+        "ratingUpper": 1481.205598348113,
+        "votes": 10472,
+        "organization": "Google",
+        "license": "Proprietary",
+        "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+        "inputPricePerMillion": null,
+        "outputPricePerMillion": null,
+        "contextLength": null
+      },
+      {
+        "rank": 23,
         "modelDisplayName": "qwen3.7-max-preview",
         "rating": 1474.6573151084947,
         "ratingLower": 1464.6186199985755,
@@ -1210,7 +1238,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 22,
+        "rank": 24,
         "modelDisplayName": "claude-opus-4-8",
         "rating": 1474.5747737790005,
         "ratingLower": 1469.7102833472304,
@@ -1224,7 +1252,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 23,
+        "rank": 25,
         "modelDisplayName": "grok-4.20-beta1",
         "rating": 1474.3776201503206,
         "ratingLower": 1469.7030128230595,
@@ -1238,7 +1266,7 @@
         "contextLength": null
       },
       {
-        "rank": 24,
+        "rank": 26,
         "modelDisplayName": "gemini-3.5-flash-medium",
         "rating": 1474.1193672490006,
         "ratingLower": 1468.6269394124868,
@@ -1252,7 +1280,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 25,
+        "rank": 27,
         "modelDisplayName": "gpt-5.5-instant",
         "rating": 1473.4547401497418,
         "ratingLower": 1468.3039856040616,
@@ -1266,7 +1294,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 26,
+        "rank": 28,
         "modelDisplayName": "gemini-3-flash",
         "rating": 1472.934928478994,
         "ratingLower": 1468.5243148332227,
@@ -1280,7 +1308,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 27,
+        "rank": 29,
         "modelDisplayName": "claude-opus-4-5-20251101-thinking-32k",
         "rating": 1472.7950199027205,
         "ratingLower": 1468.9098949915087,
@@ -1294,7 +1322,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 28,
+        "rank": 30,
         "modelDisplayName": "grok-4.20-beta-0309-reasoning",
         "rating": 1472.1235602425834,
         "ratingLower": 1468.3179885696939,
@@ -1308,7 +1336,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 29,
+        "rank": 31,
         "modelDisplayName": "claude-sonnet-4-6",
         "rating": 1471.7370709611062,
         "ratingLower": 1468.0025408187712,
@@ -1322,7 +1350,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 30,
+        "rank": 32,
         "modelDisplayName": "grok-4.20-multi-agent-beta-0309",
         "rating": 1470.8907770191793,
         "ratingLower": 1467.064466694017,
@@ -1336,7 +1364,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 31,
+        "rank": 33,
         "modelDisplayName": "glm-5.2-max",
         "rating": 1469.4932983767922,
         "ratingLower": 1464.0800726865232,
@@ -1350,7 +1378,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 32,
+        "rank": 34,
         "modelDisplayName": "claude-opus-4-5-20251101",
         "rating": 1468.8667711468502,
         "ratingLower": 1465.6604179918704,
@@ -1364,7 +1392,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 33,
+        "rank": 35,
         "modelDisplayName": "grok-4.5",
         "rating": 1468.826558683441,
         "ratingLower": 1462.6167214189288,
@@ -1378,7 +1406,7 @@
         "contextLength": 500000
       },
       {
-        "rank": 34,
+        "rank": 36,
         "modelDisplayName": "glm-5.1",
         "rating": 1468.787796757301,
         "ratingLower": 1464.4078884558764,
@@ -1392,7 +1420,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 35,
+        "rank": 37,
         "modelDisplayName": "gpt-5.6-terra-xhigh",
         "rating": 1467.814841386796,
         "ratingLower": 1461.425262812898,
@@ -1406,7 +1434,7 @@
         "contextLength": null
       },
       {
-        "rank": 36,
+        "rank": 38,
         "modelDisplayName": "ernie-5.1",
         "rating": 1467.7184888671932,
         "ratingLower": 1463.0353369445631,
@@ -1420,7 +1448,7 @@
         "contextLength": null
       },
       {
-        "rank": 37,
+        "rank": 39,
         "modelDisplayName": "grok-4.1-thinking",
         "rating": 1466.0541134466387,
         "ratingLower": 1462.811633484129,
@@ -1434,7 +1462,7 @@
         "contextLength": null
       },
       {
-        "rank": 38,
+        "rank": 40,
         "modelDisplayName": "mimo-v2.5-pro",
         "rating": 1465.7079043134224,
         "ratingLower": 1461.4281854950295,
@@ -1448,7 +1476,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 39,
+        "rank": 41,
         "modelDisplayName": "gpt-5.4",
         "rating": 1465.3676989754745,
         "ratingLower": 1461.5291249292818,
@@ -1462,7 +1490,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 40,
+        "rank": 42,
         "modelDisplayName": "qwen3.5-max-preview",
         "rating": 1465.1787732611297,
         "ratingLower": 1460.1792758589102,
@@ -1476,7 +1504,7 @@
         "contextLength": null
       },
       {
-        "rank": 41,
+        "rank": 43,
         "modelDisplayName": "claude-sonnet-5-high",
         "rating": 1462.3997209804852,
         "ratingLower": 1456.7825097070743,
@@ -1490,7 +1518,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 42,
+        "rank": 44,
         "modelDisplayName": "kimi-k2.6",
         "rating": 1460.6680227923155,
         "ratingLower": 1456.1075504136627,
@@ -1504,7 +1532,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 43,
+        "rank": 45,
         "modelDisplayName": "qwen3.6-max-preview",
         "rating": 1459.9103997147781,
         "ratingLower": 1451.5207989558694,
@@ -1518,7 +1546,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 44,
+        "rank": 46,
         "modelDisplayName": "grok-4.1",
         "rating": 1459.490209617914,
         "ratingLower": 1456.2619927916817,
@@ -1532,7 +1560,7 @@
         "contextLength": null
       },
       {
-        "rank": 45,
+        "rank": 47,
         "modelDisplayName": "qwen3.7-plus",
         "rating": 1459.4300014838998,
         "ratingLower": 1454.2282507585373,
@@ -1546,7 +1574,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 46,
+        "rank": 48,
         "modelDisplayName": "gemini-3-flash (thinking-minimal)",
         "rating": 1458.63859556012,
         "ratingLower": 1455.5074837282625,
@@ -1560,7 +1588,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 47,
+        "rank": 49,
         "modelDisplayName": "deepseek-v4-pro",
         "rating": 1457.9451784989913,
         "ratingLower": 1453.7419402259322,
@@ -1574,7 +1602,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 48,
+        "rank": 50,
         "modelDisplayName": "glm-5",
         "rating": 1456.713228047888,
         "ratingLower": 1452.3525099268898,
@@ -1588,7 +1616,7 @@
         "contextLength": 202800
       },
       {
-        "rank": 49,
+        "rank": 51,
         "modelDisplayName": "gemini-3.5-flash-lite",
         "rating": 1456.5007594849312,
         "ratingLower": 1449.5676452366217,
@@ -1602,7 +1630,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 50,
+        "rank": 52,
         "modelDisplayName": "hy3",
         "rating": 1456.272825863887,
         "ratingLower": 1446.0635648533755,
@@ -1616,7 +1644,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 51,
+        "rank": 53,
         "modelDisplayName": "dola-seed-2.0-pro",
         "rating": 1455.6910381259625,
         "ratingLower": 1452.1352364838765,
@@ -1630,7 +1658,7 @@
         "contextLength": null
       },
       {
-        "rank": 52,
+        "rank": 54,
         "modelDisplayName": "claude-sonnet-4-5-20250929-thinking-32k",
         "rating": 1455.640565277737,
         "ratingLower": 1452.8342263112906,
@@ -1644,7 +1672,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 53,
+        "rank": 55,
         "modelDisplayName": "claude-sonnet-4-5-20250929",
         "rating": 1454.9651124952832,
         "ratingLower": 1452.046184093564,
@@ -1658,7 +1686,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 54,
+        "rank": 56,
         "modelDisplayName": "gpt-5.1-high",
         "rating": 1454.5685632701366,
         "ratingLower": 1450.789329932142,
@@ -1672,7 +1700,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 55,
+        "rank": 57,
         "modelDisplayName": "deepseek-v4-pro-high-preview",
         "rating": 1454.281052047281,
         "ratingLower": 1450.018423466766,
@@ -1686,7 +1714,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 56,
+        "rank": 58,
         "modelDisplayName": "gemma-4-31b",
         "rating": 1450.923320417939,
         "ratingLower": 1443.3022537347301,
@@ -1700,7 +1728,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 57,
+        "rank": 59,
         "modelDisplayName": "gpt-5.6-luna-xhigh",
         "rating": 1450.4030296409294,
         "ratingLower": 1444.0217447935383,
@@ -1714,7 +1742,7 @@
         "contextLength": null
       },
       {
-        "rank": 58,
+        "rank": 60,
         "modelDisplayName": "kimi-k2.5-thinking",
         "rating": 1450.2119730337786,
         "ratingLower": 1446.7431383680348,
@@ -1728,7 +1756,7 @@
         "contextLength": null
       },
       {
-        "rank": 59,
+        "rank": 61,
         "modelDisplayName": "claude-opus-4-1-20250805-thinking-16k",
         "rating": 1449.0949843933101,
         "ratingLower": 1445.6445691419083,
@@ -1742,7 +1770,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 60,
+        "rank": 62,
         "modelDisplayName": "ernie-5.0-preview-1203",
         "rating": 1448.7659801675738,
         "ratingLower": 1442.2296438912283,
@@ -1756,7 +1784,7 @@
         "contextLength": null
       },
       {
-        "rank": 61,
+        "rank": 63,
         "modelDisplayName": "gpt-5.3-chat-latest",
         "rating": 1448.6970829798925,
         "ratingLower": 1444.3399264218,
@@ -1770,7 +1798,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 62,
+        "rank": 64,
         "modelDisplayName": "gpt-5.4-mini-high",
         "rating": 1448.6329372921236,
         "ratingLower": 1444.7524465632207,
@@ -1784,7 +1812,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 63,
+        "rank": 65,
         "modelDisplayName": "mimo-v2-pro",
         "rating": 1448.2371284382314,
         "ratingLower": 1443.4640227599127,
@@ -1798,7 +1826,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 64,
+        "rank": 66,
         "modelDisplayName": "claude-opus-4-1-20250805",
         "rating": 1447.114524816617,
         "ratingLower": 1444.1302691313713,
@@ -1812,7 +1840,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 65,
+        "rank": 67,
         "modelDisplayName": "ernie-5.0-0110",
         "rating": 1446.8630226158514,
         "ratingLower": 1442.8706733895006,
@@ -1826,7 +1854,7 @@
         "contextLength": null
       },
       {
-        "rank": 66,
+        "rank": 68,
         "modelDisplayName": "gemini-2.5-pro",
         "rating": 1445.5330388744962,
         "ratingLower": 1443.0374675767473,
@@ -1840,7 +1868,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 67,
+        "rank": 69,
         "modelDisplayName": "minimax-m3",
         "rating": 1445.273158346901,
         "ratingLower": 1440.2843477531073,
@@ -1854,7 +1882,7 @@
         "contextLength": null
       },
       {
-        "rank": 68,
+        "rank": 70,
         "modelDisplayName": "gpt-4.5-preview-2025-02-27",
         "rating": 1444.735432331723,
         "ratingLower": 1439.0330597149405,
@@ -1868,7 +1896,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 69,
+        "rank": 71,
         "modelDisplayName": "qwen3.6-plus",
         "rating": 1443.5590595839074,
         "ratingLower": 1439.287338601393,
@@ -1882,7 +1910,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 70,
+        "rank": 72,
         "modelDisplayName": "chatgpt-4o-latest-20250326",
         "rating": 1443.1284772172428,
         "ratingLower": 1440.316545317995,
@@ -1896,7 +1924,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 71,
+        "rank": 73,
         "modelDisplayName": "grok-4.3",
         "rating": 1442.3961220510064,
         "ratingLower": 1438.2469471371373,
@@ -1910,7 +1938,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 72,
+        "rank": 74,
         "modelDisplayName": "glm-4.7",
         "rating": 1442.052301956197,
         "ratingLower": 1435.9602296149606,
@@ -1924,7 +1952,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 73,
+        "rank": 75,
         "modelDisplayName": "qwen3.5-397b-a17b",
         "rating": 1441.680796935525,
         "ratingLower": 1438.0712283218431,
@@ -1938,7 +1966,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 74,
+        "rank": 76,
         "modelDisplayName": "inkling",
         "rating": 1440.8016819025243,
         "ratingLower": 1434.3024809734711,
@@ -1952,7 +1980,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 75,
+        "rank": 77,
         "modelDisplayName": "gpt-5.1",
         "rating": 1438.6689177302403,
         "ratingLower": 1435.014583342175,
@@ -1966,7 +1994,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 76,
+        "rank": 78,
         "modelDisplayName": "gemma-4-26b-a4b",
         "rating": 1438.4965219675812,
         "ratingLower": 1430.8328691070042,
@@ -1980,7 +2008,7 @@
         "contextLength": null
       },
       {
-        "rank": 77,
+        "rank": 79,
         "modelDisplayName": "deepseek-v4-flash-high-preview",
         "rating": 1438.0114869423683,
         "ratingLower": 1433.7755844688843,
@@ -1994,7 +2022,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 78,
+        "rank": 80,
         "modelDisplayName": "gpt-5.2-high",
         "rating": 1437.4844643203182,
         "ratingLower": 1433.8453542220425,
@@ -2008,7 +2036,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 79,
+        "rank": 81,
         "modelDisplayName": "deepseek-v4-flash",
         "rating": 1435.636196971366,
         "ratingLower": 1431.4658540849398,
@@ -2022,7 +2050,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 80,
+        "rank": 82,
         "modelDisplayName": "gpt-5.2",
         "rating": 1435.315533945776,
         "ratingLower": 1432.0459227447186,
@@ -2036,7 +2064,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 81,
+        "rank": 83,
         "modelDisplayName": "longcat-flash-chat-2602-exp",
         "rating": 1435.224211032556,
         "ratingLower": 1430.5628637032312,
@@ -2050,7 +2078,7 @@
         "contextLength": null
       },
       {
-        "rank": 82,
+        "rank": 84,
         "modelDisplayName": "qwen3-max-preview",
         "rating": 1434.6102647132964,
         "ratingLower": 1430.1090400649684,
@@ -2064,7 +2092,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 83,
+        "rank": 85,
         "modelDisplayName": "gpt-5-high",
         "rating": 1433.8437158457327,
         "ratingLower": 1429.3323446281925,
@@ -2078,7 +2106,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 84,
+        "rank": 86,
         "modelDisplayName": "mimo-v2.5",
         "rating": 1433.7385171887443,
         "ratingLower": 1429.3700682626236,
@@ -2092,7 +2120,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 85,
+        "rank": 87,
         "modelDisplayName": "glm-5v-turbo",
         "rating": 1432.9843115055764,
         "ratingLower": 1426.1997151866249,
@@ -2106,7 +2134,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 86,
+        "rank": 88,
         "modelDisplayName": "gemini-3.1-flash-lite-preview",
         "rating": 1432.389582552785,
         "ratingLower": 1428.628927178453,
@@ -2120,7 +2148,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 87,
+        "rank": 89,
         "modelDisplayName": "kimi-k2.5-instant",
         "rating": 1431.5937674595323,
         "ratingLower": 1425.0011537620073,
@@ -2134,7 +2162,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 88,
+        "rank": 90,
         "modelDisplayName": "grok-4-1-fast-reasoning",
         "rating": 1431.0740508674642,
         "ratingLower": 1427.819183916736,
@@ -2148,7 +2176,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 89,
+        "rank": 91,
         "modelDisplayName": "o3-2025-04-16",
         "rating": 1430.9087533202228,
         "ratingLower": 1427.2955739509132,
@@ -2162,7 +2190,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 90,
+        "rank": 92,
         "modelDisplayName": "mimo-v2-omni",
         "rating": 1429.7448784089172,
         "ratingLower": 1424.0077536516183,
@@ -2176,7 +2204,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 91,
+        "rank": 93,
         "modelDisplayName": "kimi-k2-thinking-turbo",
         "rating": 1429.6940398263919,
         "ratingLower": 1426.5414509582683,
@@ -2190,7 +2218,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 92,
+        "rank": 94,
         "modelDisplayName": "mistral-medium-3.5",
         "rating": 1427.2915673520592,
         "ratingLower": 1420.6808189323692,
@@ -2204,7 +2232,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 93,
+        "rank": 95,
         "modelDisplayName": "gpt-5-chat",
         "rating": 1426.8947445640854,
         "ratingLower": 1422.6071625384584,
@@ -2218,7 +2246,7 @@
         "contextLength": null
       },
       {
-        "rank": 94,
+        "rank": 96,
         "modelDisplayName": "nvidia-nemotron-3-ultra-550b-a55b-nvfp4",
         "rating": 1426.423051300756,
         "ratingLower": 1419.354476422673,
@@ -2232,7 +2260,7 @@
         "contextLength": null
       },
       {
-        "rank": 95,
+        "rank": 97,
         "modelDisplayName": "amazon-nova-experimental-chat-26-02-10",
         "rating": 1425.8108204898351,
         "ratingLower": 1415.9486860855504,
@@ -2246,7 +2274,7 @@
         "contextLength": null
       },
       {
-        "rank": 96,
+        "rank": 98,
         "modelDisplayName": "deepseek-v3.2",
         "rating": 1425.0418826690782,
         "ratingLower": 1421.4871201334704,
@@ -2260,7 +2288,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 97,
+        "rank": 99,
         "modelDisplayName": "glm-4.6",
         "rating": 1425.0246656852305,
         "ratingLower": 1421.1078374369717,
@@ -2274,7 +2302,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 98,
+        "rank": 100,
         "modelDisplayName": "deepseek-v3.2-exp-thinking",
         "rating": 1424.7637505615326,
         "ratingLower": 1418.208905550342,
@@ -2288,7 +2316,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 99,
+        "rank": 101,
         "modelDisplayName": "claude-opus-4-20250514-thinking-16k",
         "rating": 1424.7546417258486,
         "ratingLower": 1420.402107189198,
@@ -2302,7 +2330,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 100,
+        "rank": 102,
         "modelDisplayName": "qwen3-max-2025-09-23",
         "rating": 1424.189970086548,
         "ratingLower": 1417.7373982557808,
@@ -2316,7 +2344,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 101,
+        "rank": 103,
         "modelDisplayName": "qwen3-235b-a22b-instruct-2507",
         "rating": 1422.9492960384582,
         "ratingLower": 1420.3590734099835,
@@ -2330,7 +2358,7 @@
         "contextLength": null
       },
       {
-        "rank": 102,
+        "rank": 104,
         "modelDisplayName": "deepseek-v3.2-thinking",
         "rating": 1422.796958501995,
         "ratingLower": 1419.1482528655552,
@@ -2344,7 +2372,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 103,
+        "rank": 105,
         "modelDisplayName": "deepseek-v3.2-exp",
         "rating": 1422.6275038806066,
         "ratingLower": 1416.223106665238,
@@ -2358,7 +2386,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 104,
+        "rank": 106,
         "modelDisplayName": "deepseek-r1-0528",
         "rating": 1422.111566518278,
         "ratingLower": 1416.4469623666532,
@@ -2372,7 +2400,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 105,
+        "rank": 107,
         "modelDisplayName": "grok-4-fast-chat",
         "rating": 1420.8672282555904,
         "ratingLower": 1413.2400717523667,
@@ -2386,7 +2414,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 106,
+        "rank": 108,
         "modelDisplayName": "ernie-5.0-preview-1022",
         "rating": 1418.3603760563176,
         "ratingLower": 1409.552148439151,
@@ -2400,7 +2428,7 @@
         "contextLength": null
       },
       {
-        "rank": 107,
+        "rank": 109,
         "modelDisplayName": "kimi-k2-0905-preview",
         "rating": 1418.1226137587273,
         "ratingLower": 1411.624340539137,
@@ -2414,7 +2442,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 108,
+        "rank": 110,
         "modelDisplayName": "kimi-k2-0711-preview",
         "rating": 1417.7408034031303,
         "ratingLower": 1412.8776036958004,
@@ -2428,7 +2456,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 109,
+        "rank": 111,
         "modelDisplayName": "deepseek-v3.1",
         "rating": 1417.3831179006086,
         "ratingLower": 1411.3725699881627,
@@ -2442,7 +2470,7 @@
         "contextLength": null
       },
       {
-        "rank": 110,
+        "rank": 112,
         "modelDisplayName": "deepseek-v3.1-terminus-thinking",
         "rating": 1417.2232915773375,
         "ratingLower": 1407.236255185038,
@@ -2456,7 +2484,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 111,
+        "rank": 113,
         "modelDisplayName": "deepseek-v3.1-thinking",
         "rating": 1416.973371263583,
         "ratingLower": 1410.3592017227013,
@@ -2470,7 +2498,7 @@
         "contextLength": null
       },
       {
-        "rank": 112,
+        "rank": 114,
         "modelDisplayName": "minimax-m2.7",
         "rating": 1416.881453199402,
         "ratingLower": 1412.8574002989017,
@@ -2484,7 +2512,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 113,
+        "rank": 115,
         "modelDisplayName": "qwen3.5-122b-a10b",
         "rating": 1416.869922123495,
         "ratingLower": 1412.4711150882767,
@@ -2498,7 +2526,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 114,
+        "rank": 116,
         "modelDisplayName": "mistral-large-3",
         "rating": 1415.454857777998,
         "ratingLower": 1412.1738173910703,
@@ -2512,7 +2540,7 @@
         "contextLength": null
       },
       {
-        "rank": 115,
+        "rank": 117,
         "modelDisplayName": "amazon-nova-experimental-chat-26-01-10",
         "rating": 1415.294388074836,
         "ratingLower": 1405.3939039857923,
@@ -2526,7 +2554,7 @@
         "contextLength": null
       },
       {
-        "rank": 116,
+        "rank": 118,
         "modelDisplayName": "qwen3-vl-235b-a22b-instruct",
         "rating": 1415.1254460614518,
         "ratingLower": 1408.6379694472862,
@@ -2540,7 +2568,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 117,
+        "rank": 119,
         "modelDisplayName": "deepseek-v3.1-terminus",
         "rating": 1415.073824442247,
         "ratingLower": 1405.4506977735798,
@@ -2554,7 +2582,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 118,
+        "rank": 120,
         "modelDisplayName": "gpt-4.1-2025-04-14",
         "rating": 1413.774251417504,
         "ratingLower": 1410.0748984673949,
@@ -2568,7 +2596,7 @@
         "contextLength": 1047576
       },
       {
-        "rank": 119,
+        "rank": 121,
         "modelDisplayName": "claude-opus-4-20250514",
         "rating": 1412.7254114585746,
         "ratingLower": 1408.445072756314,
@@ -2582,7 +2610,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 120,
+        "rank": 122,
         "modelDisplayName": "claude-haiku-4-5-20251001",
         "rating": 1412.2344417740974,
         "ratingLower": 1409.5878746120593,
@@ -2596,7 +2624,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 121,
+        "rank": 123,
         "modelDisplayName": "hunyuan-hy3-preview",
         "rating": 1412.1903753120062,
         "ratingLower": 1404.606698859538,
@@ -2610,7 +2638,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 122,
+        "rank": 124,
         "modelDisplayName": "grok-3-preview-02-24",
         "rating": 1411.3578237063728,
         "ratingLower": 1407.0351583747565,
@@ -2624,7 +2652,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 123,
+        "rank": 125,
         "modelDisplayName": "glm-4.5",
         "rating": 1410.7140808946642,
         "ratingLower": 1405.8293745265094,
@@ -2638,7 +2666,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 124,
+        "rank": 126,
         "modelDisplayName": "gemini-2.5-flash",
         "rating": 1410.2396923534577,
         "ratingLower": 1407.7707075566038,
@@ -2652,7 +2680,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 125,
+        "rank": 127,
         "modelDisplayName": "grok-4-0709",
         "rating": 1409.4607261541726,
         "ratingLower": 1405.5618456230582,
@@ -2666,7 +2694,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 126,
+        "rank": 128,
         "modelDisplayName": "mistral-medium-2508",
         "rating": 1409.3348804528728,
         "ratingLower": 1406.6891866193143,
@@ -2680,7 +2708,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 127,
+        "rank": 129,
         "modelDisplayName": "qwen3.5-27b",
         "rating": 1408.0396764122981,
         "ratingLower": 1403.6096323136608,
@@ -2694,7 +2722,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 128,
+        "rank": 130,
         "modelDisplayName": "gemini-2.5-flash-preview-09-2025",
         "rating": 1404.0936982919156,
         "ratingLower": 1400.0415382078684,
@@ -2708,7 +2736,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 129,
+        "rank": 131,
         "modelDisplayName": "grok-4-fast-reasoning",
         "rating": 1403.951822253862,
         "ratingLower": 1398.9377326816614,
@@ -2722,7 +2750,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 130,
+        "rank": 132,
         "modelDisplayName": "qwen3-235b-a22b-no-thinking",
         "rating": 1402.9095168765996,
         "ratingLower": 1398.4030241844555,
@@ -2736,7 +2764,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 131,
+        "rank": 133,
         "modelDisplayName": "gpt-5.4-nano-high",
         "rating": 1402.384977906702,
         "ratingLower": 1398.4758804896549,
@@ -2750,7 +2778,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 132,
+        "rank": 134,
         "modelDisplayName": "o1-2024-12-17",
         "rating": 1402.1697144742127,
         "ratingLower": 1397.7074434173487,
@@ -2764,7 +2792,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 133,
+        "rank": 135,
         "modelDisplayName": "qwen3-next-80b-a3b-instruct",
         "rating": 1401.2074570572845,
         "ratingLower": 1396.4327210284532,
@@ -2778,7 +2806,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 134,
+        "rank": 136,
         "modelDisplayName": "longcat-flash-chat",
         "rating": 1400.8964112555536,
         "ratingLower": 1394.5286863744632,
@@ -2792,7 +2820,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 135,
+        "rank": 137,
         "modelDisplayName": "claude-sonnet-4-20250514-thinking-32k",
         "rating": 1399.432783872584,
         "ratingLower": 1395.0254038454693,
@@ -2806,7 +2834,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 136,
+        "rank": 138,
         "modelDisplayName": "qwen3-235b-a22b-thinking-2507",
         "rating": 1398.919053741436,
         "ratingLower": 1392.383333255096,
@@ -2820,7 +2848,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 137,
+        "rank": 139,
         "modelDisplayName": "deepseek-r1",
         "rating": 1398.2061233681038,
         "ratingLower": 1393.3222275047326,
@@ -2834,7 +2862,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 138,
+        "rank": 140,
         "modelDisplayName": "qwen3.5-flash",
         "rating": 1396.8185977901376,
         "ratingLower": 1393.0280971818552,
@@ -2848,7 +2876,7 @@
         "contextLength": null
       },
       {
-        "rank": 139,
+        "rank": 141,
         "modelDisplayName": "deepseek-v3-0324",
         "rating": 1395.5314747890063,
         "ratingLower": 1391.6534206757794,
@@ -2862,7 +2890,7 @@
         "contextLength": 32768
       },
       {
-        "rank": 140,
+        "rank": 142,
         "modelDisplayName": "qwen3.5-35b-a3b",
         "rating": 1395.4947183445695,
         "ratingLower": 1391.1470840418954,
@@ -2876,7 +2904,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 141,
+        "rank": 143,
         "modelDisplayName": "qwen3-vl-235b-a22b-thinking",
         "rating": 1395.3412433214396,
         "ratingLower": 1388.5507150789135,
@@ -2885,12 +2913,12 @@
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://qwen.ai/blog?id=99f0335c4ad9ff6153e517418d48535ab6d8afef&from=research.latest-advancements-list",
-        "inputPricePerMillion": 0.4,
-        "outputPricePerMillion": 4,
+        "inputPricePerMillion": 0.98,
+        "outputPricePerMillion": 3.95,
         "contextLength": 131072
       },
       {
-        "rank": 142,
+        "rank": 144,
         "modelDisplayName": "hunyuan-vision-1.5-thinking",
         "rating": 1394.8890894440738,
         "ratingLower": 1382.6427466712507,
@@ -2904,7 +2932,7 @@
         "contextLength": null
       },
       {
-        "rank": 143,
+        "rank": 145,
         "modelDisplayName": "step-3.5-flash",
         "rating": 1394.6075394088066,
         "ratingLower": 1390.9443151761106,
@@ -2918,7 +2946,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 144,
+        "rank": 146,
         "modelDisplayName": "amazon-nova-experimental-chat-12-10",
         "rating": 1393.4876712120606,
         "ratingLower": 1383.9158137964391,
@@ -2932,7 +2960,7 @@
         "contextLength": null
       },
       {
-        "rank": 145,
+        "rank": 147,
         "modelDisplayName": "mimo-v2-flash (non-thinking)",
         "rating": 1392.562103415771,
         "ratingLower": 1388.9946484340187,
@@ -2946,7 +2974,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 146,
+        "rank": 148,
         "modelDisplayName": "gpt-5-mini-high",
         "rating": 1390.0429957763472,
         "ratingLower": 1385.404316511884,
@@ -2960,7 +2988,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 147,
+        "rank": 149,
         "modelDisplayName": "o4-mini-2025-04-16",
         "rating": 1390.0244105459997,
         "ratingLower": 1386.0508331813649,
@@ -2974,7 +3002,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 148,
+        "rank": 150,
         "modelDisplayName": "minimax-m2.5",
         "rating": 1389.9287124021814,
         "ratingLower": 1385.9251645711508,
@@ -2988,7 +3016,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 149,
+        "rank": 151,
         "modelDisplayName": "claude-sonnet-4-20250514",
         "rating": 1389.266345384719,
         "ratingLower": 1384.9009331654363,
@@ -3002,7 +3030,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 150,
+        "rank": 152,
         "modelDisplayName": "o1-preview",
         "rating": 1388.5162724067097,
         "ratingLower": 1383.5111056811152,
@@ -3016,7 +3044,7 @@
         "contextLength": null
       },
       {
-        "rank": 151,
+        "rank": 153,
         "modelDisplayName": "qwen3-coder-480b-a35b-instruct",
         "rating": 1387.7103438750205,
         "ratingLower": 1382.7587546717127,
@@ -3030,7 +3058,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 152,
+        "rank": 154,
         "modelDisplayName": "claude-3-7-sonnet-20250219-thinking-32k",
         "rating": 1387.6831102881902,
         "ratingLower": 1383.5027056027898,
@@ -3044,7 +3072,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 153,
+        "rank": 155,
         "modelDisplayName": "mimo-v2-flash (thinking)",
         "rating": 1387.0056770938006,
         "ratingLower": 1380.757375096932,
@@ -3058,7 +3086,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 154,
+        "rank": 156,
         "modelDisplayName": "mistral-medium-2505",
         "rating": 1386.8487752422473,
         "ratingLower": 1382.1462513056865,
@@ -3072,7 +3100,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 155,
+        "rank": 157,
         "modelDisplayName": "hunyuan-t1-20250711",
         "rating": 1386.6112827524394,
         "ratingLower": 1377.9794517810897,
@@ -3086,7 +3114,7 @@
         "contextLength": null
       },
       {
-        "rank": 156,
+        "rank": 158,
         "modelDisplayName": "minimax-m2.1-preview",
         "rating": 1384.122634176615,
         "ratingLower": 1378.8931667855813,
@@ -3100,7 +3128,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 157,
+        "rank": 159,
         "modelDisplayName": "qwen3-30b-a3b-instruct-2507",
         "rating": 1383.0986812850956,
         "ratingLower": 1378.2162121009644,
@@ -3114,7 +3142,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 158,
+        "rank": 160,
         "modelDisplayName": "gpt-4.1-mini-2025-04-14",
         "rating": 1382.9728483166568,
         "ratingLower": 1378.6659494458145,
@@ -3128,7 +3156,7 @@
         "contextLength": 1047576
       },
       {
-        "rank": 159,
+        "rank": 161,
         "modelDisplayName": "hunyuan-turbos-20250416",
         "rating": 1382.3257170503152,
         "ratingLower": 1375.8594164382387,
@@ -3142,7 +3170,7 @@
         "contextLength": null
       },
       {
-        "rank": 160,
+        "rank": 162,
         "modelDisplayName": "gemini-2.5-flash-lite-preview-09-2025-no-thinking",
         "rating": 1379.6399835121201,
         "ratingLower": 1376.2040279034247,
@@ -3156,7 +3184,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 161,
+        "rank": 163,
         "modelDisplayName": "trinity-large-preview",
         "rating": 1378.5313490922492,
         "ratingLower": 1374.1599906231409,
@@ -3170,7 +3198,7 @@
         "contextLength": 131000
       },
       {
-        "rank": 162,
+        "rank": 164,
         "modelDisplayName": "glm-4.6v",
         "rating": 1377.2333027767438,
         "ratingLower": 1365.9743955593735,
@@ -3184,7 +3212,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 163,
+        "rank": 165,
         "modelDisplayName": "qwen3-235b-a22b",
         "rating": 1374.86126220844,
         "ratingLower": 1370.1641250782227,
@@ -3198,7 +3226,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 164,
+        "rank": 166,
         "modelDisplayName": "gemini-2.5-flash-lite-preview-06-17-thinking",
         "rating": 1374.339357446449,
         "ratingLower": 1369.82509235489,
@@ -3212,7 +3240,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 165,
+        "rank": 167,
         "modelDisplayName": "qwen2.5-max",
         "rating": 1374.1381897324634,
         "ratingLower": 1370.036378215459,
@@ -3226,7 +3254,7 @@
         "contextLength": null
       },
       {
-        "rank": 166,
+        "rank": 168,
         "modelDisplayName": "claude-3-5-sonnet-20241022",
         "rating": 1373.3221842090595,
         "ratingLower": 1370.1360001205212,
@@ -3240,7 +3268,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 167,
+        "rank": 169,
         "modelDisplayName": "glm-4.5-air",
         "rating": 1372.7467886645775,
         "ratingLower": 1368.5009646641345,
@@ -3254,7 +3282,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 168,
+        "rank": 170,
         "modelDisplayName": "claude-3-7-sonnet-20250219",
         "rating": 1371.659843197974,
         "ratingLower": 1367.7197669176483,
@@ -3268,7 +3296,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 169,
+        "rank": 171,
         "modelDisplayName": "qwen3-next-80b-a3b-thinking",
         "rating": 1369.3245896802218,
         "ratingLower": 1363.482220805888,
@@ -3282,7 +3310,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 170,
+        "rank": 172,
         "modelDisplayName": "trinity-large-thinking",
         "rating": 1368.8919990591753,
         "ratingLower": 1364.1841396908362,
@@ -3296,7 +3324,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 171,
+        "rank": 173,
         "modelDisplayName": "glm-4.7-flash",
         "rating": 1367.8259620598287,
         "ratingLower": 1362.0230612383752,
@@ -3310,7 +3338,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 172,
+        "rank": 174,
         "modelDisplayName": "gemma-3-27b-it",
         "rating": 1365.9046945792159,
         "ratingLower": 1362.2259485364364,
@@ -3324,7 +3352,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 173,
+        "rank": 175,
         "modelDisplayName": "amazon-nova-experimental-chat-11-10",
         "rating": 1365.8695985751242,
         "ratingLower": 1361.5020089162595,
@@ -3338,7 +3366,7 @@
         "contextLength": null
       },
       {
-        "rank": 174,
+        "rank": 176,
         "modelDisplayName": "minimax-m1",
         "rating": 1363.7724666684996,
         "ratingLower": 1359.4967948420237,
@@ -3352,7 +3380,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 175,
+        "rank": 177,
         "modelDisplayName": "o3-mini-high",
         "rating": 1363.5540118362971,
         "ratingLower": 1358.2974394479018,
@@ -3366,7 +3394,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 176,
+        "rank": 178,
         "modelDisplayName": "grok-3-mini-high",
         "rating": 1361.9439740815708,
         "ratingLower": 1356.5974351141479,
@@ -3380,7 +3408,7 @@
         "contextLength": null
       },
       {
-        "rank": 177,
+        "rank": 179,
         "modelDisplayName": "nvidia-nemotron-3-super-120b-a12b",
         "rating": 1360.8473251089524,
         "ratingLower": 1353.5683066901254,
@@ -3394,7 +3422,7 @@
         "contextLength": null
       },
       {
-        "rank": 178,
+        "rank": 180,
         "modelDisplayName": "gemini-2.0-flash-001",
         "rating": 1360.3812878879526,
         "ratingLower": 1356.5954982496792,
@@ -3408,7 +3436,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 179,
+        "rank": 181,
         "modelDisplayName": "deepseek-v3",
         "rating": 1358.5437446737142,
         "ratingLower": 1353.7960340917866,
@@ -3422,7 +3450,7 @@
         "contextLength": null
       },
       {
-        "rank": 180,
+        "rank": 182,
         "modelDisplayName": "mistral-small-2506",
         "rating": 1357.4363391583133,
         "ratingLower": 1352.232905034325,
@@ -3436,7 +3464,7 @@
         "contextLength": 32000
       },
       {
-        "rank": 181,
+        "rank": 183,
         "modelDisplayName": "grok-3-mini-beta",
         "rating": 1356.5406823237597,
         "ratingLower": 1351.5250782709545,
@@ -3450,7 +3478,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 182,
+        "rank": 184,
         "modelDisplayName": "intellect-3",
         "rating": 1356.2045968708417,
         "ratingLower": 1347.8590313684565,
@@ -3464,7 +3492,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 183,
+        "rank": 185,
         "modelDisplayName": "command-a-03-2025",
         "rating": 1354.0106146113824,
         "ratingLower": 1350.5572838885148,
@@ -3478,7 +3506,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 184,
+        "rank": 186,
         "modelDisplayName": "gemini-2.0-flash-lite-preview-02-05",
         "rating": 1353.583788728007,
         "ratingLower": 1349.2720109267625,
@@ -3492,7 +3520,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 185,
+        "rank": 187,
         "modelDisplayName": "glm-4.5v",
         "rating": 1353.3371829444288,
         "ratingLower": 1344.993994519852,
@@ -3506,7 +3534,7 @@
         "contextLength": 65536
       },
       {
-        "rank": 186,
+        "rank": 188,
         "modelDisplayName": "gpt-oss-120b",
         "rating": 1352.29334428352,
         "ratingLower": 1347.941331339142,
@@ -3520,7 +3548,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 187,
+        "rank": 189,
         "modelDisplayName": "gemini-1.5-pro-002",
         "rating": 1351.204598454681,
         "ratingLower": 1347.8138721801997,
@@ -3534,7 +3562,7 @@
         "contextLength": 2097152
       },
       {
-        "rank": 188,
+        "rank": 190,
         "modelDisplayName": "amazon-nova-experimental-chat-10-20",
         "rating": 1349.3048549590615,
         "ratingLower": 1343.1117933232135,
@@ -3548,7 +3576,7 @@
         "contextLength": null
       },
       {
-        "rank": 189,
+        "rank": 191,
         "modelDisplayName": "hunyuan-turbos-20250226",
         "rating": 1348.9429979279596,
         "ratingLower": 1337.2224842555336,
@@ -3562,7 +3590,7 @@
         "contextLength": null
       },
       {
-        "rank": 190,
+        "rank": 192,
         "modelDisplayName": "step-3",
         "rating": 1348.2579495849366,
         "ratingLower": 1340.852807696821,
@@ -3576,7 +3604,7 @@
         "contextLength": 65536
       },
       {
-        "rank": 191,
+        "rank": 193,
         "modelDisplayName": "o3-mini",
         "rating": 1347.812521500768,
         "ratingLower": 1344.2800848822005,
@@ -3590,7 +3618,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 192,
+        "rank": 194,
         "modelDisplayName": "llama-3.1-nemotron-ultra-253b-v1",
         "rating": 1347.5907001435983,
         "ratingLower": 1335.9070188969956,
@@ -3604,7 +3632,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 193,
+        "rank": 195,
         "modelDisplayName": "amazon-nova-experimental-chat-10-09",
         "rating": 1347.565627179562,
         "ratingLower": 1336.700869205872,
@@ -3618,7 +3646,7 @@
         "contextLength": null
       },
       {
-        "rank": 194,
+        "rank": 196,
         "modelDisplayName": "qwen3-32b",
         "rating": 1347.1954212020755,
         "ratingLower": 1337.7368837420051,
@@ -3632,7 +3660,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 195,
+        "rank": 197,
         "modelDisplayName": "mercury-2",
         "rating": 1346.593837816733,
         "ratingLower": 1335.9650314118671,
@@ -3646,7 +3674,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 196,
+        "rank": 198,
         "modelDisplayName": "qwen-plus-0125",
         "rating": 1346.122957440165,
         "ratingLower": 1337.786814423547,
@@ -3660,7 +3688,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 197,
+        "rank": 199,
         "modelDisplayName": "ling-flash-2.0",
         "rating": 1346.1192867175841,
         "ratingLower": 1338.8531588281767,
@@ -3674,7 +3702,7 @@
         "contextLength": null
       },
       {
-        "rank": 198,
+        "rank": 200,
         "modelDisplayName": "gpt-4o-2024-05-13",
         "rating": 1345.9300917457804,
         "ratingLower": 1342.4695469812289,
@@ -3686,34 +3714,6 @@
         "inputPricePerMillion": 5,
         "outputPricePerMillion": 15,
         "contextLength": 128000
-      },
-      {
-        "rank": 199,
-        "modelDisplayName": "minimax-m2",
-        "rating": 1345.9181130658199,
-        "ratingLower": 1338.1796321977681,
-        "ratingUpper": 1353.6565939338714,
-        "votes": 6862,
-        "organization": "MiniMax",
-        "license": "Apache 2.0",
-        "modelUrl": "https://www.minimax.io/news/minimax-m2",
-        "inputPricePerMillion": 0.255,
-        "outputPricePerMillion": 1.02,
-        "contextLength": 204800
-      },
-      {
-        "rank": 200,
-        "modelDisplayName": "nvidia-llama-3.3-nemotron-super-49b-v1.5",
-        "rating": 1343.2792656182583,
-        "ratingLower": 1333.3157120970918,
-        "ratingUpper": 1353.2428191394247,
-        "votes": 3344,
-        "organization": "Nvidia",
-        "license": "Nvidia Open",
-        "modelUrl": "https://huggingface.co/nvidia/Llama-3_3-Nemotron-Super-49B-v1_5",
-        "inputPricePerMillion": 0.1,
-        "outputPricePerMillion": 0.4,
-        "contextLength": 131072
       },
       {
         "rank": 0,
@@ -3738,10 +3738,10 @@
       {
         "rank": 1,
         "modelDisplayName": "claude-opus-5-max",
-        "rating": 1702.9084936491508,
-        "ratingLower": 1687.1498967844354,
-        "ratingUpper": 1718.6670905138662,
-        "votes": 2113,
+        "rating": 1704.67250371905,
+        "ratingLower": 1689.2121913597498,
+        "ratingUpper": 1720.1328160783498,
+        "votes": 2192,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-5",
@@ -3752,10 +3752,10 @@
       {
         "rank": 2,
         "modelDisplayName": "kimi-k3-max",
-        "rating": 1675.5446700737675,
-        "ratingLower": 1664.0283030892515,
-        "ratingUpper": 1687.0610370582835,
-        "votes": 4365,
+        "rating": 1675.5597474148117,
+        "ratingLower": 1664.0479134673187,
+        "ratingUpper": 1687.0715813623046,
+        "votes": 4366,
         "organization": "Moonshot",
         "license": "Kimi K3 license",
         "modelUrl": "https://platform.kimi.ai/docs/guide/kimi-k3-quickstart",
@@ -3766,10 +3766,10 @@
       {
         "rank": 3,
         "modelDisplayName": "claude-opus-5-high",
-        "rating": 1666.8025276648996,
-        "ratingLower": 1655.3015566863023,
-        "ratingUpper": 1678.3034986434968,
-        "votes": 3750,
+        "rating": 1668.928135772353,
+        "ratingLower": 1657.5768853517893,
+        "ratingUpper": 1680.2793861929167,
+        "votes": 3873,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-5",
@@ -3779,11 +3779,25 @@
       },
       {
         "rank": 4,
+        "modelDisplayName": "qwen3.8-max",
+        "rating": 1667.607317174256,
+        "ratingLower": 1649.9824997108667,
+        "ratingUpper": 1685.2321346376452,
+        "votes": 1563,
+        "organization": "Alibaba",
+        "license": "Proprietary",
+        "modelUrl": "https://www.qwencloud.com/models/qwen3.8-max",
+        "inputPricePerMillion": 2,
+        "outputPricePerMillion": 6,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 5,
         "modelDisplayName": "claude-fable-5",
-        "rating": 1630.7022467632405,
-        "ratingLower": 1621.2997691708138,
-        "ratingUpper": 1640.1047243556673,
-        "votes": 6251,
+        "rating": 1630.0236439715989,
+        "ratingLower": 1620.6720372608902,
+        "ratingUpper": 1639.3752506823078,
+        "votes": 6310,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
@@ -3792,12 +3806,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 5,
+        "rank": 6,
         "modelDisplayName": "gpt-5.6-sol-xhigh (codex-harness)",
-        "rating": 1621.1266673618738,
-        "ratingLower": 1611.8296365238066,
-        "ratingUpper": 1630.4236981999406,
-        "votes": 5941,
+        "rating": 1620.2674309409672,
+        "ratingLower": 1611.0324620635838,
+        "ratingUpper": 1629.5023998183508,
+        "votes": 6000,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
@@ -3806,12 +3820,12 @@
         "contextLength": 1050000
       },
       {
-        "rank": 6,
+        "rank": 7,
         "modelDisplayName": "glm-5.2-max",
-        "rating": 1587.1182452576686,
-        "ratingLower": 1578.1409658051684,
-        "ratingUpper": 1596.0955247101688,
-        "votes": 6319,
+        "rating": 1586.2923826614162,
+        "ratingLower": 1577.3452615012402,
+        "ratingUpper": 1595.2395038215923,
+        "votes": 6361,
         "organization": "Z.ai",
         "license": "MIT",
         "modelUrl": "https://huggingface.co/zai-org/GLM-5.2",
@@ -3820,12 +3834,26 @@
         "contextLength": 1000000
       },
       {
-        "rank": 7,
+        "rank": 8,
+        "modelDisplayName": "deepseek-v4-flash-high",
+        "rating": 1576.5384851960803,
+        "ratingLower": 1558.691491030225,
+        "ratingUpper": 1594.3854793619355,
+        "votes": 1319,
+        "organization": "DeepSeek",
+        "license": "MIT",
+        "modelUrl": "https://x.com/deepseek_ai/status/2083084415157022911",
+        "inputPricePerMillion": 0.14,
+        "outputPricePerMillion": 0.28,
+        "contextLength": 1048576
+      },
+      {
+        "rank": 9,
         "modelDisplayName": "claude-opus-4-8-thinking",
-        "rating": 1566.5655368045964,
-        "ratingLower": 1558.5228057907575,
-        "ratingUpper": 1574.6082678184353,
-        "votes": 8872,
+        "rating": 1566.3840557452058,
+        "ratingLower": 1558.387183079362,
+        "ratingUpper": 1574.3809284110494,
+        "votes": 8934,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-4-8",
@@ -3834,40 +3862,40 @@
         "contextLength": 1000000
       },
       {
-        "rank": 8,
-        "modelDisplayName": "claude-opus-4-7",
-        "rating": 1560.7179844733373,
-        "ratingLower": 1553.910701084521,
-        "ratingUpper": 1567.5252678621537,
-        "votes": 11702,
-        "organization": "Anthropic",
-        "license": "Proprietary",
-        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-7",
-        "inputPricePerMillion": 5,
-        "outputPricePerMillion": 25,
-        "contextLength": 1000000
-      },
-      {
-        "rank": 9,
-        "modelDisplayName": "claude-opus-4-7-thinking",
-        "rating": 1556.9139320815239,
-        "ratingLower": 1550.1490393263916,
-        "ratingUpper": 1563.6788248366556,
-        "votes": 12330,
-        "organization": "Anthropic",
-        "license": "Proprietary",
-        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-7",
-        "inputPricePerMillion": 5,
-        "outputPricePerMillion": 25,
-        "contextLength": 1000000
-      },
-      {
         "rank": 10,
+        "modelDisplayName": "claude-opus-4-7",
+        "rating": 1560.6312853423176,
+        "ratingLower": 1553.843765360612,
+        "ratingUpper": 1567.4188053240232,
+        "votes": 11755,
+        "organization": "Anthropic",
+        "license": "Proprietary",
+        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-7",
+        "inputPricePerMillion": 5,
+        "outputPricePerMillion": 25,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 11,
+        "modelDisplayName": "claude-opus-4-7-thinking",
+        "rating": 1557.4966399236423,
+        "ratingLower": 1550.7469182376262,
+        "ratingUpper": 1564.2463616096582,
+        "votes": 12387,
+        "organization": "Anthropic",
+        "license": "Proprietary",
+        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-7",
+        "inputPricePerMillion": 5,
+        "outputPricePerMillion": 25,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 12,
         "modelDisplayName": "grok-4.5",
-        "rating": 1549.7535423729073,
-        "ratingLower": 1539.407242224132,
-        "ratingUpper": 1560.099842521683,
-        "votes": 3941,
+        "rating": 1549.237713238906,
+        "ratingLower": 1538.968556197566,
+        "ratingUpper": 1559.5068702802464,
+        "votes": 3992,
         "organization": "SpaceXAI",
         "license": "Proprietary",
         "modelUrl": "https://docs.x.ai/developers/models/grok-4.5",
@@ -3876,40 +3904,12 @@
         "contextLength": 500000
       },
       {
-        "rank": 11,
-        "modelDisplayName": "claude-opus-4-6-thinking",
-        "rating": 1545.453043599276,
-        "ratingLower": 1539.2506906383019,
-        "ratingUpper": 1551.6553965602502,
-        "votes": 14224,
-        "organization": "Anthropic",
-        "license": "Proprietary",
-        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-6",
-        "inputPricePerMillion": 5,
-        "outputPricePerMillion": 25,
-        "contextLength": 1000000
-      },
-      {
-        "rank": 12,
-        "modelDisplayName": "claude-sonnet-5-high",
-        "rating": 1541.7725743768274,
-        "ratingLower": 1532.1053706449516,
-        "ratingUpper": 1551.4397781087027,
-        "votes": 4676,
-        "organization": "Anthropic",
-        "license": "Proprietary",
-        "modelUrl": "https://www.anthropic.com/news/claude-sonnet-5",
-        "inputPricePerMillion": 2,
-        "outputPricePerMillion": 10,
-        "contextLength": 1000000
-      },
-      {
         "rank": 13,
-        "modelDisplayName": "claude-opus-4-6",
-        "rating": 1537.9633536349215,
-        "ratingLower": 1531.9416556865212,
-        "ratingUpper": 1543.9850515833218,
-        "votes": 15416,
+        "modelDisplayName": "claude-opus-4-6-thinking",
+        "rating": 1545.454636484851,
+        "ratingLower": 1539.2645599882505,
+        "ratingUpper": 1551.644712981452,
+        "votes": 14273,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-4-6",
@@ -3919,11 +3919,25 @@
       },
       {
         "rank": 14,
+        "modelDisplayName": "claude-sonnet-5-high",
+        "rating": 1541.889175759523,
+        "ratingLower": 1532.2696586834484,
+        "ratingUpper": 1551.5086928355977,
+        "votes": 4722,
+        "organization": "Anthropic",
+        "license": "Proprietary",
+        "modelUrl": "https://www.anthropic.com/news/claude-sonnet-5",
+        "inputPricePerMillion": 2,
+        "outputPricePerMillion": 10,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 15,
         "modelDisplayName": "claude-opus-4-8",
-        "rating": 1537.821526535181,
-        "ratingLower": 1529.9202419968492,
-        "ratingUpper": 1545.7228110735132,
-        "votes": 7831,
+        "rating": 1538.8380243512008,
+        "ratingLower": 1530.9576845028364,
+        "ratingUpper": 1546.7183641995655,
+        "votes": 7895,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-4-8",
@@ -3932,12 +3946,26 @@
         "contextLength": 1000000
       },
       {
-        "rank": 15,
+        "rank": 16,
+        "modelDisplayName": "claude-opus-4-6",
+        "rating": 1537.9259738878704,
+        "ratingLower": 1531.9181214687403,
+        "ratingUpper": 1543.9338263070003,
+        "votes": 15482,
+        "organization": "Anthropic",
+        "license": "Proprietary",
+        "modelUrl": "https://www.anthropic.com/news/claude-opus-4-6",
+        "inputPricePerMillion": 5,
+        "outputPricePerMillion": 25,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 17,
         "modelDisplayName": "muse-spark-1.1",
-        "rating": 1535.9012366606198,
-        "ratingLower": 1525.319701671197,
-        "ratingUpper": 1546.4827716500427,
-        "votes": 3815,
+        "rating": 1535.9479079401299,
+        "ratingLower": 1525.4528312672473,
+        "ratingUpper": 1546.4429846130124,
+        "votes": 3874,
         "organization": "Meta",
         "license": "Proprietary",
         "modelUrl": "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/",
@@ -3946,12 +3974,12 @@
         "contextLength": null
       },
       {
-        "rank": 16,
+        "rank": 18,
         "modelDisplayName": "gemini-3.6-flash",
-        "rating": 1532.1869713636802,
-        "ratingLower": 1520.6111736418393,
-        "ratingUpper": 1543.762769085521,
-        "votes": 3261,
+        "rating": 1532.5353646131518,
+        "ratingLower": 1521.0537189361087,
+        "ratingUpper": 1544.017010290195,
+        "votes": 3314,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
@@ -3960,12 +3988,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 17,
+        "rank": 19,
         "modelDisplayName": "seed-2.1-pro-preview",
-        "rating": 1527.1044754847676,
-        "ratingLower": 1517.9943167774309,
-        "ratingUpper": 1536.2146341921043,
-        "votes": 5471,
+        "rating": 1526.825859918042,
+        "ratingLower": 1517.753635963191,
+        "ratingUpper": 1535.8980838728928,
+        "votes": 5513,
         "organization": "Bytedance",
         "license": "Proprietary",
         "modelUrl": "https://seed.bytedance.com/en/blog/seed-2-1-preview-model-release-on-arena",
@@ -3974,12 +4002,12 @@
         "contextLength": null
       },
       {
-        "rank": 18,
+        "rank": 20,
         "modelDisplayName": "gpt-5.6-luna-xhigh (codex-harness)",
-        "rating": 1523.086381138166,
-        "ratingLower": 1511.5385503022335,
-        "ratingUpper": 1534.6342119740984,
-        "votes": 3146,
+        "rating": 1522.9410138458493,
+        "ratingLower": 1511.511275621556,
+        "ratingUpper": 1534.3707520701425,
+        "votes": 3212,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
@@ -3988,12 +4016,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 19,
+        "rank": 21,
         "modelDisplayName": "claude-sonnet-4-6",
-        "rating": 1522.6136816102057,
-        "ratingLower": 1516.8061576556797,
-        "ratingUpper": 1528.4212055647322,
-        "votes": 17372,
+        "rating": 1522.636559679283,
+        "ratingLower": 1516.8411678681516,
+        "ratingUpper": 1528.4319514904143,
+        "votes": 17430,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-sonnet-4-6",
@@ -4002,12 +4030,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 20,
+        "rank": 22,
         "modelDisplayName": "gpt-5.6-terra-xhigh (codex-harness)",
-        "rating": 1521.6245077266435,
-        "ratingLower": 1510.0062309578225,
-        "ratingUpper": 1533.2427844954645,
-        "votes": 3105,
+        "rating": 1521.606216463791,
+        "ratingLower": 1510.0818470145275,
+        "ratingUpper": 1533.1305859130546,
+        "votes": 3162,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
@@ -4016,12 +4044,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 21,
+        "rank": 23,
         "modelDisplayName": "qwen3.7-max-20260517",
-        "rating": 1517.4715786999705,
-        "ratingLower": 1509.629871401898,
-        "ratingUpper": 1525.3132859980424,
-        "votes": 7781,
+        "rating": 1516.969139953603,
+        "ratingLower": 1509.1502027641743,
+        "ratingUpper": 1524.7880771430316,
+        "votes": 7840,
         "organization": "Alibaba",
         "license": "Proprietary",
         "modelUrl": "https://modelstudio.console.alibabacloud.com/ap-southeast-1?tab=doc#/doc/?type=model&url=2840914_2&modelId=qwen3.7-max-2026-05-17&serviceSite=international",
@@ -4030,12 +4058,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 22,
+        "rank": 24,
         "modelDisplayName": "hy3",
-        "rating": 1516.3847049035307,
-        "ratingLower": 1499.723631167973,
-        "ratingUpper": 1533.0457786390884,
-        "votes": 1492,
+        "rating": 1516.525415769808,
+        "ratingLower": 1499.865900525965,
+        "ratingUpper": 1533.184931013651,
+        "votes": 1491,
         "organization": "Tencent",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/tencent/Hy3",
@@ -4044,12 +4072,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 23,
+        "rank": 25,
         "modelDisplayName": "glm-5.1",
-        "rating": 1515.8822878528258,
-        "ratingLower": 1507.8030223493001,
-        "ratingUpper": 1523.9615533563515,
-        "votes": 7315,
+        "rating": 1516.1625934925835,
+        "ratingLower": 1508.123039357854,
+        "ratingUpper": 1524.2021476273128,
+        "votes": 7377,
         "organization": "Z.ai",
         "license": "MIT",
         "modelUrl": "https://huggingface.co/zai-org/GLM-5.1",
@@ -4058,12 +4086,12 @@
         "contextLength": 202752
       },
       {
-        "rank": 24,
+        "rank": 26,
         "modelDisplayName": "kimi-k2.6",
-        "rating": 1509.677053508873,
-        "ratingLower": 1502.1536389490607,
-        "ratingUpper": 1517.200468068685,
-        "votes": 9257,
+        "rating": 1509.5096689539962,
+        "ratingLower": 1501.9914650225417,
+        "ratingUpper": 1517.027872885451,
+        "votes": 9256,
         "organization": "Moonshot",
         "license": "Modified MIT",
         "modelUrl": "https://www.kimi.com/blog/kimi-k2-6",
@@ -4072,12 +4100,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 25,
+        "rank": 27,
         "modelDisplayName": "gpt-5.5-xhigh (codex-harness)",
-        "rating": 1508.0617664758192,
-        "ratingLower": 1501.063335128642,
-        "ratingUpper": 1515.060197822997,
-        "votes": 10794,
+        "rating": 1508.9406640135426,
+        "ratingLower": 1501.96452933699,
+        "ratingUpper": 1515.9167986900952,
+        "votes": 10857,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/introducing-gpt-5-5/",
@@ -4086,12 +4114,26 @@
         "contextLength": null
       },
       {
-        "rank": 26,
+        "rank": 28,
+        "modelDisplayName": "gemini-3.5-flash-high",
+        "rating": 1506.875818996115,
+        "ratingLower": 1494.2546093144692,
+        "ratingUpper": 1519.497028677761,
+        "votes": 2565,
+        "organization": "Google",
+        "license": "Proprietary",
+        "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+        "inputPricePerMillion": null,
+        "outputPricePerMillion": null,
+        "contextLength": null
+      },
+      {
+        "rank": 29,
         "modelDisplayName": "claude-opus-4-5-20251101-thinking-32k",
-        "rating": 1494.3642485977743,
-        "ratingLower": 1486.00299607152,
-        "ratingUpper": 1502.725501124029,
-        "votes": 10538,
+        "rating": 1494.4524963312572,
+        "ratingLower": 1486.0944827263859,
+        "ratingUpper": 1502.8105099361287,
+        "votes": 10537,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-4-5",
@@ -4100,11 +4142,11 @@
         "contextLength": 200000
       },
       {
-        "rank": 27,
+        "rank": 30,
         "modelDisplayName": "gemini-3.5-flash",
-        "rating": 1492.27708772271,
-        "ratingLower": 1478.6053795868138,
-        "ratingUpper": 1505.9487958586064,
+        "rating": 1492.2694736599321,
+        "ratingLower": 1478.5993495977696,
+        "ratingUpper": 1505.9395977220945,
         "votes": 2309,
         "organization": "Google",
         "license": "Proprietary",
@@ -4114,12 +4156,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 28,
+        "rank": 31,
         "modelDisplayName": "minimax-m3",
-        "rating": 1491.2688261564895,
-        "ratingLower": 1483.4629709006667,
-        "ratingUpper": 1499.0746814123127,
-        "votes": 8104,
+        "rating": 1490.7442961048064,
+        "ratingLower": 1482.9644536961143,
+        "ratingUpper": 1498.5241385134984,
+        "votes": 8155,
         "organization": "MiniMax",
         "license": "MiniMax Community License",
         "modelUrl": "https://www.minimax.io/models/text/m3",
@@ -4128,12 +4170,12 @@
         "contextLength": null
       },
       {
-        "rank": 29,
+        "rank": 32,
         "modelDisplayName": "gemini-3.5-flash-medium",
-        "rating": 1487.4983968787792,
-        "ratingLower": 1479.3067714496856,
-        "ratingUpper": 1495.6900223078728,
-        "votes": 7272,
+        "rating": 1486.1839679040813,
+        "ratingLower": 1478.0324358870357,
+        "ratingUpper": 1494.3354999211272,
+        "votes": 7329,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
@@ -4142,12 +4184,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 30,
+        "rank": 33,
         "modelDisplayName": "gpt-5.5-high (codex-harness)",
-        "rating": 1485.2863678637327,
-        "ratingLower": 1478.411321472905,
-        "ratingUpper": 1492.1614142545604,
-        "votes": 12626,
+        "rating": 1485.1056962708635,
+        "ratingLower": 1478.25429271487,
+        "ratingUpper": 1491.957099826857,
+        "votes": 12682,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/introducing-gpt-5-5/",
@@ -4156,11 +4198,11 @@
         "contextLength": null
       },
       {
-        "rank": 31,
+        "rank": 34,
         "modelDisplayName": "qwen3.6-max-preview",
-        "rating": 1478.1940209246673,
-        "ratingLower": 1465.2840218907759,
-        "ratingUpper": 1491.104019958559,
+        "rating": 1478.1785993326744,
+        "ratingLower": 1465.2705646273541,
+        "ratingUpper": 1491.0866340379944,
         "votes": 2539,
         "organization": "Alibaba",
         "license": "Proprietary",
@@ -4170,12 +4212,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 32,
+        "rank": 35,
         "modelDisplayName": "mimo-v2.5-pro",
-        "rating": 1473.3341017843118,
-        "ratingLower": 1466.5025180301504,
-        "ratingUpper": 1480.1656855384736,
-        "votes": 11299,
+        "rating": 1474.0178150332429,
+        "ratingLower": 1467.207535732192,
+        "ratingUpper": 1480.8280943342936,
+        "votes": 11350,
         "organization": "Xiaomi",
         "license": "MIT",
         "modelUrl": "https://mimo.xiaomi.com/mimo-v2-5-pro/",
@@ -4184,12 +4226,12 @@
         "contextLength": 1050000
       },
       {
-        "rank": 33,
+        "rank": 36,
         "modelDisplayName": "kimi-k2.7-code",
-        "rating": 1472.6975184242629,
-        "ratingLower": 1462.8650047300735,
-        "ratingUpper": 1482.5300321184527,
-        "votes": 4538,
+        "rating": 1472.5711676894903,
+        "ratingLower": 1462.7404223441586,
+        "ratingUpper": 1482.401913034822,
+        "votes": 4539,
         "organization": "Moonshot",
         "license": "Modified MIT",
         "modelUrl": "https://platform.kimi.ai/docs/guide/kimi-k2-7-code-quickstart",
@@ -4198,12 +4240,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 34,
+        "rank": 37,
         "modelDisplayName": "claude-opus-4-5-20251101",
-        "rating": 1467.0366621966537,
-        "ratingLower": 1459.7621867858174,
-        "ratingUpper": 1474.3111376074903,
-        "votes": 12783,
+        "rating": 1466.9903244298578,
+        "ratingLower": 1459.7207372524645,
+        "ratingUpper": 1474.2599116072513,
+        "votes": 12782,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-opus-4-5",
@@ -4212,12 +4254,12 @@
         "contextLength": 200000
       },
       {
-        "rank": 35,
+        "rank": 38,
         "modelDisplayName": "deepseek-v4-pro-high-preview",
-        "rating": 1464.6115470330674,
-        "ratingLower": 1457.6720860760847,
-        "ratingUpper": 1471.5510079900505,
-        "votes": 10618,
+        "rating": 1463.8791269132066,
+        "ratingLower": 1456.9640992539375,
+        "ratingUpper": 1470.7941545724755,
+        "votes": 10670,
         "organization": "DeepSeek",
         "license": "MIT",
         "modelUrl": "https://api-docs.deepseek.com/news/news260424",
@@ -4226,11 +4268,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 36,
+        "rank": 39,
         "modelDisplayName": "gpt-5.4-high (codex-harness)",
-        "rating": 1462.1676501510847,
-        "ratingLower": 1442.6278093593555,
-        "ratingUpper": 1481.7074909428143,
+        "rating": 1462.1584528762987,
+        "ratingLower": 1442.6204644103498,
+        "ratingUpper": 1481.6964413422477,
         "votes": 1259,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4240,12 +4282,12 @@
         "contextLength": 1050000
       },
       {
-        "rank": 37,
+        "rank": 40,
         "modelDisplayName": "qwen3.6-plus",
-        "rating": 1457.9922346339877,
-        "ratingLower": 1451.6154019897326,
-        "ratingUpper": 1464.3690672782427,
-        "votes": 13438,
+        "rating": 1457.85832143372,
+        "ratingLower": 1451.5000416758899,
+        "ratingUpper": 1464.2166011915501,
+        "votes": 13492,
         "organization": "Alibaba",
         "license": "Proprietary",
         "modelUrl": "https://qwen.ai/blog?id=qwen3.6",
@@ -4254,12 +4296,12 @@
         "contextLength": 1000000
       },
       {
-        "rank": 38,
+        "rank": 41,
         "modelDisplayName": "gpt-5.5 (codex-harness)",
-        "rating": 1457.4541147224231,
-        "ratingLower": 1450.5462482177434,
-        "ratingUpper": 1464.3619812271027,
-        "votes": 10935,
+        "rating": 1457.5367126565307,
+        "ratingLower": 1450.650453241899,
+        "ratingUpper": 1464.4229720711626,
+        "votes": 10988,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/introducing-gpt-5-5/",
@@ -4268,12 +4310,12 @@
         "contextLength": null
       },
       {
-        "rank": 39,
+        "rank": 42,
         "modelDisplayName": "gemini-3.5-flash-lite",
-        "rating": 1452.8411759083128,
-        "ratingLower": 1409.0323330973927,
-        "ratingUpper": 1496.6500187192332,
-        "votes": 215,
+        "rating": 1451.8745263117073,
+        "ratingLower": 1407.8057832179888,
+        "ratingUpper": 1495.9432694054258,
+        "votes": 214,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
@@ -4282,12 +4324,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 40,
+        "rank": 43,
         "modelDisplayName": "gemini-3.1-pro-preview",
-        "rating": 1446.5595289226312,
-        "ratingLower": 1440.932132627995,
-        "ratingUpper": 1452.1869252172673,
-        "votes": 18540,
+        "rating": 1446.833469609246,
+        "ratingLower": 1441.2199957344521,
+        "ratingUpper": 1452.4469434840403,
+        "votes": 18596,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/",
@@ -4296,12 +4338,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 41,
+        "rank": 44,
         "modelDisplayName": "deepseek-v4-pro",
-        "rating": 1446.3137398087902,
-        "ratingLower": 1439.3459608233884,
-        "ratingUpper": 1453.281518794192,
-        "votes": 11196,
+        "rating": 1446.0012087850423,
+        "ratingLower": 1439.0509201349969,
+        "ratingUpper": 1452.9514974350875,
+        "votes": 11248,
         "organization": "DeepSeek",
         "license": "MIT",
         "modelUrl": "https://api-docs.deepseek.com/news/news260424",
@@ -4310,11 +4352,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 42,
+        "rank": 45,
         "modelDisplayName": "gpt-5.4-medium (codex-harness)",
-        "rating": 1443.525560435057,
-        "ratingLower": 1424.668172322621,
-        "ratingUpper": 1462.382948547493,
+        "rating": 1443.516073377084,
+        "ratingLower": 1424.6607327980428,
+        "ratingUpper": 1462.3714139561255,
         "votes": 1296,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4324,11 +4366,11 @@
         "contextLength": 1050000
       },
       {
-        "rank": 43,
+        "rank": 46,
         "modelDisplayName": "gemini-3-pro",
-        "rating": 1438.150609308233,
-        "ratingLower": 1429.632208085874,
-        "ratingUpper": 1446.669010530592,
+        "rating": 1438.1475018993888,
+        "ratingLower": 1429.6333026554257,
+        "ratingUpper": 1446.6617011433518,
         "votes": 13488,
         "organization": "Google",
         "license": "Proprietary",
@@ -4338,11 +4380,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 44,
+        "rank": 47,
         "modelDisplayName": "gemini-3-flash",
-        "rating": 1438.0040448619563,
-        "ratingLower": 1429.2555938596083,
-        "ratingUpper": 1446.7524958643044,
+        "rating": 1438.008607311558,
+        "ratingLower": 1429.2643065453983,
+        "ratingUpper": 1446.7529080777178,
         "votes": 10416,
         "organization": "Google",
         "license": "Proprietary",
@@ -4352,26 +4394,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 45,
-        "modelDisplayName": "mimo-v2.5",
-        "rating": 1435.7824352817715,
-        "ratingLower": 1428.7542653595192,
-        "ratingUpper": 1442.8106052040241,
-        "votes": 10232,
-        "organization": "Xiaomi",
-        "license": "MIT",
-        "modelUrl": "https://mimo.xiaomi.com/mimo-v2-5/",
-        "inputPricePerMillion": 0.14,
-        "outputPricePerMillion": 0.28,
-        "contextLength": 1050000
-      },
-      {
-        "rank": 46,
+        "rank": 48,
         "modelDisplayName": "kimi-k2.5-thinking",
-        "rating": 1435.5908365056073,
-        "ratingLower": 1429.84977715619,
-        "ratingUpper": 1441.3318958550244,
-        "votes": 15884,
+        "rating": 1435.7698441223602,
+        "ratingLower": 1430.0413055108622,
+        "ratingUpper": 1441.4983827338583,
+        "votes": 15931,
         "organization": "Moonshot",
         "license": "Modified MIT",
         "modelUrl": "https://www.kimi.com/blog/kimi-k2-5.html",
@@ -4380,12 +4408,26 @@
         "contextLength": null
       },
       {
-        "rank": 47,
+        "rank": 49,
+        "modelDisplayName": "mimo-v2.5",
+        "rating": 1435.4966381626555,
+        "ratingLower": 1428.4874654096225,
+        "ratingUpper": 1442.505810915689,
+        "votes": 10292,
+        "organization": "Xiaomi",
+        "license": "MIT",
+        "modelUrl": "https://mimo.xiaomi.com/mimo-v2-5/",
+        "inputPricePerMillion": 0.14,
+        "outputPricePerMillion": 0.28,
+        "contextLength": 1050000
+      },
+      {
+        "rank": 50,
         "modelDisplayName": "glm-5",
-        "rating": 1434.7039227667815,
-        "ratingLower": 1426.3046704417657,
-        "ratingUpper": 1443.1031750917978,
-        "votes": 6968,
+        "rating": 1434.7419679399914,
+        "ratingLower": 1426.3488381354905,
+        "ratingUpper": 1443.1350977444924,
+        "votes": 6971,
         "organization": "Z.ai",
         "license": "MIT",
         "modelUrl": "https://huggingface.co/zai-org/GLM-5",
@@ -4394,11 +4436,11 @@
         "contextLength": 202800
       },
       {
-        "rank": 48,
+        "rank": 51,
         "modelDisplayName": "glm-4.7",
-        "rating": 1433.452550546826,
-        "ratingLower": 1421.0670221352834,
-        "ratingUpper": 1445.838078958369,
+        "rating": 1433.4636164970236,
+        "ratingLower": 1421.0811250349534,
+        "ratingUpper": 1445.846107959094,
         "votes": 3797,
         "organization": "Z.ai",
         "license": "MIT",
@@ -4408,11 +4450,11 @@
         "contextLength": 204800
       },
       {
-        "rank": 49,
+        "rank": 52,
         "modelDisplayName": "mimo-v2-pro",
-        "rating": 1432.9865368380147,
-        "ratingLower": 1424.62802106841,
-        "ratingUpper": 1441.3450526076194,
+        "rating": 1433.0005663335292,
+        "ratingLower": 1424.645627025263,
+        "ratingUpper": 1441.3555056417958,
         "votes": 6845,
         "organization": "Xiaomi",
         "license": "Proprietary",
@@ -4422,12 +4464,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 50,
+        "rank": 53,
         "modelDisplayName": "deepseek-v4-flash-high-preview",
-        "rating": 1432.1069420043177,
-        "ratingLower": 1424.8255532282988,
-        "ratingUpper": 1439.3883307803364,
-        "votes": 9165,
+        "rating": 1431.9346058303595,
+        "ratingLower": 1424.6578326403396,
+        "ratingUpper": 1439.211379020379,
+        "votes": 9164,
         "organization": "DeepSeek",
         "license": "MIT",
         "modelUrl": "https://api-docs.deepseek.com/news/news260424",
@@ -4436,11 +4478,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 51,
+        "rank": 54,
         "modelDisplayName": "gpt-5.2",
-        "rating": 1419.1847040268312,
-        "ratingLower": 1396.1017845535775,
-        "ratingUpper": 1442.2676235000852,
+        "rating": 1419.1945746016022,
+        "ratingLower": 1396.1131780995959,
+        "ratingUpper": 1442.2759711036085,
         "votes": 1049,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4450,11 +4492,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 52,
+        "rank": 55,
         "modelDisplayName": "gpt-5-medium",
-        "rating": 1418.9404303495185,
-        "ratingLower": 1403.142487670821,
-        "ratingUpper": 1434.738373028216,
+        "rating": 1418.9486372293813,
+        "ratingLower": 1403.1531107683427,
+        "ratingUpper": 1434.7441636904202,
         "votes": 3018,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4464,12 +4506,12 @@
         "contextLength": 400000
       },
       {
-        "rank": 53,
+        "rank": 56,
         "modelDisplayName": "inkling",
-        "rating": 1411.8296074303921,
-        "ratingLower": 1402.2843341530083,
-        "ratingUpper": 1421.3748807077757,
-        "votes": 4662,
+        "rating": 1411.460641558027,
+        "ratingLower": 1401.9539623361582,
+        "ratingUpper": 1420.967320779896,
+        "votes": 4710,
         "organization": "Thinky",
         "license": "Apache 2.0",
         "modelUrl": "https://thinkingmachines.ai/news/introducing-inkling/",
@@ -4478,11 +4520,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 54,
+        "rank": 57,
         "modelDisplayName": "gpt-5.3-codex (codex-harness)",
-        "rating": 1408.9565326284026,
-        "ratingLower": 1395.013155939193,
-        "ratingUpper": 1422.8999093176121,
+        "rating": 1408.8954754450313,
+        "ratingLower": 1394.9551986594265,
+        "ratingUpper": 1422.835752230636,
         "votes": 2502,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4492,11 +4534,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 55,
+        "rank": 58,
         "modelDisplayName": "kimi-k2.5-instant",
-        "rating": 1404.7649045985982,
-        "ratingLower": 1392.470700525251,
-        "ratingUpper": 1417.059108671945,
+        "rating": 1404.7669147355264,
+        "ratingLower": 1392.4755845020359,
+        "ratingUpper": 1417.0582449690166,
         "votes": 3087,
         "organization": "Moonshot",
         "license": "Modified MIT",
@@ -4506,12 +4548,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 56,
+        "rank": 59,
         "modelDisplayName": "qwen3.5-397b-a17b",
-        "rating": 1400.1423353560886,
-        "ratingLower": 1394.3853854962392,
-        "ratingUpper": 1405.899285215938,
-        "votes": 15750,
+        "rating": 1399.586279547009,
+        "ratingLower": 1393.8502292920289,
+        "ratingUpper": 1405.3223298019893,
+        "votes": 15821,
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
@@ -4520,26 +4562,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 57,
-        "modelDisplayName": "gpt-5.4-mini-high",
-        "rating": 1398.86698076993,
-        "ratingLower": 1392.075471440749,
-        "ratingUpper": 1405.658490099111,
-        "votes": 10919,
-        "organization": "OpenAI",
-        "license": "Proprietary",
-        "modelUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
-        "inputPricePerMillion": 0.75,
-        "outputPricePerMillion": 4.5,
-        "contextLength": 400000
-      },
-      {
-        "rank": 58,
+        "rank": 60,
         "modelDisplayName": "glm-5v-turbo",
-        "rating": 1398.8650343679387,
-        "ratingLower": 1384.5211449205387,
-        "ratingUpper": 1413.208923815339,
-        "votes": 2096,
+        "rating": 1399.34900515842,
+        "ratingLower": 1384.9918775479107,
+        "ratingUpper": 1413.7061327689294,
+        "votes": 2090,
         "organization": "Z.ai",
         "license": "Proprietary",
         "modelUrl": "https://docs.z.ai/guides/vlm/glm-5v-turbo",
@@ -4548,12 +4576,26 @@
         "contextLength": 202752
       },
       {
-        "rank": 59,
+        "rank": 61,
+        "modelDisplayName": "gpt-5.4-mini-high",
+        "rating": 1398.6595732738588,
+        "ratingLower": 1391.8731554333617,
+        "ratingUpper": 1405.4459911143556,
+        "votes": 10921,
+        "organization": "OpenAI",
+        "license": "Proprietary",
+        "modelUrl": "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
+        "inputPricePerMillion": 0.75,
+        "outputPricePerMillion": 4.5,
+        "contextLength": 400000
+      },
+      {
+        "rank": 62,
         "modelDisplayName": "minimax-m2.7",
-        "rating": 1398.7082103917223,
-        "ratingLower": 1392.1972928500645,
-        "ratingUpper": 1405.2191279333797,
-        "votes": 11872,
+        "rating": 1398.4923771599088,
+        "ratingLower": 1392.0019464188904,
+        "ratingUpper": 1404.982807900927,
+        "votes": 11921,
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m27-en",
@@ -4562,11 +4604,11 @@
         "contextLength": 204800
       },
       {
-        "rank": 60,
+        "rank": 63,
         "modelDisplayName": "claude-sonnet-4-5-20250929-thinking-32k",
-        "rating": 1391.9073423837208,
-        "ratingLower": 1384.1256551405036,
-        "ratingUpper": 1399.6890296269385,
+        "rating": 1391.8953892847076,
+        "ratingLower": 1384.118591985601,
+        "ratingUpper": 1399.672186583814,
         "votes": 12733,
         "organization": "Anthropic",
         "license": "Proprietary",
@@ -4576,11 +4618,11 @@
         "contextLength": 200000
       },
       {
-        "rank": 61,
+        "rank": 64,
         "modelDisplayName": "gpt-5.1-medium",
-        "rating": 1390.3578093774513,
-        "ratingLower": 1378.7565607989259,
-        "ratingUpper": 1401.959057955977,
+        "rating": 1390.3661276065418,
+        "ratingLower": 1378.768029474885,
+        "ratingUpper": 1401.9642257381988,
         "votes": 4738,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4590,12 +4632,12 @@
         "contextLength": 400000
       },
       {
-        "rank": 62,
+        "rank": 65,
         "modelDisplayName": "gpt-5.4",
-        "rating": 1389.4158310936461,
-        "ratingLower": 1371.7232171257347,
-        "ratingUpper": 1407.1084450615576,
-        "votes": 1250,
+        "rating": 1389.2851374611637,
+        "ratingLower": 1371.6286913471008,
+        "ratingUpper": 1406.9415835752266,
+        "votes": 1255,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://platform.openai.com/docs/models/gpt-5.4",
@@ -4604,11 +4646,11 @@
         "contextLength": 1050000
       },
       {
-        "rank": 63,
+        "rank": 66,
         "modelDisplayName": "claude-opus-4-1-20250805",
-        "rating": 1388.7348036992257,
-        "ratingLower": 1377.9183432685672,
-        "ratingUpper": 1399.5512641298842,
+        "rating": 1388.7408842125642,
+        "ratingLower": 1377.9278349653396,
+        "ratingUpper": 1399.5539334597888,
         "votes": 6736,
         "organization": "Anthropic",
         "license": "Proprietary",
@@ -4618,11 +4660,11 @@
         "contextLength": 200000
       },
       {
-        "rank": 64,
+        "rank": 67,
         "modelDisplayName": "minimax-m2.1-preview",
-        "rating": 1388.3969003733596,
-        "ratingLower": 1378.6878448021153,
-        "ratingUpper": 1398.105955944604,
+        "rating": 1388.4043621400833,
+        "ratingLower": 1378.6990209117241,
+        "ratingUpper": 1398.1097033684423,
         "votes": 7291,
         "organization": "MiniMax",
         "license": "MIT",
@@ -4632,12 +4674,12 @@
         "contextLength": 204800
       },
       {
-        "rank": 65,
+        "rank": 68,
         "modelDisplayName": "minimax-m2.5",
-        "rating": 1386.2895277591022,
-        "ratingLower": 1377.7895833404366,
-        "ratingUpper": 1394.7894721777677,
-        "votes": 7167,
+        "rating": 1386.2660689170189,
+        "ratingLower": 1377.7706040702697,
+        "ratingUpper": 1394.761533763768,
+        "votes": 7168,
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m25",
@@ -4646,11 +4688,11 @@
         "contextLength": 204800
       },
       {
-        "rank": 66,
+        "rank": 69,
         "modelDisplayName": "claude-sonnet-4-5-20250929",
-        "rating": 1385.1423898438904,
-        "ratingLower": 1377.8188363575618,
-        "ratingUpper": 1392.465943330219,
+        "rating": 1385.1252693168476,
+        "ratingLower": 1377.806826790701,
+        "ratingUpper": 1392.4437118429944,
         "votes": 15083,
         "organization": "Anthropic",
         "license": "Proprietary",
@@ -4660,12 +4702,12 @@
         "contextLength": 200000
       },
       {
-        "rank": 67,
+        "rank": 70,
         "modelDisplayName": "gemini-3-flash (thinking-minimal)",
-        "rating": 1383.3903693201003,
-        "ratingLower": 1378.014597093867,
-        "ratingUpper": 1388.7661415463335,
-        "votes": 20491,
+        "rating": 1383.417527124414,
+        "ratingLower": 1378.0469940909484,
+        "ratingUpper": 1388.7880601578795,
+        "votes": 20489,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/products/gemini/gemini-3-flash",
@@ -4674,12 +4716,12 @@
         "contextLength": 1048576
       },
       {
-        "rank": 68,
+        "rank": 71,
         "modelDisplayName": "grok-4.20-beta-0309-reasoning",
-        "rating": 1373.678330743389,
-        "ratingLower": 1367.351358279705,
-        "ratingUpper": 1380.0053032070732,
-        "votes": 14072,
+        "rating": 1373.6778981464531,
+        "ratingLower": 1367.3545968870242,
+        "ratingUpper": 1380.0011994058823,
+        "votes": 14068,
         "organization": "SpaceXAI",
         "license": "Proprietary",
         "modelUrl": "https://docs.x.ai/developers/models/grok-4.20-beta-0309-reasoning",
@@ -4688,11 +4730,11 @@
         "contextLength": 2000000
       },
       {
-        "rank": 69,
+        "rank": 72,
         "modelDisplayName": "gpt-5.3-codex (codex-harness)",
-        "rating": 1369.4079776703825,
-        "ratingLower": 1357.7600779586983,
-        "ratingUpper": 1381.0558773820667,
+        "rating": 1369.369676121883,
+        "ratingLower": 1357.7246309844159,
+        "ratingUpper": 1381.0147212593506,
         "votes": 3425,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4702,11 +4744,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 70,
+        "rank": 73,
         "modelDisplayName": "gemma-4-26b-a4b",
-        "rating": 1366.6423368977985,
-        "ratingLower": 1349.2319464465118,
-        "ratingUpper": 1384.0527273490852,
+        "rating": 1366.5888394879403,
+        "ratingLower": 1349.1799659028402,
+        "ratingUpper": 1383.9977130730404,
         "votes": 1415,
         "organization": "Google",
         "license": "Apache 2.0",
@@ -4716,12 +4758,12 @@
         "contextLength": null
       },
       {
-        "rank": 71,
+        "rank": 74,
         "modelDisplayName": "gemma-4-31b",
-        "rating": 1363.7364437706758,
-        "ratingLower": 1355.646617973834,
-        "ratingUpper": 1371.8262695675176,
-        "votes": 7356,
+        "rating": 1363.3921632255365,
+        "ratingLower": 1355.3230926649026,
+        "ratingUpper": 1371.4612337861704,
+        "votes": 7392,
         "organization": "Google",
         "license": "Apache 2.0",
         "modelUrl": "https://aistudio.google.com/app/prompts/new_chat?model=gemma-4-31b-it",
@@ -4730,11 +4772,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 72,
+        "rank": 75,
         "modelDisplayName": "deepseek-v3.2-thinking",
-        "rating": 1360.7424847224895,
-        "ratingLower": 1351.5104366827627,
-        "ratingUpper": 1369.9745327622163,
+        "rating": 1360.7244852354586,
+        "ratingLower": 1351.4966398203371,
+        "ratingUpper": 1369.95233065058,
         "votes": 6613,
         "organization": "DeepSeek",
         "license": "MIT",
@@ -4744,12 +4786,12 @@
         "contextLength": 163840
       },
       {
-        "rank": 73,
+        "rank": 76,
         "modelDisplayName": "qwen3.5-122b-a10b",
-        "rating": 1359.5317058582466,
-        "ratingLower": 1351.6663539100325,
-        "ratingUpper": 1367.3970578064607,
-        "votes": 7688,
+        "rating": 1359.503853706717,
+        "ratingLower": 1351.6433460324029,
+        "ratingUpper": 1367.364361381031,
+        "votes": 7690,
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
@@ -4758,12 +4800,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 74,
+        "rank": 77,
         "modelDisplayName": "qwen3.5-27b",
-        "rating": 1357.676052616963,
-        "ratingLower": 1349.4277387810841,
-        "ratingUpper": 1365.924366452842,
-        "votes": 7296,
+        "rating": 1357.6160357563247,
+        "ratingLower": 1349.3718245146124,
+        "ratingUpper": 1365.860246998037,
+        "votes": 7297,
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3.5-27B",
@@ -4772,26 +4814,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 75,
-        "modelDisplayName": "hunyuan-hy3-preview",
-        "rating": 1357.0693721538664,
-        "ratingLower": 1339.230364234882,
-        "ratingUpper": 1374.9083800728508,
-        "votes": 1361,
-        "organization": "Tencent",
-        "license": "tencent-hunyuan-community",
-        "modelUrl": "https://huggingface.co/tencent/Hy3-preview",
-        "inputPricePerMillion": null,
-        "outputPricePerMillion": null,
-        "contextLength": null
-      },
-      {
-        "rank": 76,
+        "rank": 78,
         "modelDisplayName": "grok-4.3",
-        "rating": 1356.7931276179406,
-        "ratingLower": 1349.56022601642,
-        "ratingUpper": 1364.0260292194612,
-        "votes": 10151,
+        "rating": 1356.9267718162364,
+        "ratingLower": 1349.711091315506,
+        "ratingUpper": 1364.142452316967,
+        "votes": 10203,
         "organization": "SpaceXAI",
         "license": "Proprietary",
         "modelUrl": "https://docs.x.ai/developers/models/grok-4.3",
@@ -4800,12 +4828,26 @@
         "contextLength": 1000000
       },
       {
-        "rank": 77,
+        "rank": 79,
+        "modelDisplayName": "hunyuan-hy3-preview",
+        "rating": 1356.771194427313,
+        "ratingLower": 1338.9190214844868,
+        "ratingUpper": 1374.6233673701392,
+        "votes": 1360,
+        "organization": "Tencent",
+        "license": "tencent-hunyuan-community",
+        "modelUrl": "https://huggingface.co/tencent/Hy3-preview",
+        "inputPricePerMillion": null,
+        "outputPricePerMillion": null,
+        "contextLength": null
+      },
+      {
+        "rank": 80,
         "modelDisplayName": "laguna-m.1",
-        "rating": 1349.0350821906104,
-        "ratingLower": 1339.268254385666,
-        "ratingUpper": 1358.8019099955545,
-        "votes": 4877,
+        "rating": 1348.8143823611476,
+        "ratingLower": 1339.0503644698501,
+        "ratingUpper": 1358.5784002524447,
+        "votes": 4876,
         "organization": "Poolside",
         "license": "Apache 2.0",
         "modelUrl": "https://poolside.ai/blog/introducing-laguna-xs2-m1",
@@ -4814,12 +4856,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 78,
+        "rank": 81,
         "modelDisplayName": "gpt-5.1",
-        "rating": 1341.2793742238237,
-        "ratingLower": 1332.7307319632032,
-        "ratingUpper": 1349.8280164844437,
-        "votes": 10271,
+        "rating": 1341.2741438282924,
+        "ratingLower": 1332.73188088451,
+        "ratingUpper": 1349.8164067720745,
+        "votes": 10272,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-1/",
@@ -4828,11 +4870,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 79,
+        "rank": 82,
         "modelDisplayName": "glm-4.6",
-        "rating": 1339.023116277195,
-        "ratingLower": 1328.1582179208156,
-        "ratingUpper": 1349.8880146335741,
+        "rating": 1339.0301150737482,
+        "ratingLower": 1328.16858745175,
+        "ratingUpper": 1349.8916426957467,
         "votes": 6568,
         "organization": "Z.ai",
         "license": "MIT",
@@ -4842,12 +4884,12 @@
         "contextLength": 204800
       },
       {
-        "rank": 80,
+        "rank": 83,
         "modelDisplayName": "gpt-5.2-codex",
-        "rating": 1338.344826830286,
-        "ratingLower": 1329.3005998360031,
-        "ratingUpper": 1347.3890538245691,
-        "votes": 6386,
+        "rating": 1338.403835711622,
+        "ratingLower": 1329.3627965347127,
+        "ratingUpper": 1347.4448748885309,
+        "votes": 6385,
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/introducing-gpt-5-2-codex",
@@ -4856,11 +4898,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 81,
+        "rank": 84,
         "modelDisplayName": "gpt-5.1-codex",
-        "rating": 1336.062870138794,
-        "ratingLower": 1324.3228420262672,
-        "ratingUpper": 1347.802898251321,
+        "rating": 1336.0713447180606,
+        "ratingLower": 1324.334479186898,
+        "ratingUpper": 1347.808210249223,
         "votes": 4834,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -4870,11 +4912,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 82,
+        "rank": 85,
         "modelDisplayName": "mimo-v2-flash (non-thinking)",
-        "rating": 1330.6816580857603,
-        "ratingLower": 1320.7517407698992,
-        "ratingUpper": 1340.6115754016216,
+        "rating": 1330.689586876565,
+        "ratingLower": 1320.76339183424,
+        "ratingUpper": 1340.6157819188898,
         "votes": 5413,
         "organization": "Xiaomi",
         "license": "MIT",
@@ -4884,12 +4926,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 83,
+        "rank": 86,
         "modelDisplayName": "claude-haiku-4-5-20251001",
-        "rating": 1324.906930944327,
-        "ratingLower": 1319.5811057067313,
-        "ratingUpper": 1330.2327561819232,
-        "votes": 24028,
+        "rating": 1325.0375444255974,
+        "ratingLower": 1319.723184147896,
+        "ratingUpper": 1330.3519047032985,
+        "votes": 24078,
         "organization": "Anthropic",
         "license": "Proprietary",
         "modelUrl": "https://www.anthropic.com/news/claude-haiku-4-5",
@@ -4898,12 +4940,12 @@
         "contextLength": 200000
       },
       {
-        "rank": 84,
+        "rank": 87,
         "modelDisplayName": "deepseek-v3.2",
-        "rating": 1323.3843402635898,
-        "ratingLower": 1315.3014244293024,
-        "ratingUpper": 1331.467256097877,
-        "votes": 8905,
+        "rating": 1323.3839782502118,
+        "ratingLower": 1315.3073853417966,
+        "ratingUpper": 1331.4605711586269,
+        "votes": 8906,
         "organization": "DeepSeek",
         "license": "MIT",
         "modelUrl": "https://api-docs.deepseek.com/news/news250929",
@@ -4912,12 +4954,12 @@
         "contextLength": 163840
       },
       {
-        "rank": 85,
+        "rank": 88,
         "modelDisplayName": "kimi-k2-thinking-turbo",
-        "rating": 1322.0317378693844,
-        "ratingLower": 1314.5427309536549,
-        "ratingUpper": 1329.520744785114,
-        "votes": 12548,
+        "rating": 1322.0010912510575,
+        "ratingLower": 1314.5170056632196,
+        "ratingUpper": 1329.4851768388955,
+        "votes": 12547,
         "organization": "Moonshot",
         "license": "Modified MIT",
         "modelUrl": "https://huggingface.co/moonshotai/Kimi-K2-Thinking",
@@ -4926,12 +4968,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 86,
+        "rank": 89,
         "modelDisplayName": "laguna-xs.2",
-        "rating": 1303.562514530277,
-        "ratingLower": 1292.1571029383153,
-        "ratingUpper": 1314.9679261222386,
-        "votes": 3772,
+        "rating": 1303.558117667279,
+        "ratingLower": 1292.1557157738766,
+        "ratingUpper": 1314.9605195606812,
+        "votes": 3773,
         "organization": "Poolside",
         "license": "Apache 2.0",
         "modelUrl": "https://poolside.ai/blog/introducing-laguna-xs2-m1",
@@ -4940,11 +4982,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 87,
+        "rank": 90,
         "modelDisplayName": "minimax-m2",
-        "rating": 1296.690236527108,
-        "ratingLower": 1285.654052498316,
-        "ratingUpper": 1307.7264205559004,
+        "rating": 1296.6920415597401,
+        "ratingLower": 1285.6590935928511,
+        "ratingUpper": 1307.7249895266293,
         "votes": 6508,
         "organization": "MiniMax",
         "license": "Apache 2.0",
@@ -4954,12 +4996,12 @@
         "contextLength": 204800
       },
       {
-        "rank": 88,
+        "rank": 91,
         "modelDisplayName": "mimo-v2-flash (thinking)",
-        "rating": 1291.2020067644044,
-        "ratingLower": 1274.545663355137,
-        "ratingUpper": 1307.8583501736712,
-        "votes": 1649,
+        "rating": 1291.2624870876753,
+        "ratingLower": 1274.6229120171815,
+        "ratingUpper": 1307.902062158169,
+        "votes": 1650,
         "organization": "Xiaomi",
         "license": "MIT",
         "modelUrl": "https://mimo.xiaomi.com/blog/mimo-v2-flash",
@@ -4968,11 +5010,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 89,
+        "rank": 92,
         "modelDisplayName": "qwen3-coder-480b-a35b-instruct",
-        "rating": 1272.2309589968063,
-        "ratingLower": 1264.3919059207947,
-        "ratingUpper": 1280.070012072818,
+        "rating": 1272.2156834294242,
+        "ratingLower": 1264.3816033399175,
+        "ratingUpper": 1280.049763518931,
         "votes": 12222,
         "organization": "Alibaba",
         "license": "Apache 2.0",
@@ -4982,11 +5024,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 90,
+        "rank": 93,
         "modelDisplayName": "deepseek-v3.2-exp",
-        "rating": 1271.7713106774818,
-        "ratingLower": 1258.1419661076693,
-        "ratingUpper": 1285.4006552472943,
+        "rating": 1271.7788572552458,
+        "ratingLower": 1258.1521984337444,
+        "ratingUpper": 1285.4055160767473,
         "votes": 3845,
         "organization": "DeepSeek",
         "license": "MIT",
@@ -4996,12 +5038,12 @@
         "contextLength": 163840
       },
       {
-        "rank": 91,
+        "rank": 94,
         "modelDisplayName": "mistral-medium-3.5",
-        "rating": 1266.8414616679593,
-        "ratingLower": 1251.1418085548398,
-        "ratingUpper": 1282.5411147810787,
-        "votes": 2076,
+        "rating": 1267.067457153279,
+        "ratingLower": 1251.3720000320573,
+        "ratingUpper": 1282.7629142745013,
+        "votes": 2075,
         "organization": "Mistral",
         "license": "Modified MIT",
         "modelUrl": "https://docs.mistral.ai/models/model-cards/mistral-medium-3-5-26-04",
@@ -5010,12 +5052,12 @@
         "contextLength": 262144
       },
       {
-        "rank": 92,
+        "rank": 95,
         "modelDisplayName": "gemini-3.1-flash-lite-preview",
-        "rating": 1256.2663989474922,
-        "ratingLower": 1249.2164935805877,
-        "ratingUpper": 1263.3163043143968,
-        "votes": 13316,
+        "rating": 1256.2258283246078,
+        "ratingLower": 1249.1778520470857,
+        "ratingUpper": 1263.27380460213,
+        "votes": 13309,
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite",
@@ -5024,11 +5066,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 93,
+        "rank": 96,
         "modelDisplayName": "KAT-Coder-Pro-V1",
-        "rating": 1255.0038724683682,
-        "ratingLower": 1235.029669708923,
-        "ratingUpper": 1274.9780752278134,
+        "rating": 1255.0111074157116,
+        "ratingLower": 1235.0385671536847,
+        "ratingUpper": 1274.9836476777386,
         "votes": 1449,
         "organization": null,
         "license": "Proprietary",
@@ -5038,11 +5080,11 @@
         "contextLength": 256000
       },
       {
-        "rank": 94,
+        "rank": 97,
         "modelDisplayName": "qwen3.5-35b-a3b",
-        "rating": 1250.470376841617,
-        "ratingLower": 1232.5321846238155,
-        "ratingUpper": 1268.4085690594186,
+        "rating": 1250.4604309340382,
+        "ratingLower": 1232.5240950726682,
+        "ratingUpper": 1268.3967667954084,
         "votes": 1521,
         "organization": "Alibaba",
         "license": "Apache 2.0",
@@ -5052,11 +5094,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 95,
+        "rank": 98,
         "modelDisplayName": "gpt-5.1-codex-mini",
-        "rating": 1244.2062492661003,
-        "ratingLower": 1221.8819261902936,
-        "ratingUpper": 1266.5305723419065,
+        "rating": 1244.213132396722,
+        "ratingLower": 1221.8904214648674,
+        "ratingUpper": 1266.535843328577,
         "votes": 1127,
         "organization": "OpenAI",
         "license": "Proprietary",
@@ -5066,11 +5108,11 @@
         "contextLength": 400000
       },
       {
-        "rank": 96,
+        "rank": 99,
         "modelDisplayName": "grok-4-1-fast-reasoning",
-        "rating": 1240.0387921019833,
-        "ratingLower": 1228.8246020103402,
-        "ratingUpper": 1251.2529821936262,
+        "rating": 1240.060488972315,
+        "ratingLower": 1228.8494556692262,
+        "ratingUpper": 1251.2715222754032,
         "votes": 5311,
         "organization": "SpaceXAI",
         "license": "Proprietary",
@@ -5080,12 +5122,12 @@
         "contextLength": 2000000
       },
       {
-        "rank": 97,
+        "rank": 100,
         "modelDisplayName": "trinity-large-thinking",
-        "rating": 1239.3089338139448,
-        "ratingLower": 1218.4901096788017,
-        "ratingUpper": 1260.127757949088,
-        "votes": 1274,
+        "rating": 1238.9320963538278,
+        "ratingLower": 1218.1115876435513,
+        "ratingUpper": 1259.7526050641045,
+        "votes": 1275,
         "organization": null,
         "license": "Apache 2.0",
         "modelUrl": "https://www.arcee.ai/blog/trinity-large-thinking",
@@ -5094,11 +5136,11 @@
         "contextLength": 262144
       },
       {
-        "rank": 98,
+        "rank": 101,
         "modelDisplayName": "qwen3.5-flash",
-        "rating": 1237.9669897173749,
-        "ratingLower": 1217.7164402408437,
-        "ratingUpper": 1258.217539193906,
+        "rating": 1237.9584015860935,
+        "ratingLower": 1217.709785193263,
+        "ratingUpper": 1258.207017978924,
         "votes": 1256,
         "organization": "Alibaba",
         "license": "Proprietary",
@@ -5108,11 +5150,11 @@
         "contextLength": null
       },
       {
-        "rank": 99,
+        "rank": 102,
         "modelDisplayName": "mistral-large-3",
-        "rating": 1230.005757529399,
-        "ratingLower": 1204.0564711777008,
-        "ratingUpper": 1255.9550438810975,
+        "rating": 1230.0154494215583,
+        "ratingLower": 1204.0673897570184,
+        "ratingUpper": 1255.9635090860982,
         "votes": 808,
         "organization": "Mistral",
         "license": "Apache 2.0",
@@ -5122,11 +5164,11 @@
         "contextLength": null
       },
       {
-        "rank": 100,
+        "rank": 103,
         "modelDisplayName": "gemini-2.5-pro",
-        "rating": 1224.221812588316,
-        "ratingLower": 1208.1838034811508,
-        "ratingUpper": 1240.2598216954812,
+        "rating": 1224.2314774192075,
+        "ratingLower": 1208.1958859593706,
+        "ratingUpper": 1240.2670688790442,
         "votes": 2657,
         "organization": "Google",
         "license": "Proprietary",
@@ -5136,11 +5178,11 @@
         "contextLength": 1048576
       },
       {
-        "rank": 101,
+        "rank": 104,
         "modelDisplayName": "grok-4.1-thinking",
-        "rating": 1210.320864749045,
-        "ratingLower": 1185.2755901237024,
-        "ratingUpper": 1235.3661393743876,
+        "rating": 1210.3294988212365,
+        "ratingLower": 1185.2857600401217,
+        "ratingUpper": 1235.3732376023513,
         "votes": 945,
         "organization": "SpaceXAI",
         "license": "Proprietary",
@@ -5150,11 +5192,11 @@
         "contextLength": null
       },
       {
-        "rank": 102,
+        "rank": 105,
         "modelDisplayName": "granite-4.1-8b",
-        "rating": 1193.9766480906283,
-        "ratingLower": 1174.9988850623504,
-        "ratingUpper": 1212.954411118906,
+        "rating": 1193.975589503469,
+        "ratingLower": 1174.9987424662072,
+        "ratingUpper": 1212.9524365407308,
         "votes": 1674,
         "organization": "IBM",
         "license": "Apache 2.0",
@@ -5164,11 +5206,11 @@
         "contextLength": 131072
       },
       {
-        "rank": 103,
+        "rank": 106,
         "modelDisplayName": "devstral-2",
-        "rating": 1193.879002421607,
-        "ratingLower": 1172.6810359709489,
-        "ratingUpper": 1215.0769688722653,
+        "rating": 1193.891685415457,
+        "ratingLower": 1172.695573159872,
+        "ratingUpper": 1215.0877976710422,
         "votes": 1139,
         "organization": "Mistral",
         "license": "Modified MIT",
@@ -5178,11 +5220,11 @@
         "contextLength": null
       },
       {
-        "rank": 104,
+        "rank": 107,
         "modelDisplayName": "mercury-2",
-        "rating": 1166.3526807855242,
-        "ratingLower": 1140.7662827031893,
-        "ratingUpper": 1191.9390788678588,
+        "rating": 1166.3434294173735,
+        "ratingLower": 1140.7582881817839,
+        "ratingUpper": 1191.9285706529627,
         "votes": 888,
         "organization": "Inception AI",
         "license": "Proprietary",
@@ -5192,11 +5234,11 @@
         "contextLength": 128000
       },
       {
-        "rank": 105,
+        "rank": 108,
         "modelDisplayName": "grok-code-fast-1",
-        "rating": 1163.3729326199923,
-        "ratingLower": 1134.99846848359,
-        "ratingUpper": 1191.7473967563942,
+        "rating": 1163.4061641025378,
+        "ratingLower": 1135.0322473466877,
+        "ratingUpper": 1191.7800808583884,
         "votes": 782,
         "organization": "SpaceXAI",
         "license": "Proprietary",
@@ -5206,11 +5248,11 @@
         "contextLength": null
       },
       {
-        "rank": 106,
+        "rank": 109,
         "modelDisplayName": "grok-4-fast-reasoning",
-        "rating": 1160.367493827759,
-        "ratingLower": 1132.6511407204998,
-        "ratingUpper": 1188.0838469350183,
+        "rating": 1160.406422346884,
+        "ratingLower": 1132.6910776361763,
+        "ratingUpper": 1188.1217670575916,
         "votes": 731,
         "organization": "SpaceXAI",
         "license": "Proprietary",
@@ -5220,11 +5262,11 @@
         "contextLength": 2000000
       },
       {
-        "rank": 107,
+        "rank": 110,
         "modelDisplayName": "devstral-medium-2507",
-        "rating": 1079.2532227574225,
-        "ratingLower": 1047.9728860676537,
-        "ratingUpper": 1110.5335594471917,
+        "rating": 1079.2622521596186,
+        "ratingLower": 1047.9829662165027,
+        "ratingUpper": 1110.5415381027346,
         "votes": 825,
         "organization": "Mistral",
         "license": "Proprietary",

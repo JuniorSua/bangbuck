@@ -9,9 +9,11 @@ import {
   DEFAULT_SETTINGS,
   referenceElo,
   TIER_PRESETS,
+  unrankedContenders,
   valueFrontier,
 } from "./score";
 import { craftFor, familyKey } from "./normalize";
+import { MODEL_NOTES, noteFor } from "./notes";
 import { linearTicks, rangeTicks } from "./metrics";
 import { canonicalVendor } from "./vendors";
 import type { Snapshot } from "./types";
@@ -34,7 +36,12 @@ describe("the two axes", () => {
   const r = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("measures Craft against the WebDev board's median", () => {
-    expect(r.referenceElo).toBeCloseTo(1409, 0);
+    // Moved 1409 -> 1418.9 when Arena's WebDev board grew from 107 entries to
+    // 110 (qwen3.8-max, released 2026-08-03, entered at #4). Re-agreed on
+    // purpose: the reference is the board's median, so it is supposed to move
+    // when the board does. Every ranking held — both tier winners, both
+    // qualifying counts and both lead multiples were unchanged.
+    expect(r.referenceElo).toBeCloseTo(1418.9, 0);
     expect(referenceElo(snap.arenaWebdev!.entries)).toBe(r.referenceElo);
   });
 
@@ -45,12 +52,12 @@ describe("the two axes", () => {
     expect(craftElo(craftProbability(1667, 1409), 1409)).toBeCloseTo(1667, 6);
   });
 
-  it("scores claude-opus-5 [high] at 82% craft and gpt-5.6-luna [max] at 66%", () => {
+  it("scores claude-opus-5 [high] at 81% craft and gpt-5.6-luna [max] at 65%", () => {
     const find = (label: string) => r.all.find((s) => s.label === label)!;
-    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1667, 0);
-    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.815, 2);
-    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1523, 0);
-    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.659, 2);
+    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1668.9, 0);
+    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.808, 2);
+    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1522.9, 0);
+    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.645, 2);
   });
 
   it("is conjunctive — a hole on one axis cannot be filled by the other", () => {
@@ -435,11 +442,71 @@ describe("craft matching", () => {
     const m = craftFor(low, webdev);
     expect(m.kind).toBe("family");
     expect(m.kind === "family" && m.borrowedFrom).toBe("high");
-    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1667, 0);
+    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1668.9, 0);
   });
 
   it("reports no match for a family Arena does not carry", () => {
     expect(craftFor(snap.deepswe.configs[0], []).kind).toBe("none");
+  });
+});
+
+describe("unrankedContenders — models the formula cannot touch", () => {
+  it("surfaces qwen3.8-max, which Arena rates but DeepSWE never ran", () => {
+    const c = unrankedContenders(snap, DEFAULT_SETTINGS);
+    expect(c.map((x) => x.entry.modelDisplayName)).toContain("qwen3.8-max");
+    const q = c.find((x) => x.entry.modelDisplayName === "qwen3.8-max")!;
+    expect(q.rank).toBe(4);
+    expect(q.craft).toBeGreaterThan(DEFAULT_SETTINGS.craftFloor);
+  });
+
+  it("never lists a model DeepSWE has measured at any effort", () => {
+    // The whole point is "no Ship data". A family already benchmarked, even at a
+    // different effort, belongs in the ranking rather than here.
+    const measured = new Set(snap.deepswe.configs.map((c) => familyKey(c.model)));
+    for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
+      for (const c of unrankedContenders(snap, settings)) {
+        expect(measured.has(familyKey(c.entry.modelDisplayName))).toBe(false);
+      }
+    }
+  });
+
+  it("respects the Craft floor and widens as it drops", () => {
+    const strict = unrankedContenders(snap, DEFAULT_SETTINGS);
+    const loose = unrankedContenders(snap, EVERYDAY);
+    for (const c of strict) expect(c.craft).toBeGreaterThanOrEqual(DEFAULT_SETTINGS.craftFloor);
+    expect(loose.length).toBeGreaterThanOrEqual(strict.length);
+  });
+
+  it("is sorted by Craft, best first", () => {
+    const c = unrankedContenders(snap, EVERYDAY);
+    for (let i = 1; i < c.length; i++) expect(c[i].craft).toBeLessThanOrEqual(c[i - 1].craft);
+  });
+});
+
+describe("vendor claims stay out of the ranking", () => {
+  it("scores no config from a hand-written note", () => {
+    // lib/notes.ts holds self-reported figures. If one ever reached the ranking
+    // the site would be mixing a measured harness with a vendor's own marketing.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    for (const note of MODEL_NOTES) {
+      expect(r.all.some((s) => s.label.startsWith(note.model))).toBe(false);
+    }
+  });
+
+  it("records qwen3.8-max as self-reported, sourced, and below both Ship floors", () => {
+    const n = noteFor("qwen3.8-max")!;
+    expect(n.selfReported).toBe(true);
+    expect(n.source).toMatch(/^https:\/\//);
+    expect(n.claimedShip).toBeCloseTo(0.566, 3);
+    // 56.6% misses everyday (65%) by 8.4 points and high power (72.5%) by 15.9.
+    for (const t of TIER_PRESETS) expect(n.claimedShip!).toBeLessThan(t.shipFloor);
+  });
+
+  it("gives every note a checkable source", () => {
+    for (const n of MODEL_NOTES) {
+      expect(n.source).toMatch(/^https:\/\/\S+$/);
+      expect(n.sourceLabel.length).toBeGreaterThan(3);
+    }
   });
 });
 
@@ -453,6 +520,8 @@ describe("snapshot integrity", () => {
   });
 
   it("has 50 configs and both Arena boards", () => {
+    // DeepSWE is still at 50: it has not evaluated qwen3.8-max, which is why
+    // that model cannot be ranked no matter how well Arena rates it.
     expect(snap.deepswe.configs).toHaveLength(50);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");

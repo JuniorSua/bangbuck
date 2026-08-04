@@ -25,6 +25,10 @@ const SOURCES: { vendor: string; icon: string; note: string }[] = [
   { vendor: "Meta", icon: "simple-icons/meta", note: "infinity loop" },
   { vendor: "Google", icon: "logos/google-icon", note: "official four-colour G" },
   { vendor: "Z.ai", icon: "simple-icons/zdotai", note: "" },
+  // Same reasoning as Moonshot/Kimi: the models ship as qwen*, so Qwen is the
+  // brand a reader recognises, not the parent company's mark.
+  { vendor: "Alibaba", icon: "simple-icons/qwen", note: "Qwen, the model brand" },
+  { vendor: "DeepSeek", icon: "simple-icons/deepseek", note: "" },
 ];
 
 async function main() {

@@ -15,6 +15,8 @@ export const VENDORS = [
   "xAI",
   "Z.ai",
   "Meta",
+  "Alibaba",
+  "DeepSeek",
 ] as const;
 
 export type Vendor = (typeof VENDORS)[number];

@@ -1,4 +1,11 @@
-import { arenaFor, buildArenaIndex, configLabel, craftFor, organizationFor } from "./normalize";
+import {
+  arenaFor,
+  buildArenaIndex,
+  configLabel,
+  craftFor,
+  familyKey,
+  organizationFor,
+} from "./normalize";
 import type { CraftMatch } from "./normalize";
 import type { ArenaEntry, DeepSweConfig, Snapshot } from "./types";
 
@@ -371,6 +378,45 @@ function buildInsights(all: ScoredConfig[], qualified: ScoredConfig[]): Insights
     totalCount: all.length,
     exactCraftCount: all.filter((s) => s.craftMatch.kind === "exact").length,
   };
+}
+
+/**
+ * A model Arena rates well that DeepSWE has never measured.
+ *
+ * Craft alone cannot produce a BangBuck score: the formula divides by MEASURED
+ * cost per task, and Arena publishes list price per million tokens, which is a
+ * different thing entirely — it says nothing about how many tokens a model burns
+ * finishing a real repo task. So these are genuinely unrankable rather than
+ * merely unranked, and showing them as "not yet" is the honest treatment.
+ */
+export interface Contender {
+  entry: ArenaEntry;
+  /** Win probability against the board median, on the same scale as `craft`. */
+  craft: number;
+  /** Where it sits on the WebDev board. */
+  rank: number;
+}
+
+/**
+ * Models clearing the Craft floor that the Ship axis has no data for.
+ *
+ * Matched by family key against DeepSWE's roster, so a model already benchmarked
+ * at some other effort never appears here. Sorted by Craft, best first.
+ */
+export function unrankedContenders(snapshot: Snapshot, settings: Settings): Contender[] {
+  const measured = new Set(snapshot.deepswe.configs.map((c) => familyKey(c.model)));
+  const webdev = snapshot.arenaWebdev?.entries ?? [];
+  const reference = referenceElo(webdev);
+
+  return webdev
+    .filter((e) => !measured.has(familyKey(e.modelDisplayName)))
+    .map((entry) => ({
+      entry,
+      craft: craftProbability(entry.rating, reference),
+      rank: entry.rank,
+    }))
+    .filter((c) => c.craft >= settings.craftFloor)
+    .sort((a, b) => b.craft - a.craft);
 }
 
 /** One band of Craft floors over which the winner does not change. */

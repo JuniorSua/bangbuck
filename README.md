@@ -74,6 +74,26 @@ noise, and the UI says so rather than pretending it is a ranking.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
 At 0.20 they act as a tiebreaker between configs of similar capability and price.
 
+### Rated, but not rankable
+
+A model can be excellent and still be unscoreable here. Craft alone is not enough, because the
+formula divides by **measured** cost per task — and Arena publishes list price per million tokens,
+which says nothing about how many tokens a model burns finishing a real repo task.
+
+`unrankedContenders()` finds them: anything clearing the Craft floor whose family DeepSWE has never
+run. They get their own section rather than silently vanishing, because a reader who cannot find a
+model they just saw enter Arena at #4 would reasonably assume it had been judged and rejected.
+
+**qwen3.8-max** (Alibaba, 3 Aug 2026) is the current case, and a useful one: fourth on WebDev at
+1668 Elo on 1,563 votes — level with `claude-opus-5 [high]` — but absent from DeepSWE. Alibaba's own
+launch materials claim **56.6 on DeepSWE 1.1**, which is under both Ship floors, so on its own
+numbers it would be gated out anyway. It is the mirror image of the luna problem the two-axis design
+was built for: luna could finish the job and wrote code humans rejected; qwen writes code humans
+like and has not shown it can finish.
+
+Self-reported figures live in `lib/notes.ts`, never in `data/snapshot.json`, and a test asserts none
+of them can reach the ranking. Every note carries a URL a reader can open.
+
 ### A known weakness, pinned by a test
 
 At the everyday tier the winner is **dominated**: `claude-opus-5 [medium]` is both cheaper ($3.29 vs
@@ -171,13 +191,15 @@ polling on a timer is wasted work. The plan is event-driven instead — see *Not
 
 ```
 lib/score.ts            The formula. PURE — no I/O. This is the piece that encodes the judgment call.
-lib/score.test.ts       59 golden tests. The numbers here were verified by hand before any code existed.
+lib/score.test.ts       66 golden tests. The numbers here were verified by hand before any code existed.
 lib/sources/deepswe.ts  Scrapes the live SSR page (seroval-serialised TanStack payload). Read the trap above.
 lib/sources/arena.ts    Scrapes arena.ai's RSC flight payloads — both boards. See ARENA_BOARDS.
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
 lib/normalize.ts        Name joining. craftFor() resolves a config to a WebDev Elo + its provenance.
 lib/metrics.ts          The four chart axes + readable tick generation (zero-anchored and fitted).
 lib/vendors.ts          Canonical vendor names + aliases. Asserted against the data by a test.
+lib/notes.ts            Hand-written, sourced notes on models the scrapers cannot score.
+                        Self-reported only; a test keeps them out of the ranking.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
                         Dashboard.tsx owns tuning state and mirrors it into the URL.
                         SectionHead.tsx numbers the page so it reads as one argument.

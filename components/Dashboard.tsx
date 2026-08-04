@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { computeRanking, DEFAULT_SETTINGS, type Settings } from "@/lib/score";
+import {
+  computeRanking,
+  DEFAULT_SETTINGS,
+  unrankedContenders,
+  type Settings,
+} from "@/lib/score";
 import type { Snapshot } from "@/lib/types";
 import { WinnerCard } from "./WinnerCard";
 import { Controls } from "./Controls";
@@ -11,6 +16,7 @@ import { DataProvenance } from "./DataProvenance";
 import { Hero } from "./Hero";
 import { SectionHead } from "./SectionHead";
 import { StickyAnswer } from "./StickyAnswer";
+import { Radar } from "./Radar";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -48,6 +54,7 @@ function readSettings(search: string): Settings {
 export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const ranking = useMemo(() => computeRanking(snapshot, settings), [snapshot, settings]);
+  const contenders = useMemo(() => unrankedContenders(snapshot, settings), [snapshot, settings]);
 
   // Read once on mount rather than during render: the server has no location, and
   // initialising state from it directly would mismatch on hydration.
@@ -104,8 +111,19 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <RankTable ranking={ranking} />
         </section>
 
+        {contenders.length > 0 && (
+          <section>
+            <SectionHead
+              n={5}
+              title="Rated, but not rankable"
+              aside={`${contenders.length} waiting on DeepSWE`}
+            />
+            <Radar contenders={contenders} settings={settings} />
+          </section>
+        )}
+
         <section>
-          <SectionHead n={5} title="Where the numbers come from" aside="nothing here is measured by us" />
+          <SectionHead n={6} title="Where the numbers come from" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>
       </div>
