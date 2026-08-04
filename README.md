@@ -234,10 +234,25 @@ inverse of that scale, holding type at a constant *physical* size. Past a thresh
 out: fewer ticks, no legend, winner-only labels. If you add text to that chart, size it through
 `fs()`.
 
-**Never put a raw float in a CSS value.** The browser truncates percentages when parsing, so a bar
-width of `73.54960673390156%` comes back out of the server HTML as `73.5496%` and React reports a
-hydration mismatch. Round before interpolating — see the comment on the BangBuck bar in
-`RankTable.tsx`.
+**Never put a raw float anywhere the server and client both render it.** This has bitten twice,
+through two different doors, and both are hydration mismatches:
+
+- *CSS values.* The browser truncates percentages when parsing, so a bar width of
+  `73.54960673390156%` reads back out of the server HTML as `73.5496%`. See `RankTable.tsx`.
+- *SVG coordinates.* `Math.log10` is only implementation-**approximated** by the spec, so Node and
+  the browser may differ in the last bit — enough to emit `cx="96.75098312865315"` on the server and
+  `96.75098312865306` on the client. `ScatterChart` therefore rounds inside its `x()` and `y()`
+  scales, which covers every coordinate derived from them.
+
+The rule: round at the point a number becomes geometry, not at each call site. Two decimals in an
+860-unit viewBox is about a hundredth of a pixel — invisible, and it removes the class of bug rather
+than one instance. A quick check that nothing regressed:
+
+```
+curl -s localhost:3000 | grep -oE '(cx|cy|points|width|height)="[^"]*"' | grep -E '\.[0-9]{4,}'
+```
+
+That should print nothing.
 
 ---
 

@@ -63,15 +63,18 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   const fs = (base: number) => Math.round(base * scale * 10) / 10;
   const narrow = scale > 1.45;
   // Gutters have to grow with the type or the enlarged axis labels clip.
-  const pad = useMemo(
-    () => ({
-      top: PAD.top * (narrow ? 1.15 : 1),
-      right: PAD.right * (narrow ? 1.4 : 1),
-      bottom: PAD.bottom * (narrow ? 1.25 : 1),
-      left: PAD.left * (narrow ? 1.45 : 1),
-    }),
-    [narrow],
-  );
+  const pad = useMemo(() => {
+    // Rounded so the derived plot box stays a clean number. These multipliers
+    // produce values like 39.099999999999994, which is harmless arithmetically
+    // but leaks straight into rect widths in the DOM.
+    const g = (base: number, factor: number) => Math.round(base * (narrow ? factor : 1));
+    return {
+      top: g(PAD.top, 1.15),
+      right: g(PAD.right, 1.4),
+      bottom: g(PAD.bottom, 1.25),
+      left: g(PAD.left, 1.45),
+    };
+  }, [narrow]);
   const plotW = W - pad.left - pad.right;
   const plotH = H - pad.top - pad.bottom;
 
@@ -90,27 +93,44 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
 
     // Every metric runs better-to-the-right, so switching tabs never flips the
     // reader's sense of which direction is good.
-    let x: (v: number) => number;
+    let rawX: (v: number) => number;
     let ticks: number[];
     if (metric.scale === "log") {
       const lo = Math.log10(min * 0.75);
       const hi = Math.log10(max * 1.25);
-      x = (v) => pad.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
+      rawX = (v) => pad.left + plotW * (1 - (Math.log10(v) - lo) / (hi - lo));
       ticks = LOG_COST_TICKS.filter((t) => Math.log10(t) >= lo && Math.log10(t) <= hi);
     } else if (metric.higherIsBetter) {
       // Fitted domain, not zero-anchored — see rangeTicks.
       const span = max - min || 1;
       const lo = min - span * 0.12;
       const hi = max + span * 0.08;
-      x = (v) => pad.left + plotW * ((v - lo) / (hi - lo));
+      rawX = (v) => pad.left + plotW * ((v - lo) / (hi - lo));
       ticks = rangeTicks(lo, hi);
     } else {
       const hi = max * 1.06;
-      x = (v) => pad.left + plotW * (1 - v / hi);
+      rawX = (v) => pad.left + plotW * (1 - v / hi);
       ticks = linearTicks(max);
     }
 
-    const y = (p: number) => pad.top + plotH * (1 - p / 0.8);
+    /**
+     * Both scales round to 2dp, and not for tidiness.
+     *
+     * `Math.log10` is only implementation-APPROXIMATED by the spec, so Node and
+     * the browser are free to disagree in the last bit or two. That is enough to
+     * render a point at cx="96.75098312865315" on the server and 96.75098312865306
+     * on the client, which React reports as a hydration mismatch — the same class
+     * of bug as an unrounded CSS percentage, arriving through a different door.
+     *
+     * Rounding here rather than at each call site covers every coordinate the
+     * chart derives, including the ones built by arithmetic on top of these.
+     * The viewBox is 860 units wide and draws at roughly 984px, so a hundredth
+     * of a unit is about a hundredth of a pixel: far below anything visible, and
+     * it removes the whole class of divergence rather than one instance of it.
+     */
+    const round = (n: number) => Math.round(n * 100) / 100;
+    const x = (v: number) => round(rawX(v));
+    const y = (p: number) => round(pad.top + plotH * (1 - p / 0.8));
 
     const byModel = new Map<string, ScoredConfig[]>();
     for (const s of all) {
@@ -333,14 +353,14 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             x={pad.left}
             y={pad.top}
             width={plotW}
-            height={Math.max(0, floorY - pad.top)}
+            height={Math.round(Math.max(0, floorY - pad.top) * 100) / 100}
             fill="url(#bb-zone)"
           />
           <rect
             x={pad.left}
             y={floorY}
             width={plotW}
-            height={Math.max(0, H - pad.bottom - floorY)}
+            height={Math.round(Math.max(0, H - pad.bottom - floorY) * 100) / 100}
             fill="var(--page)"
             opacity={0.35}
           />
@@ -575,8 +595,13 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
             style={{
               borderColor: "var(--border)",
               background: "var(--surface-2)",
-              left: `${(x(metric.get(hover)) / W) * 100}%`,
-              top: `${(py / H) * 100}%`,
+              // Rounded for the same reason the scales are: these are CSS
+              // percentages, and the browser truncates those when it parses them.
+              // The tooltip only exists after a mouse move so it never actually
+              // hydrates, but leaving an unrounded float here invites the bug back
+              // the moment something renders it earlier.
+              left: `${((x(metric.get(hover)) / W) * 100).toFixed(3)}%`,
+              top: `${((py / H) * 100).toFixed(3)}%`,
               transform: below
                 ? `translate(-50%, ${medal ? 14 : 16}px)`
                 : `translate(-50%, calc(-100% - ${clearance}px))`,
