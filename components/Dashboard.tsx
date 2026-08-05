@@ -88,12 +88,12 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <WinnerCard insights={ranking.insights} />
         </section>
 
-        <section>
+        <section className="reveal">
           <SectionHead n={2} title="Set your bar" aside="the formula is a judgment call" />
           <Controls settings={settings} onChange={setSettings} />
         </section>
 
-        <section>
+        <section className="reveal">
           <SectionHead
             n={3}
             title="What paying more actually buys"
@@ -102,7 +102,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <ScatterChart ranking={ranking} />
         </section>
 
-        <section>
+        <section className="reveal">
           <SectionHead
             n={4}
             title="Every configuration, winners and losers"
@@ -112,7 +112,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         </section>
 
         {contenders.length > 0 && (
-          <section>
+          <section className="reveal">
             <SectionHead
               n={5}
               title="Rated, but not rankable"
@@ -122,7 +122,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           </section>
         )}
 
-        <section>
+        <section className="reveal">
           <SectionHead n={6} title="Where the numbers come from" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>

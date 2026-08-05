@@ -1,11 +1,11 @@
 {
-  "capturedAt": "2026-08-04T00:40:56.392Z",
+  "capturedAt": "2026-08-05T19:57:16.309Z",
   "deepswe": {
-    "generatedAt": "2026-07-25T03:13:49.273952+00:00",
+    "generatedAt": "2026-08-04T01:34:32.908483+00:00",
     "nTasksInSet": 113,
     "latestJob": {
-      "name": "20260724-opus-5",
-      "finished_at": "2026-07-25T01:59:45.339374Z"
+      "name": "20260803-qwen-3.8-max",
+      "finished_at": "2026-08-03T17:42:27.603007"
     },
     "sourceUrl": "https://deepswe.datacurve.ai/",
     "configs": [
@@ -386,6 +386,24 @@
         "meanInputTokens": 1564287.6570155902,
         "meanDurationSeconds": 468.87542417149217,
         "medianPeakContextTokens": 46865
+      },
+      {
+        "model": "qwen3-8-max",
+        "modelDisplay": "qwen3.8-max",
+        "effort": "xhigh",
+        "config": "mini_swe_agent_qwen3_8_max_xhigh",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.5746102449888641,
+        "passAt4": 0.831858407079646,
+        "ciLo": 0.5479823182637887,
+        "ciHi": 0.6012381717139396,
+        "nRuns": 4,
+        "meanCostUsd": 3.7290646500445437,
+        "meanOutputTokens": 95075.18262806236,
+        "meanAgentSteps": 111.33853006681514,
+        "meanInputTokens": 12996066.461024499,
+        "meanDurationSeconds": 2567.2746634654786,
+        "medianPeakContextTokens": 160572
       },
       {
         "model": "gpt-5-6-luna",
@@ -1219,9 +1237,9 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
-        "inputPricePerMillion": null,
-        "outputPricePerMillion": null,
-        "contextLength": null
+        "inputPricePerMillion": 1.5,
+        "outputPricePerMillion": 9,
+        "contextLength": 1048576
       },
       {
         "rank": 23,
@@ -2507,8 +2525,8 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m27-en",
-        "inputPricePerMillion": 0.25,
-        "outputPricePerMillion": 1,
+        "inputPricePerMillion": 0.27,
+        "outputPricePerMillion": 1.08,
         "contextLength": 204800
       },
       {
@@ -2801,7 +2819,7 @@
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct",
-        "inputPricePerMillion": 0.1,
+        "inputPricePerMillion": 0.09,
         "outputPricePerMillion": 1.1,
         "contextLength": 262144
       },
@@ -2913,8 +2931,8 @@
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://qwen.ai/blog?id=99f0335c4ad9ff6153e517418d48535ab6d8afef&from=research.latest-advancements-list",
-        "inputPricePerMillion": 0.98,
-        "outputPricePerMillion": 3.95,
+        "inputPricePerMillion": 0.4,
+        "outputPricePerMillion": 4,
         "contextLength": 131072
       },
       {
@@ -3011,7 +3029,7 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m25",
-        "inputPricePerMillion": 0.15,
+        "inputPricePerMillion": 0.22,
         "outputPricePerMillion": 0.9,
         "contextLength": 204800
       },
@@ -3714,20 +3732,6 @@
         "inputPricePerMillion": 5,
         "outputPricePerMillion": 15,
         "contextLength": 128000
-      },
-      {
-        "rank": 0,
-        "modelDisplayName": "inkling-small",
-        "rating": 1430.5408686010203,
-        "ratingLower": 1419.3923614396585,
-        "ratingUpper": 1441.689375762382,
-        "votes": 0,
-        "organization": "Thinky",
-        "license": "Apache 2.0",
-        "modelUrl": null,
-        "inputPricePerMillion": null,
-        "outputPricePerMillion": null,
-        "contextLength": null
       }
     ]
   },
@@ -4123,9 +4127,9 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
-        "inputPricePerMillion": null,
-        "outputPricePerMillion": null,
-        "contextLength": null
+        "inputPricePerMillion": 1.5,
+        "outputPricePerMillion": 9,
+        "contextLength": 1048576
       },
       {
         "rank": 29,
@@ -4235,7 +4239,7 @@
         "organization": "Moonshot",
         "license": "Modified MIT",
         "modelUrl": "https://platform.kimi.ai/docs/guide/kimi-k2-7-code-quickstart",
-        "inputPricePerMillion": 0.73,
+        "inputPricePerMillion": 0.7,
         "outputPricePerMillion": 3.5,
         "contextLength": 262144
       },
@@ -4599,8 +4603,8 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m27-en",
-        "inputPricePerMillion": 0.25,
-        "outputPricePerMillion": 1,
+        "inputPricePerMillion": 0.27,
+        "outputPricePerMillion": 1.08,
         "contextLength": 204800
       },
       {
@@ -4683,7 +4687,7 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m25",
-        "inputPricePerMillion": 0.15,
+        "inputPricePerMillion": 0.22,
         "outputPricePerMillion": 0.9,
         "contextLength": 204800
       },

@@ -29,22 +29,11 @@ export interface ModelNote {
 }
 
 export const MODEL_NOTES: ModelNote[] = [
-  {
-    model: "qwen3.8-max",
-    // Alibaba's launch materials put it at 56.6 on DeepSWE 1.1 — the same
-    // benchmark and version this site's Ship axis reads. DeepSWE's own
-    // leaderboard does not carry the model, so the figure cannot be verified
-    // against the harness the other fifty configurations were run on.
-    claimedShip: 0.566,
-    selfReported: true,
-    source: "https://www.marktechpost.com/2026/08/03/alibaba-qwen-releases-qwen3-8-max/",
-    sourceLabel: "Alibaba launch benchmarks, 3 Aug 2026",
-    note:
-      "A 2.4T-parameter MoE released 3 August 2026. Alibaba reports 56.6 on DeepSWE 1.1 — " +
-      "below both Ship floors here, so on its own numbers it would be gated out even if " +
-      "DeepSWE listed it. Its Craft is not in doubt: fourth on Arena's WebDev board on 1,563 " +
-      "human votes, level with claude-opus-5 [high]. Good taste, unproven follow-through.",
-  },
+  // qwen3.8-max's note retired 2026-08-04, the day DeepSWE measured it. The
+  // claim held up: Alibaba reported 56.6 on DeepSWE 1.1 and the harness
+  // measured 57.5 (CI 54.8-60.1) — a self-reported figure that survived
+  // independent measurement. Kept here as the calibration point for how much
+  // to trust the next claim that lands in this file.
 ];
 
 export const noteFor = (model: string): ModelNote | undefined =>

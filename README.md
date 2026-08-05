@@ -54,7 +54,7 @@ actually carry the judgment.
 
 ### Craft coverage — read this before trusting a row
 
-Arena rates only **12 of the 50** configurations exactly. The other 38 borrow the nearest reasoning
+Arena rates only **12 of the 51** configurations exactly. The rest borrow the nearest reasoning
 effort of the same model, and every table row marks this with `~`.
 
 Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
@@ -84,12 +84,13 @@ which says nothing about how many tokens a model burns finishing a real repo tas
 run. They get their own section rather than silently vanishing, because a reader who cannot find a
 model they just saw enter Arena at #4 would reasonably assume it had been judged and rejected.
 
-**qwen3.8-max** (Alibaba, 3 Aug 2026) is the current case, and a useful one: fourth on WebDev at
-1668 Elo on 1,563 votes — level with `claude-opus-5 [high]` — but absent from DeepSWE. Alibaba's own
-launch materials claim **56.6 on DeepSWE 1.1**, which is under both Ship floors, so on its own
-numbers it would be gated out anyway. It is the mirror image of the luna problem the two-axis design
-was built for: luna could finish the job and wrote code humans rejected; qwen writes code humans
-like and has not shown it can finish.
+**qwen3.8-max** was the proving case, and it graduated in one day. On 3 Aug 2026 it entered Arena's
+WebDev board at #4 (1668 Elo, level with `claude-opus-5 [high]`) with no DeepSWE data, so it sat
+here with Alibaba's claimed **56.6 on DeepSWE 1.1** shown as self-reported. On 4 Aug DeepSWE ran it:
+**57.5% (CI 54.8–60.1) at $3.73/task** — the claim sat inside the measured interval, and the model
+moved from this section into the ranking automatically, where the Ship gate excludes it exactly as
+its own numbers predicted. The pipeline worked end to end: honest waiting room, measured
+graduation, no hand-editing. `deepseek-v4-flash-high` is the current occupant at the everyday bar.
 
 Self-reported figures live in `lib/notes.ts`, never in `data/snapshot.json`, and a test asserts none
 of them can reach the ranking. Every note carries a URL a reader can open.
@@ -191,7 +192,7 @@ polling on a timer is wasted work. The plan is event-driven instead — see *Not
 
 ```
 lib/score.ts            The formula. PURE — no I/O. This is the piece that encodes the judgment call.
-lib/score.test.ts       66 golden tests. The numbers here were verified by hand before any code existed.
+lib/score.test.ts       71 golden tests. The numbers here were verified by hand before any code existed.
 lib/sources/deepswe.ts  Scrapes the live SSR page (seroval-serialised TanStack payload). Read the trap above.
 lib/sources/arena.ts    Scrapes arena.ai's RSC flight payloads — both boards. See ARENA_BOARDS.
 lib/diff.ts             Snapshot-to-snapshot comparison. Also the engine for the planned release watcher.
@@ -300,7 +301,7 @@ circle, which reads as a design choice rather than a gap.
 
 BangBuck does not run benchmarks. It reads published results and applies a cost-efficiency formula.
 
-- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 50 configurations across 113
+- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 51 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
 - **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on

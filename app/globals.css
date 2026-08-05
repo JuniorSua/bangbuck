@@ -93,6 +93,62 @@ body {
   transform: translateY(-1px);
 }
 
+/* The headline in a vertical sheen — white at the top, easing toward the page's
+   secondary tone. Modernises the big type without introducing any hue. */
+.hero-title {
+  background: linear-gradient(180deg, #ffffff 55%, #b9b8ae 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* The answer card alone carries an accent hairline across its top edge — the
+   one place on the page where colour marks a *thing* rather than a rank. */
+.card-answer {
+  position: relative;
+}
+.card-answer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  border-radius: 18px 18px 0 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 75%, transparent) 22%,
+    var(--accent) 50%,
+    color-mix(in srgb, var(--accent) 75%, transparent) 78%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* Sections fade up as they enter the viewport. Pure CSS scroll-driven animation:
+   progressive enhancement only — browsers without animation-timeline (and anyone
+   preferring reduced motion) simply see the content, which is the correct
+   fallback for a page whose job is to be read. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 32%;
+    }
+    @keyframes reveal-up {
+      from {
+        opacity: 0.15;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}
+
 .tnum {
   font-variant-numeric: tabular-nums;
 }

@@ -22,7 +22,7 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
   const c = w.config;
 
   return (
-    <section className="card overflow-hidden">
+    <section className="card card-answer overflow-hidden">
       {/* Asymmetric on purpose. The name and the argument are prose and want a
           measure to read across; the number that settles it wants to be looked
           at, not read. Stacking them made the card a uniform slab and buried the

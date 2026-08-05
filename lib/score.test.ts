@@ -69,8 +69,12 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 50 configs, 12 of them exactly", () => {
+  it("rates every one of the 51 configs, 12 of them exactly", () => {
+    // 51 as of the 2026-08-04 DeepSWE run, which added qwen3.8-max [xhigh].
+    // Arena's "qwen3.8-max" parses as effort max, so the [xhigh] config borrows
+    // it as a family match rather than an exact one — exact stays at 12.
     expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
+    expect(r.all).toHaveLength(51);
     expect(r.insights!.exactCraftCount).toBe(12);
   });
 });
@@ -192,7 +196,7 @@ describe("the Everyday tier", () => {
 
   it("qualifies 12 configs", () => {
     expect(r.qualified).toHaveLength(12);
-    expect(r.all).toHaveLength(50);
+    expect(r.all).toHaveLength(51);
   });
 
   it("is a statistical tie between gpt-5.6-sol [high] and claude-opus-5 [medium]", () => {
@@ -222,7 +226,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(50);
+    expect(r.all).toHaveLength(51);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -451,12 +455,20 @@ describe("craft matching", () => {
 });
 
 describe("unrankedContenders — models the formula cannot touch", () => {
-  it("surfaces qwen3.8-max, which Arena rates but DeepSWE never ran", () => {
-    const c = unrankedContenders(snap, DEFAULT_SETTINGS);
-    expect(c.map((x) => x.entry.modelDisplayName)).toContain("qwen3.8-max");
-    const q = c.find((x) => x.entry.modelDisplayName === "qwen3.8-max")!;
-    expect(q.rank).toBe(4);
-    expect(q.craft).toBeGreaterThan(DEFAULT_SETTINGS.craftFloor);
+  it("no longer lists qwen3.8-max, which DeepSWE measured on 2026-08-04", () => {
+    // The graduation this section exists for: the moment a model gets a real
+    // Ship score and a measured cost, it must leave the waiting room and enter
+    // the ranking. It sat here for one day.
+    for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
+      const names = unrankedContenders(snap, settings).map((c) => c.entry.modelDisplayName);
+      expect(names).not.toContain("qwen3.8-max");
+    }
+    expect(computeRanking(snap, DEFAULT_SETTINGS).all.some((s) => s.label === "qwen3.8-max [xhigh]")).toBe(true);
+  });
+
+  it("still surfaces deepseek-v4-flash-high at the everyday bar", () => {
+    const names = unrankedContenders(snap, EVERYDAY).map((c) => c.entry.modelDisplayName);
+    expect(names).toContain("deepseek-v4-flash-high");
   });
 
   it("never lists a model DeepSWE has measured at any effort", () => {
@@ -483,29 +495,69 @@ describe("unrankedContenders — models the formula cannot touch", () => {
   });
 });
 
-describe("vendor claims stay out of the ranking", () => {
-  it("scores no config from a hand-written note", () => {
-    // lib/notes.ts holds self-reported figures. If one ever reached the ranking
-    // the site would be mixing a measured harness with a vendor's own marketing.
-    const r = computeRanking(snap, DEFAULT_SETTINGS);
-    for (const note of MODEL_NOTES) {
-      expect(r.all.some((s) => s.label.startsWith(note.model))).toBe(false);
-    }
+describe("qwen3.8-max [xhigh] — measured, and the vendor claim checked out", () => {
+  const r = computeRanking(snap, DEFAULT_SETTINGS);
+  const q = r.all.find((s) => s.label === "qwen3.8-max [xhigh]")!;
+
+  it("is gated out on Ship at both tiers, exactly as its own numbers predicted", () => {
+    expect(q.ship).toBeCloseTo(0.5746, 3);
+    expect(q.failed).toBe("ship");
+    for (const t of TIER_PRESETS) expect(q.ship).toBeLessThan(t.shipFloor);
   });
 
-  it("records qwen3.8-max as self-reported, sourced, and below both Ship floors", () => {
-    const n = noteFor("qwen3.8-max")!;
-    expect(n.selfReported).toBe(true);
-    expect(n.source).toMatch(/^https:\/\//);
-    expect(n.claimedShip).toBeCloseTo(0.566, 3);
-    // 56.6% misses everyday (65%) by 8.4 points and high power (72.5%) by 15.9.
-    for (const t of TIER_PRESETS) expect(n.claimedShip!).toBeLessThan(t.shipFloor);
+  it("confirms Alibaba's self-reported 56.6 was honest", () => {
+    // The launch claim of 56.6 on DeepSWE 1.1 sits inside the measured 95% CI
+    // of 54.8-60.1 — a self-reported figure that survived independent
+    // measurement. Worth pinning: it is the calibration point for how much to
+    // trust the next vendor claim that lands in lib/notes.ts.
+    const CLAIMED = 0.566;
+    expect(CLAIMED).toBeGreaterThan(q.config.ciLo);
+    expect(CLAIMED).toBeLessThan(q.config.ciHi);
+  });
+
+  it("keeps its strong Craft, borrowed from the family's max entry", () => {
+    expect(q.craft).toBeCloseTo(0.807, 2);
+    expect(q.craftMatch.kind).toBe("family");
+    expect(q.organization).toBe("Alibaba");
+  });
+
+  it("changes neither tier's answer", () => {
+    expect(r.qualified.map((s) => s.label)).toEqual([
+      "claude-opus-5 [high]",
+      "gpt-5.6-sol [max]",
+      "claude-opus-5 [xhigh]",
+      "claude-opus-5 [max]",
+    ]);
+    const ev = computeRanking(snap, EVERYDAY);
+    expect(ev.qualified[0].label).toBe("gpt-5.6-sol [high]");
+    expect(ev.qualified).toHaveLength(12);
+  });
+});
+
+describe("vendor claims stay out of the ranking", () => {
+  it("keeps every note pointed at a model DeepSWE has NOT measured", () => {
+    // A note on a measured model is stale by definition — the real number
+    // exists, so the claim must retire. qwen3.8-max's note was removed the day
+    // DeepSWE ran it; this keeps the next one from lingering.
+    const measured = new Set(snap.deepswe.configs.map((c) => familyKey(c.model)));
+    for (const n of MODEL_NOTES) {
+      expect(measured.has(familyKey(n.model))).toBe(false);
+    }
   });
 
   it("gives every note a checkable source", () => {
     for (const n of MODEL_NOTES) {
       expect(n.source).toMatch(/^https:\/\/\S+$/);
       expect(n.sourceLabel.length).toBeGreaterThan(3);
+    }
+  });
+
+  it("scores no config from a hand-written note", () => {
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    for (const note of MODEL_NOTES) {
+      // Any note-model appearing in the ranking must be there via the snapshot,
+      // never via the note — which the stale-note guard above already forbids.
+      expect(r.all.some((s) => s.label.startsWith(note.model))).toBe(false);
     }
   });
 });
@@ -519,10 +571,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 50 configs and both Arena boards", () => {
-    // DeepSWE is still at 50: it has not evaluated qwen3.8-max, which is why
-    // that model cannot be ranked no matter how well Arena rates it.
-    expect(snap.deepswe.configs).toHaveLength(50);
+  it("has 51 configs and both Arena boards", () => {
+    // 51 since the 2026-08-04 run added qwen3.8-max [xhigh].
+    expect(snap.deepswe.configs).toHaveLength(51);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);

@@ -21,10 +21,7 @@ export function Hero({ snapshot }: { snapshot: Snapshot }) {
         </span>
       </div>
 
-      <h1
-        className="tight text-[2.6rem] font-semibold leading-[1.04] sm:text-[4rem] lg:text-[4.75rem]"
-        style={{ color: "var(--text-primary)" }}
-      >
+      <h1 className="hero-title tight text-[2.6rem] font-semibold leading-[1.04] sm:text-[4rem] lg:text-[4.75rem]">
         Best code
         <br />
         per dollar.
