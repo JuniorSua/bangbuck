@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Ranking, ScoredConfig } from "@/lib/score";
 import { craftEloOf } from "@/lib/score";
 import { pct, steps, tokens, usdPrecise } from "@/lib/format";
@@ -9,7 +9,7 @@ import { VendorMark } from "./VendorMark";
 type SortKey = "bb" | "ship" | "craft" | "cost" | "tokens" | "steps";
 
 /**
- * All 50 configs. Gated-out rows stay visible but dimmed rather than hidden —
+ * All 51 configs. Gated-out rows stay visible but dimmed rather than hidden —
  * seeing what got excluded, and by how little, is what makes the ranking
  * trustworthy rather than a black box. The specific value that failed is drawn in
  * the warning colour, so "why is this greyed out" is answerable at a glance.
@@ -17,8 +17,47 @@ type SortKey = "bb" | "ship" | "craft" | "cost" | "tokens" | "steps";
 export function RankTable({ ranking }: { ranking: Ranking }) {
   const [sort, setSort] = useState<SortKey>("bb");
   const [desc, setDesc] = useState(true);
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const sorted = [...ranking.all].sort((a, b) => {
+  /**
+   * Fifty-one rows is past the point where scanning works. The most common
+   * question a returning reader has is not "what won" — the card above answers
+   * that — but "where did MY model land", and until now the only way to answer
+   * it was to read every row.
+   *
+   * Matches on model, effort and vendor together, so "anthropic", "opus", and
+   * "xhigh" are all useful queries. Whitespace splits into terms that must all
+   * match, which makes "opus max" work without needing to guess the exact label.
+   */
+  const filtered = useMemo(() => {
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return ranking.all;
+    return ranking.all.filter((s) => {
+      const hay = `${s.label} ${s.organization}`.toLowerCase();
+      return terms.every((t) => hay.includes(t));
+    });
+  }, [ranking.all, query]);
+
+  // "/" focuses the filter, the convention every search-in-page UI shares. Only
+  // when the reader is not already typing somewhere else.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement;
+      const typing = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement;
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      } else if (e.key === "Escape" && el === inputRef.current) {
+        setQuery("");
+        inputRef.current?.blur();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const sorted = [...filtered].sort((a, b) => {
     // Below-floor configs have no meaningful BB score, so keep them at the bottom
     // when sorting by it rather than interleaving nonsense.
     if (sort === "bb" && a.qualified !== b.qualified) return a.qualified ? -1 : 1;
@@ -40,6 +79,55 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
 
   return (
     <section>
+      <div className="mb-3 flex flex-wrap items-center gap-3">
+        <div className="relative min-w-0 flex-1 sm:max-w-xs">
+          <input
+            ref={inputRef}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter by model or vendor…"
+            aria-label="Filter configurations by model or vendor"
+            className="w-full rounded-lg border px-3 py-1.5 pr-8 text-sm outline-none"
+            style={{
+              borderColor: "var(--border)",
+              background: "rgba(255,255,255,0.03)",
+              color: "var(--text-primary)",
+            }}
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              aria-label="Clear filter"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-sm"
+              style={{ color: "var(--text-muted)" }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        <span className="tnum shrink-0 text-xs" style={{ color: "var(--text-muted)" }}>
+          {query
+            ? `${sorted.length} of ${ranking.all.length}`
+            : `${ranking.qualified.length} of ${ranking.all.length} clear both floors`}
+        </span>
+        {!query && (
+          <span
+            className="ml-auto hidden shrink-0 items-center gap-1.5 text-xs sm:flex"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Press
+            <kbd
+              className="rounded border px-1.5 py-0.5 font-mono text-[10px]"
+              style={{ borderColor: "var(--border)", background: "rgba(255,255,255,0.04)" }}
+            >
+              /
+            </kbd>
+            to filter
+          </span>
+        )}
+      </div>
+
       {/* max-h + sticky thead: fifty rows is longer than any viewport, and a
           header that scrolls away turns the lower two-thirds into unlabelled
           numbers. */}
@@ -76,6 +164,13 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
             {sorted.map((s) => (
               <Row key={s.label} s={s} isWinner={s.rank === 1} topBb={topBb} />
             ))}
+            {sorted.length === 0 && (
+              <tr>
+                <td colSpan={8} className="px-3 py-10 text-center text-sm" style={{ color: "var(--text-muted)" }}>
+                  Nothing matches &ldquo;{query}&rdquo;. Try a vendor name, or part of a model name.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

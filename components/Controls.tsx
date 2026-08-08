@@ -3,6 +3,7 @@
 import type { Settings } from "@/lib/score";
 import { DEFAULT_SETTINGS, TIER_PRESETS } from "@/lib/score";
 import { pct } from "@/lib/format";
+import { ShareLink } from "./ShareLink";
 
 /**
  * The formula is a judgment call, not a law. Exposing the knobs is how the site
@@ -49,6 +50,7 @@ export function Controls({
               </button>
             ))}
           </div>
+          <ShareLink settings={settings} />
           {!isDefault && (
             <button
               onClick={() => onChange(DEFAULT_SETTINGS)}

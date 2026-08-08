@@ -138,6 +138,12 @@ better-to-the-right, so a tab change never flips the reader's sense of which way
 
 ## Sharing a tuned view
 
+The link preview is generated from the ranking itself — `app/opengraph-image.tsx` calls
+`computeRanking` and renders a 1200x630 card at build time, so the preview can never disagree with
+the page and there is no separate asset to remember to update. When the answer changes, so does the
+card, on the next build.
+
+
 Settings live in the query string, so "here is the same data under my assumptions" is a link:
 `?s=` ship floor, `c=` craft floor, `w=` craft weight, `b=` beta, `g=` gamma. Only knobs moved off
 default appear. Values outside 0..1 are ignored rather than trusted, so a hand-edited URL cannot
@@ -202,6 +208,7 @@ lib/vendors.ts          Canonical vendor names + aliases. Asserted against the d
 lib/notes.ts            Hand-written, sourced notes on models the scrapers cannot score.
                         Self-reported only; a test keeps them out of the ranking.
 components/             UI. ScatterChart.tsx is the dense one; read its module comment first.
+                        RankTable.tsx filters on "/" — model, effort and vendor together.
                         Dashboard.tsx owns tuning state and mirrors it into the URL.
                         SectionHead.tsx numbers the page so it reads as one argument.
                         StickyAnswer.tsx carries the winner once its card scrolls away.
