@@ -85,7 +85,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
       <div className="space-y-14">
         <section ref={answerRef}>
           <SectionHead n={1} title="The answer" aside="at the bar set below" />
-          <WinnerCard insights={ranking.insights} />
+          <WinnerCard insights={ranking.insights} settings={settings} />
         </section>
 
         <section className="reveal">

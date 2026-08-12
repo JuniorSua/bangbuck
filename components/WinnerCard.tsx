@@ -1,13 +1,20 @@
-import type { Insights } from "@/lib/score";
+import type { Insights, Settings } from "@/lib/score";
 import { craftEloOf } from "@/lib/score";
 import { multiple, pct, steps, tokens, usdPrecise } from "@/lib/format";
 import { VendorMark } from "./VendorMark";
+import { TwoGates } from "./TwoGates";
 
 /**
  * The headline. This component is essentially the whole product: it names one
  * config and then argues for it with numbers the reader can check.
  */
-export function WinnerCard({ insights }: { insights: Insights | null }) {
+export function WinnerCard({
+  insights,
+  settings,
+}: {
+  insights: Insights | null;
+  settings: Settings;
+}) {
   if (!insights) {
     return (
       <div className="card p-8 text-center">
@@ -118,6 +125,8 @@ export function WinnerCard({ insights }: { insights: Insights | null }) {
           <Stat label="Agent steps" value={steps(c.meanAgentSteps)} />
         </div>
       </div>
+
+      <TwoGates insights={insights} settings={settings} />
 
       <div className="p-6 sm:p-8">
         <div

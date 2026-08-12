@@ -36,12 +36,12 @@ describe("the two axes", () => {
   const r = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("measures Craft against the WebDev board's median", () => {
-    // Moved 1409 -> 1418.9 when Arena's WebDev board grew from 107 entries to
-    // 110 (qwen3.8-max, released 2026-08-03, entered at #4). Re-agreed on
-    // purpose: the reference is the board's median, so it is supposed to move
-    // when the board does. Every ranking held — both tier winners, both
+    // Re-agreed twice as the board grew: 1409 -> 1418.9 when qwen3.8-max
+    // entered (110 entries), 1418.9 -> 1417.7 on the 2026-08-07 refresh (114).
+    // The reference is the board's median, so it is supposed to move when the
+    // board does. Every ranking held each time — both tier winners, both
     // qualifying counts and both lead multiples were unchanged.
-    expect(r.referenceElo).toBeCloseTo(1418.9, 0);
+    expect(r.referenceElo).toBeCloseTo(1417.7, 0);
     expect(referenceElo(snap.arenaWebdev!.entries)).toBe(r.referenceElo);
   });
 
@@ -52,12 +52,12 @@ describe("the two axes", () => {
     expect(craftElo(craftProbability(1667, 1409), 1409)).toBeCloseTo(1667, 6);
   });
 
-  it("scores claude-opus-5 [high] at 81% craft and gpt-5.6-luna [max] at 65%", () => {
+  it("scores claude-opus-5 [high] at 81% craft and gpt-5.6-luna [max] at 64%", () => {
     const find = (label: string) => r.all.find((s) => s.label === label)!;
-    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1668.9, 0);
-    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.808, 2);
-    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1522.9, 0);
-    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.645, 2);
+    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1664.4, 0);
+    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.805, 2);
+    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1518.3, 0);
+    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.641, 2);
   });
 
   it("is conjunctive — a hole on one axis cannot be filled by the other", () => {
@@ -69,12 +69,12 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 51 configs, 12 of them exactly", () => {
-    // 51 as of the 2026-08-04 DeepSWE run, which added qwen3.8-max [xhigh].
-    // Arena's "qwen3.8-max" parses as effort max, so the [xhigh] config borrows
-    // it as a family match rather than an exact one — exact stays at 12.
+  it("rates every one of the 53 configs, 12 of them exactly", () => {
+    // 53 as of the 2026-08-07 DeepSWE run, which added muse-spark-1.2 [xhigh]
+    // and deepseek-v4-flash [max]. Exact matches stay at 12 — both newcomers
+    // borrow their family's nearest-effort Arena entry.
     expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
-    expect(r.all).toHaveLength(51);
+    expect(r.all).toHaveLength(53);
     expect(r.insights!.exactCraftCount).toBe(12);
   });
 });
@@ -196,7 +196,7 @@ describe("the Everyday tier", () => {
 
   it("qualifies 12 configs", () => {
     expect(r.qualified).toHaveLength(12);
-    expect(r.all).toHaveLength(51);
+    expect(r.all).toHaveLength(53);
   });
 
   it("is a statistical tie between gpt-5.6-sol [high] and claude-opus-5 [medium]", () => {
@@ -226,7 +226,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(51);
+    expect(r.all).toHaveLength(53);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -446,7 +446,7 @@ describe("craft matching", () => {
     const m = craftFor(low, webdev);
     expect(m.kind).toBe("family");
     expect(m.kind === "family" && m.borrowedFrom).toBe("high");
-    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1668.9, 0);
+    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1664.4, 0);
   });
 
   it("reports no match for a family Arena does not carry", () => {
@@ -466,9 +466,13 @@ describe("unrankedContenders — models the formula cannot touch", () => {
     expect(computeRanking(snap, DEFAULT_SETTINGS).all.some((s) => s.label === "qwen3.8-max [xhigh]")).toBe(true);
   });
 
-  it("still surfaces deepseek-v4-flash-high at the everyday bar", () => {
+  it("graduated deepseek too — grok-4.6-high is the current occupant", () => {
+    // deepseek-v4-flash [max] was measured on 2026-08-07 ($0.10/task, 53.3%
+    // ship) and left the waiting room the same way qwen did three days earlier.
     const names = unrankedContenders(snap, EVERYDAY).map((c) => c.entry.modelDisplayName);
-    expect(names).toContain("deepseek-v4-flash-high");
+    expect(names).not.toContain("deepseek-v4-flash-high");
+    expect(names).toContain("grok-4.6-high");
+    expect(computeRanking(snap, EVERYDAY).all.some((s) => s.label === "deepseek-v4-flash [max]")).toBe(true);
   });
 
   it("never lists a model DeepSWE has measured at any effort", () => {
@@ -571,9 +575,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 51 configs and both Arena boards", () => {
-    // 51 since the 2026-08-04 run added qwen3.8-max [xhigh].
-    expect(snap.deepswe.configs).toHaveLength(51);
+  it("has 53 configs and both Arena boards", () => {
+    // 53 since the 2026-08-07 run added muse-spark-1.2 and deepseek-v4-flash.
+    expect(snap.deepswe.configs).toHaveLength(53);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);

@@ -7,6 +7,15 @@ const DESCRIPTION =
   "then measured cost per task decides. Not list price.";
 
 export const metadata: Metadata = {
+  // Absolute URLs for the social card. Vercel injects its production hostname,
+  // so this self-configures on deploy; NEXT_PUBLIC_SITE_URL wins if set (e.g. a
+  // custom domain), and localhost keeps dev builds warning-free.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : "http://localhost:3000"),
+  ),
   title: "BangBuck — the most cost-efficient AI coding model",
   description: DESCRIPTION,
   // A link with no card is a link nobody opens, and this site is built to be

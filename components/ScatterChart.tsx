@@ -80,6 +80,15 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
 
   const [hover, setHover] = useState<ScoredConfig | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
+  /**
+   * Click pins the inspection in place. Hover alone was fiddly in exactly the
+   * regions worth inspecting — the dense clusters — because reading the tooltip
+   * means holding the mouse still on a 26px target, and moving toward the
+   * tooltip to read it would re-resolve to a different point. A pin survives
+   * mouse movement, mouse leave, and reading at leisure; click again, click
+   * empty space, or press Escape to release it.
+   */
+  const [pinned, setPinned] = useState<string | null>(null);
   const [metricId, setMetricId] = useState<MetricId>("cost");
   const metric = metricById(metricId);
 
@@ -258,7 +267,40 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const HIT_RADIUS = 26;
 
+  const nearest = (e: React.MouseEvent<SVGSVGElement>): ScoredConfig | null => {
+    const svg = svgRef.current;
+    if (!svg) return null;
+    const box = svg.getBoundingClientRect();
+    const px = ((e.clientX - box.left) / box.width) * W;
+    const py = ((e.clientY - box.top) / box.height) * H;
+    let best: ScoredConfig | null = null;
+    let bestDist = HIT_RADIUS;
+    for (const s of all) {
+      const dist = Math.hypot(x(metric.get(s)) - px, y(s.config.passAt1) - py);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = s;
+      }
+    }
+    return best;
+  };
+
+  const handleClick = (e: React.MouseEvent<SVGSVGElement>) => {
+    const best = nearest(e);
+    if (!best || best.label === pinned) {
+      // Same point again, or empty space: release.
+      setPinned(null);
+      setHover(best);
+      setFocus(best?.config.model ?? null);
+      return;
+    }
+    setPinned(best.label);
+    setHover(best);
+    setFocus(best.config.model);
+  };
+
   const handleMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (pinned) return;
     const svg = svgRef.current;
     if (!svg) return;
     const box = svg.getBoundingClientRect();
@@ -281,9 +323,30 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
   };
 
   const clearHover = () => {
+    if (pinned) return;
     setHover(null);
     setFocus(null);
   };
+
+  useEffect(() => {
+    if (!pinned) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setPinned(null);
+        setHover(null);
+        setFocus(null);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pinned]);
+
+  // A pinned point must not survive a tab switch pointing at stale geometry.
+  useEffect(() => {
+    setPinned(null);
+    setHover(null);
+    setFocus(null);
+  }, [metricId]);
 
   return (
     <figure className="m-0">
@@ -318,7 +381,7 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           {all.length - ranking.qualified.length} gated out
         </Key>
         <span className="ml-auto" style={{ color: "var(--text-muted)" }}>
-          Hover any line to name it
+          Hover to inspect · click to pin
         </span>
       </div>
 
@@ -327,8 +390,10 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
           className="w-full"
+          style={{ cursor: hover ? "pointer" : "default" }}
           onMouseMove={handleMove}
           onMouseLeave={clearHover}
+          onClick={handleClick}
           role="img"
           aria-label={`Score against ${metric.axis} for each model across its reasoning-effort settings.${
             winner ? ` Best value: ${winner.label}.` : ""
@@ -622,6 +687,11 @@ export function ScatterChart({ ranking }: { ranking: Ranking }) {
                 accent={hover.qualified}
               />
             </div>
+            {pinned === hover.label && (
+              <div className="mt-1.5 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                📌 Pinned — click again or press Esc to release
+              </div>
+            )}
           </div>
           );
         })()}
