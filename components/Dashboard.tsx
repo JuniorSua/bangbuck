@@ -96,7 +96,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         <section className="reveal">
           <SectionHead
             n={3}
-            title="What paying more actually buys"
+            title="What paying more buys"
             aside={`${ranking.qualified.length} of ${ranking.all.length} still standing`}
           />
           <ScatterChart ranking={ranking} />
@@ -105,7 +105,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         <section className="reveal">
           <SectionHead
             n={4}
-            title="Every configuration, winners and losers"
+            title="The whole field"
             aside="dimmed rows failed a floor"
           />
           <RankTable ranking={ranking} />
@@ -123,15 +123,14 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         )}
 
         <section className="reveal">
-          <SectionHead n={6} title="Where the numbers come from" aside="nothing here is measured by us" />
+          <SectionHead n={6} title="Receipts" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>
       </div>
 
       <footer className="mt-10 border-t pt-6 text-xs" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>
-        BangBuck is an independent efficiency ranking. It does not run benchmarks — it reads
-        published results from the projects above and applies a cost-efficiency formula. The formula
-        is a judgment call; the sliders above let you disagree with it.
+        BangBuck reads published benchmarks and applies one opinionated formula. Disagree? The
+        sliders are right there.
       </footer>
     </main>
   );

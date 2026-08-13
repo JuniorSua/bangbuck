@@ -36,12 +36,10 @@ describe("the two axes", () => {
   const r = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("measures Craft against the WebDev board's median", () => {
-    // Re-agreed twice as the board grew: 1409 -> 1418.9 when qwen3.8-max
-    // entered (110 entries), 1418.9 -> 1417.7 on the 2026-08-07 refresh (114).
-    // The reference is the board's median, so it is supposed to move when the
-    // board does. Every ranking held each time — both tier winners, both
-    // qualifying counts and both lead multiples were unchanged.
-    expect(r.referenceElo).toBeCloseTo(1417.7, 0);
+    // Re-agreed as the board grows (1409 -> 1418.9 -> 1417.7 -> 1418.8). The
+    // reference is the board's median, so it is supposed to move when the board
+    // does; the high-power answer has held through every shift.
+    expect(r.referenceElo).toBeCloseTo(1418.8, 0);
     expect(referenceElo(snap.arenaWebdev!.entries)).toBe(r.referenceElo);
   });
 
@@ -69,15 +67,12 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 58 configs, 16 of them exactly", () => {
-    // 58 as of the 2026-08-13 DeepSWE run (the grok-4.6 ladder plus
-    // deepseek-v4-pro [max]). Exact matches jumped 12 -> 16 for two reasons:
-    // the newcomers brought real config-level Arena entries, and the join now
-    // strips Arena's date stamps ("deepseek-v4-pro-max-20260813"), which had
-    // been hiding effort suffixes and silently blocking exact matches.
+  it("rates every one of the 61 configs, 17 of them exactly", () => {
+    // 61 as of the second 2026-08-13 DeepSWE run, which added the
+    // gemini-3.7-flash ladder (its [high] matches Arena exactly, hence 17).
     expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
-    expect(r.all).toHaveLength(58);
-    expect(r.insights!.exactCraftCount).toBe(16);
+    expect(r.all).toHaveLength(61);
+    expect(r.insights!.exactCraftCount).toBe(17);
   });
 });
 
@@ -148,6 +143,7 @@ describe("craftFloorRegimes", () => {
     const r = craftFloorRegimes(snap, EVERYDAY);
     expect(r.map((x) => x.winner?.label)).toEqual([
       "gpt-5.6-luna [max]",
+      "gemini-3.7-flash [medium]",
       "gpt-5.6-sol [high]",
       "claude-opus-5 [medium]",
       "kimi-k3 [max]",
@@ -196,31 +192,32 @@ describe("craftFloorRegimes", () => {
 describe("the Everyday tier", () => {
   const r = computeRanking(snap, EVERYDAY);
 
-  it("qualifies 15 configs — the grok-4.6 ladder added three", () => {
-    expect(r.qualified).toHaveLength(15);
-    expect(r.all).toHaveLength(58);
+  it("qualifies 17 configs", () => {
+    expect(r.qualified).toHaveLength(17);
+    expect(r.all).toHaveLength(61);
   });
 
-  it("is a statistical tie between gpt-5.6-sol [high] and claude-opus-5 [medium]", () => {
-    // Documented as a tie on purpose: a 4% gap is not a ranking, and the site
-    // must not present it as one.
-    expect(r.qualified[0].label).toBe("gpt-5.6-sol [high]");
-    expect(r.qualified[1].label).toBe("claude-opus-5 [medium]");
+  it("crowns gemini-3.7-flash [medium] — the first everyday handover", () => {
+    // The everyday answer changed for the first time since the two-axis
+    // rebuild: 65.5% ship at $2.03 with 73% craft, edging gpt-5.6-sol [high]
+    // by 1.4%. Still a photo finish, and presented as one — but the new
+    // leader is the cheapest qualifier the tier has ever had.
+    expect(r.qualified[0].label).toBe("gemini-3.7-flash [medium]");
+    expect(r.qualified[1].label).toBe("gpt-5.6-sol [high]");
+    expect(r.qualified[2].label).toBe("claude-opus-5 [medium]");
     expect(r.insights!.leadMultiple).toBeLessThan(1.06);
   });
 
-  it("puts claude-opus-5 [high] eighth — capable, but you overpay for it here", () => {
-    // Slid from sixth when grok-4.6 [medium] and [high] entered above it.
-    expect(r.qualified[7].label).toBe("claude-opus-5 [high]");
+  it("puts claude-opus-5 [high] tenth — capable, but you overpay for it here", () => {
+    // Sixth, then eighth, now tenth: each refresh has added cheaper qualifiers
+    // above it while the high-power tier keeps crowning it. Both true at once
+    // is the two-tier design working.
+    expect(r.qualified[9].label).toBe("claude-opus-5 [high]");
   });
 
-  it("debuts grok-4.6 [medium] on the everyday podium", () => {
-    // The first genuinely new podium entrant since the two-axis rebuild:
-    // 67.5% ship at $3.45 with 77% craft. It does not threaten the top two —
-    // sol [high] and opus [medium] both beat it on ship AND price — but it is
-    // the best config xAI has ever placed here.
-    expect(r.qualified[2].label).toBe("grok-4.6 [medium]");
-    expect(r.qualified[2].bb).toBeCloseTo(8.63, 1);
+  it("keeps grok-4.6 [medium] in the top five", () => {
+    expect(r.qualified[4].label).toBe("grok-4.6 [medium]");
+    expect(r.qualified[4].bb).toBeCloseTo(8.63, 1);
   });
 });
 
@@ -238,7 +235,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(58);
+    expect(r.all).toHaveLength(61);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -328,32 +325,27 @@ describe("invariants that must hold at any setting", () => {
     expect(dominated).toBe(false);
   });
 
-  it("DOES crown a dominated config at the everyday tier — a known weakness", () => {
-    // Pinned deliberately rather than hidden. gpt-5.6-sol [high] wins the
-    // everyday tier while claude-opus-5 [medium] is BOTH cheaper ($3.29 vs
-    // $3.47) and more capable (0.762 vs 0.740). Sol only wins on the token and
-    // step penalties — 28k/37 against 37k/52 — which means a tiebreaker meant
-    // to stand in for wall-clock time is overturning both axes the formula
-    // claims to rank on.
-    //
-    // Left as-is because the penalties are the user's stated judgment and the
-    // gap is 4%, which the UI already reports as a tie rather than a ranking.
-    // If this test ever starts failing, the penalties were retuned and the
-    // everyday answer moved to claude-opus-5 [medium] — check that was intended.
+  it("no longer crowns a dominated config at the everyday tier", () => {
+    // This test used to pin the opposite as a known weakness: gpt-5.6-sol
+    // [high] won everyday while claude-opus-5 [medium] was cheaper AND more
+    // capable, kept on top only by the token/step penalties. The 2026-08-13
+    // data resolved it — gemini-3.7-flash [medium] is cheaper than every
+    // config above it in capability, so nothing dominates the winner.
     const r = computeRanking(snap, EVERYDAY);
-    const [winner, second] = r.qualified;
-    expect(winner.label).toBe("gpt-5.6-sol [high]");
-    expect(second.label).toBe("claude-opus-5 [medium]");
-    expect(second.config.meanCostUsd).toBeLessThan(winner.config.meanCostUsd);
-    expect(second.capability!).toBeGreaterThan(winner.capability!);
-    expect(winner.bb / second.bb).toBeLessThan(1.05);
+    const w = r.qualified[0];
+    const dominated = r.qualified.some(
+      (o) => o !== w && o.config.meanCostUsd <= w.config.meanCostUsd && o.capability! > w.capability!,
+    );
+    expect(dominated).toBe(false);
   });
 
-  it("puts claude-opus-5 [medium] first once the penalties are switched off", () => {
-    // The same finding from the other side: with beta and gamma at zero, the
-    // everyday tier ranks on capability and price alone and the order reverses.
+  it("keeps the everyday winner with the penalties switched off", () => {
+    // The old winner depended on the token/step penalties to stay ahead of a
+    // cheaper, stronger config. The new one does not: cheapest capable config
+    // wins with beta = gamma = 0 too, so the answer no longer rests on the
+    // tiebreakers.
     const r = computeRanking(snap, { ...EVERYDAY, beta: 0, gamma: 0 });
-    expect(r.qualified[0].label).toBe("claude-opus-5 [medium]");
+    expect(r.qualified[0].label).toBe("gemini-3.7-flash [medium]");
   });
 
   it("is deterministic", () => {
@@ -386,17 +378,15 @@ describe("robustness of the two headline answers", () => {
     }
   });
 
-  it("keeps the everyday top two a tie under any craft weight", () => {
-    // Reported as a tie on the site, so it has to stay one — if some weight
-    // separated them, the copy would be wrong rather than cautious.
+  it("keeps the everyday podium a three-way photo finish under any craft weight", () => {
+    // Was a two-way tie; gemini-3.7-flash [medium] made it three. The site
+    // reports a near-tie rather than a ranking, so it must STAY one whatever
+    // the weight — if some weight separated them, the copy would be wrong.
+    const PODIUM = ["claude-opus-5 [medium]", "gemini-3.7-flash [medium]", "gpt-5.6-sol [high]"];
     for (const craftWeight of [0, 0.3, 0.6, 1]) {
       const r = computeRanking(snap, { ...EVERYDAY, craftWeight });
-      const gap = r.qualified[0].bb / r.qualified[1].bb;
-      expect(gap).toBeLessThan(1.1);
-      expect([r.qualified[0].label, r.qualified[1].label].sort()).toEqual([
-        "claude-opus-5 [medium]",
-        "gpt-5.6-sol [high]",
-      ]);
+      expect(r.qualified.slice(0, 3).map((s) => s.label).sort()).toEqual(PODIUM);
+      expect(r.qualified[0].bb / r.qualified[2].bb).toBeLessThan(1.15);
     }
   });
 
@@ -537,16 +527,13 @@ describe("qwen3.8-max [xhigh] — measured, and the vendor claim checked out", (
     expect(q.organization).toBe("Alibaba");
   });
 
-  it("changes neither tier's answer", () => {
+  it("leaves the high-power answer untouched", () => {
     expect(r.qualified.map((s) => s.label)).toEqual([
       "claude-opus-5 [high]",
       "gpt-5.6-sol [max]",
       "claude-opus-5 [xhigh]",
       "claude-opus-5 [max]",
     ]);
-    const ev = computeRanking(snap, EVERYDAY);
-    expect(ev.qualified[0].label).toBe("gpt-5.6-sol [high]");
-    expect(ev.qualified).toHaveLength(15);
   });
 });
 
@@ -616,9 +603,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 58 configs and both Arena boards", () => {
-    // 58 since the 2026-08-13 run added the grok-4.6 ladder and deepseek-v4-pro.
-    expect(snap.deepswe.configs).toHaveLength(58);
+  it("has 61 configs and both Arena boards", () => {
+    // 61 since the second 2026-08-13 run added the gemini-3.7-flash ladder.
+    expect(snap.deepswe.configs).toHaveLength(61);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);
@@ -631,29 +618,40 @@ describe("snapshot integrity", () => {
 
 describe("hindsight check — the era before gpt-5.6 shipped", () => {
   /**
-   * The user picked claude-opus-5 [medium] by hand as best bang-for-buck BEFORE the
-   * gpt-5.6 generation existed. DeepSWE's own v1 snapshot (2026-06-20) confirms
-   * none of luna/sol/terra were on the leaderboard then.
+   * The user picked claude-opus-5 [medium] by hand as best bang-for-buck BEFORE
+   * the gpt-5.6 generation existed. Rewinding the field to that point must
+   * reproduce their pick with the formula completely unchanged.
    *
-   * Rewinding the field to that point must reproduce their pick with the formula
-   * completely unchanged. If a future tuning breaks this, the formula has drifted
-   * away from the judgment it was built to encode.
+   * "Rewinding" now has to remove every family that arrived after the era, not
+   * just gpt-5.6 — the benchmark keeps absorbing new models (qwen3.8, grok-4.6,
+   * gemini-3.7-flash, deepseek-v4, muse-spark-1.2), and leaving them in would
+   * test a field that never existed at any point in time.
    */
-  const withoutGpt56 = {
+  const ERA_NEWCOMERS = [
+    "gpt-5.6-",
+    "qwen3.8-",
+    "grok-4.6",
+    "gemini-3.7-",
+    "deepseek-v4-",
+    "muse-spark-1.2",
+  ];
+  const eraField = {
     ...snap,
     deepswe: {
       ...snap.deepswe,
-      configs: snap.deepswe.configs.filter((c) => !c.model.startsWith("gpt-5-6")),
+      configs: snap.deepswe.configs.filter(
+        (c) => !ERA_NEWCOMERS.some((p) => c.modelDisplay.startsWith(p)),
+      ),
     },
   };
 
   it("still crowns claude-opus-5 [medium] at the everyday bar", () => {
-    const r = computeRanking(withoutGpt56, EVERYDAY);
+    const r = computeRanking(eraField, EVERYDAY);
     expect(r.qualified[0].label).toBe("claude-opus-5 [medium]");
   });
 
   it("still crowns claude-opus-5 [high] at the high-power bar", () => {
-    const r = computeRanking(withoutGpt56, DEFAULT_SETTINGS);
+    const r = computeRanking(eraField, DEFAULT_SETTINGS);
     expect(r.qualified[0].label).toBe("claude-opus-5 [high]");
   });
 });

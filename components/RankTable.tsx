@@ -175,16 +175,23 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
         </table>
       </div>
 
-      <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-        <strong style={{ color: "var(--text-secondary)" }}>Ship</strong> is DeepSWE pass@1 across 113
-        real repo tasks, measured per configuration.{" "}
-        <strong style={{ color: "var(--text-secondary)" }}>Craft</strong> is how often a human picks
-        this model&rsquo;s web work over a typical model&rsquo;s, from Arena&rsquo;s WebDev board.
-        Craft marked <span className="font-mono">~</span> is borrowed from the nearest reasoning
-        effort of the same model, because Arena rates only{" "}
-        {ranking.all.filter((s) => s.craftMatch.kind === "exact").length} of these {ranking.all.length}{" "}
-        configurations directly — effort shows up on Ship, which is measured per configuration.
-      </p>
+      <details className="mt-3">
+        <summary
+          className="cursor-pointer select-none text-xs underline underline-offset-2"
+          style={{ color: "var(--text-muted)" }}
+        >
+          How to read this table
+        </summary>
+        <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <strong style={{ color: "var(--text-secondary)" }}>Ship</strong> = share of 113 real repo
+          tasks finished (DeepSWE). <strong style={{ color: "var(--text-secondary)" }}>Craft</strong>{" "}
+          = how often humans prefer its web code (Arena WebDev).{" "}
+          <span className="font-mono">~</span> marks a craft score borrowed from the nearest sibling
+          effort — Arena rates only{" "}
+          {ranking.all.filter((s) => s.craftMatch.kind === "exact").length} of {ranking.all.length}{" "}
+          configs directly. Dimmed rows failed a floor; the failing number is the amber one.
+        </p>
+      </details>
     </section>
   );
 }

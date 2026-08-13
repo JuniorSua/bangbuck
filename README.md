@@ -54,7 +54,7 @@ actually carry the judgment.
 
 ### Craft coverage — read this before trusting a row
 
-Arena rates only **16 of the 58** configurations exactly. The rest borrow the nearest reasoning
+Arena rates only **17 of the 61** configurations exactly. The rest borrow the nearest reasoning
 effort of the same model, and every table row marks this with `~`.
 
 Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
@@ -99,7 +99,16 @@ join silently falls through to the base model's rating. `familyKey`/`describe` h
 Self-reported figures live in `lib/notes.ts`, never in `data/snapshot.json`, and a test asserts none
 of them can reach the ranking. Every note carries a URL a reader can open.
 
-### A known weakness, pinned by a test
+### A weakness that resolved itself
+
+Until 13 Aug the everyday winner was **dominated**: `gpt-5.6-sol [high]` won while `claude-opus-5
+[medium]` was cheaper *and* more capable, kept on top only by the token/step penalties. Two tests
+pinned that honestly. The gemini-3.7-flash data dissolved it — `gemini-3.7-flash [medium]` is
+cheaper than everything above it in capability, nothing dominates it, and it stays first even with
+the penalties at zero. The tests now pin the healthy state instead; the history lives in this
+paragraph and the git log.
+
+### The old weakness, for the record
 
 At the everyday tier the winner is **dominated**: `claude-opus-5 [medium]` is both cheaper ($3.29 vs
 $3.47) and more capable (0.762 vs 0.740) than `gpt-5.6-sol [high]`, which wins only on the token and
@@ -312,7 +321,7 @@ circle, which reads as a design choice rather than a gap.
 
 BangBuck does not run benchmarks. It reads published results and applies a cost-efficiency formula.
 
-- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 58 configurations across 113
+- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 61 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
 - **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on

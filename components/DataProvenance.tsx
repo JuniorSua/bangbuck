@@ -12,14 +12,14 @@ export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
         <Source
           name="DeepSWE"
           href={snapshot.deepswe.sourceUrl}
-          detail={`${snapshot.deepswe.configs.length} configurations across ${snapshot.deepswe.nTasksInSet} long-horizon software engineering tasks. Supplies the Ship axis and every measured cost figure: pass@1, cost per task, output tokens and agent steps.`}
+          detail={`${snapshot.deepswe.configs.length} configs, ${snapshot.deepswe.nTasksInSet} real repo tasks. Supplies Ship and every measured cost figure.`}
           asOf={`Benchmark data as of ${shortDate(snapshot.deepswe.generatedAt)}`}
         />
         {snapshot.arenaWebdev && (
           <Source
             name="Arena WebDev"
             href={snapshot.arenaWebdev.sourceUrl}
-            detail={`${snapshot.arenaWebdev.entries.length} models rated by human preference votes on web development specifically. Supplies the Craft axis. Arena measures no cost, tokens or steps, so it decides only whether a model is good enough to compete — never how cheap it is.`}
+            detail={`${snapshot.arenaWebdev.entries.length} models, human votes on web dev. Supplies Craft — never cost.`}
             asOf="Human-preference Elo"
           />
         )}
@@ -27,16 +27,15 @@ export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
           <Source
             name="Arena chat"
             href={snapshot.arena.sourceUrl}
-            detail={`${snapshot.arena.entries.length} models ranked on general conversation. Shown for context only and deliberately kept out of the score — a model's chat ranking says little about its code, which is the mistake this ranking was rebuilt to avoid.`}
+            detail={`${snapshot.arena.entries.length} models, general chat. Context only — chat rank says little about code.`}
             asOf="Human-preference Elo, list pricing"
           />
         )}
       </div>
 
       <p className="mt-4 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-        Snapshot captured {shortDate(snapshot.capturedAt)}. This site does not poll — benchmark
-        results only change when a new model is evaluated, so the data is refreshed deliberately
-        rather than on a timer.
+        Snapshot captured {shortDate(snapshot.capturedAt)} — refreshed when a new model ships, not
+        on a timer.
       </p>
     </section>
   );

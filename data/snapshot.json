@@ -1,11 +1,11 @@
 {
-  "capturedAt": "2026-08-13T16:01:12.034Z",
+  "capturedAt": "2026-08-13T20:24:14.650Z",
   "deepswe": {
-    "generatedAt": "2026-08-13T03:56:46.395109+00:00",
+    "generatedAt": "2026-08-13T16:11:55.708636+00:00",
     "nTasksInSet": 113,
     "latestJob": {
-      "name": "20260812-deep-swe-grok-4.6",
-      "finished_at": "2026-08-13T03:27:32.963557"
+      "name": "20260812-deep-swe-1-1-gemini-3-5-flash-high",
+      "finished_at": "2026-08-13T05:10:16.059120"
     },
     "sourceUrl": "https://deepswe.datacurve.ai/",
     "configs": [
@@ -712,24 +712,6 @@
         "medianPeakContextTokens": 79616
       },
       {
-        "model": "gemini-3-6-flash",
-        "modelDisplay": "gemini-3.6-flash",
-        "effort": "high",
-        "config": "mini_swe_agent_gemini_3_6_flash_high",
-        "harness": "mini-swe-agent",
-        "passAt1": 0.48558758314855877,
-        "passAt4": 0.7610619469026548,
-        "ciLo": 0.43555190193399257,
-        "ciHi": 0.5356232643631249,
-        "nRuns": 4,
-        "meanCostUsd": 3.532355313192905,
-        "meanOutputTokens": 96978.28381374723,
-        "meanAgentSteps": 108.31042128603104,
-        "meanInputTokens": 12585482.277161863,
-        "meanDurationSeconds": 1279.711030638581,
-        "medianPeakContextTokens": 154493
-      },
-      {
         "model": "claude-sonnet-5",
         "modelDisplay": "claude-sonnet-5",
         "effort": "high",
@@ -746,6 +728,24 @@
         "meanInputTokens": 18254491.34368071,
         "meanDurationSeconds": 1728.2193087920355,
         "medianPeakContextTokens": 174563
+      },
+      {
+        "model": "gemini-3-6-flash",
+        "modelDisplay": "gemini-3.6-flash",
+        "effort": "high",
+        "config": "mini_swe_agent_gemini_3_6_flash_high",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.4668141592920354,
+        "passAt4": 0.7522123893805309,
+        "ciLo": 0.4297656202995626,
+        "ciHi": 0.5038626982845081,
+        "nRuns": 4,
+        "meanCostUsd": 4.419013277333334,
+        "meanOutputTokens": 95844.86222222222,
+        "meanAgentSteps": 116.73333333333333,
+        "meanInputTokens": 12595957.344444444,
+        "meanDurationSeconds": 1477.8607510707964,
+        "medianPeakContextTokens": 151398.5
       },
       {
         "model": "gpt-5-6-sol",
@@ -856,24 +856,6 @@
         "medianPeakContextTokens": 118790
       },
       {
-        "model": "gemini-3-5-flash",
-        "modelDisplay": "gemini-3.5-flash",
-        "effort": "medium",
-        "config": "mini_swe_agent_gemini_3_5_flash_medium",
-        "harness": "mini-swe-agent",
-        "passAt1": 0.37389380530973454,
-        "passAt4": 0.6637168141592921,
-        "ciLo": 0.3560151802418914,
-        "ciHi": 0.3917724303775777,
-        "nRuns": 4,
-        "meanCostUsd": 7.341823985508849,
-        "meanOutputTokens": 275777.50884955755,
-        "meanAgentSteps": 85.71681415929204,
-        "meanInputTokens": 17106307.721238937,
-        "meanDurationSeconds": 1591.2357384845131,
-        "medianPeakContextTokens": 443903.5
-      },
-      {
         "model": "glm-5-2",
         "modelDisplay": "glm-5.2",
         "effort": "high",
@@ -890,6 +872,24 @@
         "meanInputTokens": 9070605.707964601,
         "meanDurationSeconds": 1794.4733617809734,
         "medianPeakContextTokens": 102096
+      },
+      {
+        "model": "gemini-3-5-flash",
+        "modelDisplay": "gemini-3.5-flash",
+        "effort": "high",
+        "config": "mini_swe_agent_gemini_3_5_flash_high",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.3606194690265487,
+        "passAt4": 0.6371681415929203,
+        "ciLo": 0.3209564389213443,
+        "ciHi": 0.40028249913175307,
+        "nRuns": 4,
+        "meanCostUsd": 3.4467114588691796,
+        "meanOutputTokens": 75730.19290465632,
+        "meanAgentSteps": 105.30376940133037,
+        "meanInputTokens": 7629071.858093127,
+        "meanDurationSeconds": 1125.1601607057523,
+        "medianPeakContextTokens": 113979
       },
       {
         "model": "gpt-5-6-terra",
@@ -1005,17 +1005,17 @@
         "effort": "high",
         "config": "mini_swe_agent_gemini_3_1_pro_preview_high",
         "harness": "mini-swe-agent",
-        "passAt1": 0.11751662971175167,
+        "passAt1": 0.1172566371681416,
         "passAt4": 0.2831858407079646,
-        "ciLo": 0.09263116889072637,
-        "ciHi": 0.14240209053277697,
+        "ciLo": 0.10244568255705315,
+        "ciHi": 0.13206759177923005,
         "nRuns": 4,
-        "meanCostUsd": 9.48151874855876,
-        "meanOutputTokens": 196386.1019955654,
-        "meanAgentSteps": 81.39024390243902,
-        "meanInputTokens": 6571926.115299335,
-        "meanDurationSeconds": 2198.6902187827054,
-        "medianPeakContextTokens": 81324
+        "meanCostUsd": 2.1434045568888886,
+        "meanOutputTokens": 28368.884444444444,
+        "meanAgentSteps": 75.56444444444445,
+        "meanInputTokens": 2403677.331111111,
+        "meanDurationSeconds": 867.7979107013274,
+        "medianPeakContextTokens": 49745.5
       },
       {
         "model": "gpt-5-6-luna",
@@ -1052,6 +1052,60 @@
         "meanInputTokens": 150031.52876106196,
         "meanDurationSeconds": 77.14656007522123,
         "medianPeakContextTokens": 17490.5
+      },
+      {
+        "model": "gemini-3-7-flash",
+        "modelDisplay": "gemini-3.7-flash",
+        "effort": "medium",
+        "config": "mini_swe_agent_gemini_3_7_flash_medium",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.6548672566371682,
+        "passAt4": 0.831858407079646,
+        "ciLo": 0.624001933873013,
+        "ciHi": 0.6857325794013234,
+        "nRuns": 4,
+        "meanCostUsd": 2.0251351826880533,
+        "meanOutputTokens": 93990.8517699115,
+        "meanAgentSteps": 117.36946902654867,
+        "meanInputTokens": 15332065.907079646,
+        "meanDurationSeconds": 1240.376194079646,
+        "medianPeakContextTokens": 195705.5
+      },
+      {
+        "model": "gemini-3-7-flash",
+        "modelDisplay": "gemini-3.7-flash",
+        "effort": "high",
+        "config": "mini_swe_agent_gemini_3_7_flash_high",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.6526548672566371,
+        "passAt4": 0.8230088495575221,
+        "ciLo": 0.6347762421887939,
+        "ciHi": 0.6705334923244803,
+        "nRuns": 4,
+        "meanCostUsd": 2.1762860351216813,
+        "meanOutputTokens": 107248.30309734514,
+        "meanAgentSteps": 124.51548672566372,
+        "meanInputTokens": 16999853.159292035,
+        "meanDurationSeconds": 1244.9565387986725,
+        "medianPeakContextTokens": 221180.5
+      },
+      {
+        "model": "gemini-3-7-flash",
+        "modelDisplay": "gemini-3.7-flash",
+        "effort": "low",
+        "config": "mini_swe_agent_gemini_3_7_flash_low",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.5376106194690266,
+        "passAt4": 0.7787610619469026,
+        "ciLo": 0.5117141286507079,
+        "ciHi": 0.5635071102873452,
+        "nRuns": 4,
+        "meanCostUsd": 1.8322645629424779,
+        "meanOutputTokens": 73364.9557522124,
+        "meanAgentSteps": 130.37610619469027,
+        "meanInputTokens": 15056565.075221239,
+        "meanDurationSeconds": 1252.0731730707964,
+        "medianPeakContextTokens": 168146
       }
     ]
   },
@@ -1173,6 +1227,20 @@
       },
       {
         "rank": 9,
+        "modelDisplayName": "gemini-3.7-flash-high",
+        "rating": 1490.3785050956562,
+        "ratingLower": 1482.2512616270083,
+        "ratingUpper": 1498.5057485643042,
+        "votes": 5744,
+        "organization": "Google",
+        "license": "Proprietary",
+        "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/",
+        "inputPricePerMillion": 0.75,
+        "outputPricePerMillion": 3.75,
+        "contextLength": null
+      },
+      {
+        "rank": 10,
         "modelDisplayName": "claude-opus-5-max",
         "rating": 1489.4035984005334,
         "ratingLower": 1482.4536327023309,
@@ -1186,7 +1254,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 10,
+        "rank": 11,
         "modelDisplayName": "muse-spark-1.1",
         "rating": 1488.8526539376112,
         "ratingLower": 1483.3122698182142,
@@ -1200,7 +1268,7 @@
         "contextLength": null
       },
       {
-        "rank": 11,
+        "rank": 12,
         "modelDisplayName": "kimi-k3-max",
         "rating": 1488.7811298424115,
         "ratingLower": 1482.5811666292907,
@@ -1214,7 +1282,7 @@
         "contextLength": null
       },
       {
-        "rank": 12,
+        "rank": 13,
         "modelDisplayName": "muse-spark",
         "rating": 1488.0025579887613,
         "ratingLower": 1482.155494524993,
@@ -1228,7 +1296,7 @@
         "contextLength": null
       },
       {
-        "rank": 13,
+        "rank": 14,
         "modelDisplayName": "gemini-3.1-pro-preview",
         "rating": 1486.4668823819263,
         "ratingLower": 1483.1338005256928,
@@ -1242,7 +1310,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 14,
+        "rank": 15,
         "modelDisplayName": "gemini-3-pro",
         "rating": 1485.4834177575933,
         "ratingLower": 1481.6548204435537,
@@ -1256,7 +1324,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 15,
+        "rank": 16,
         "modelDisplayName": "gemini-3.6-flash-high",
         "rating": 1483.953525699951,
         "ratingLower": 1478.0845476170264,
@@ -1265,12 +1333,12 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
-        "inputPricePerMillion": 0.75,
-        "outputPricePerMillion": 3.75,
+        "inputPricePerMillion": 0.375,
+        "outputPricePerMillion": 1.875,
         "contextLength": 1048576
       },
       {
-        "rank": 16,
+        "rank": 17,
         "modelDisplayName": "gpt-5.5-high",
         "rating": 1481.696937285408,
         "ratingLower": 1477.6495743997364,
@@ -1284,7 +1352,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 17,
+        "rank": 18,
         "modelDisplayName": "claude-opus-4-8-high",
         "rating": 1481.3369289044085,
         "ratingLower": 1476.8015504939315,
@@ -1298,7 +1366,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 18,
+        "rank": 19,
         "modelDisplayName": "gpt-5.6-sol-xhigh",
         "rating": 1481.097237027926,
         "ratingLower": 1475.3717507688596,
@@ -1312,7 +1380,7 @@
         "contextLength": null
       },
       {
-        "rank": 19,
+        "rank": 20,
         "modelDisplayName": "gemini-3.5-flash-high",
         "rating": 1477.370308032193,
         "ratingLower": 1472.7082689719116,
@@ -1326,7 +1394,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 20,
+        "rank": 21,
         "modelDisplayName": "gpt-5.5",
         "rating": 1476.6692460957795,
         "ratingLower": 1472.6451677845016,
@@ -1340,7 +1408,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 21,
+        "rank": 22,
         "modelDisplayName": "gpt-5.4-high",
         "rating": 1476.4266255714556,
         "ratingLower": 1472.540857691819,
@@ -1354,7 +1422,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 22,
+        "rank": 23,
         "modelDisplayName": "gpt-5.2-chat-latest-20260210",
         "rating": 1476.2314355332182,
         "ratingLower": 1472.0995840494818,
@@ -1368,7 +1436,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 23,
+        "rank": 24,
         "modelDisplayName": "grok-4.20-beta1",
         "rating": 1474.6621990454253,
         "ratingLower": 1470.0112024354664,
@@ -1382,7 +1450,7 @@
         "contextLength": null
       },
       {
-        "rank": 24,
+        "rank": 25,
         "modelDisplayName": "gemini-3.5-flash-medium",
         "rating": 1474.4576466055285,
         "ratingLower": 1469.3699433892593,
@@ -1396,7 +1464,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 25,
+        "rank": 26,
         "modelDisplayName": "qwen3.7-max-preview",
         "rating": 1473.9155834221583,
         "ratingLower": 1463.920821735017,
@@ -1410,7 +1478,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 26,
+        "rank": 27,
         "modelDisplayName": "claude-opus-4-8",
         "rating": 1473.6383017341473,
         "ratingLower": 1469.0615250425074,
@@ -1424,7 +1492,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 27,
+        "rank": 28,
         "modelDisplayName": "gpt-5.5-instant",
         "rating": 1473.3555292924889,
         "ratingLower": 1468.23108368316,
@@ -1438,7 +1506,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 28,
+        "rank": 29,
         "modelDisplayName": "gemini-3-flash",
         "rating": 1472.889558466655,
         "ratingLower": 1468.4957236729438,
@@ -1452,7 +1520,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 29,
+        "rank": 30,
         "modelDisplayName": "claude-opus-4-5-20251101-high-32k",
         "rating": 1472.7108414993315,
         "ratingLower": 1468.8426850361573,
@@ -1466,7 +1534,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 30,
+        "rank": 31,
         "modelDisplayName": "claude-sonnet-4-6",
         "rating": 1471.9860897858625,
         "ratingLower": 1468.3671501851086,
@@ -1480,7 +1548,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 31,
+        "rank": 32,
         "modelDisplayName": "grok-4.20-beta-0309-reasoning",
         "rating": 1471.6510991951443,
         "ratingLower": 1467.8637836856142,
@@ -1494,7 +1562,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 32,
+        "rank": 33,
         "modelDisplayName": "glm-5.2-max",
         "rating": 1470.984140727889,
         "ratingLower": 1465.949215433624,
@@ -1508,7 +1576,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 33,
+        "rank": 34,
         "modelDisplayName": "grok-4.20-multi-agent-beta-0309",
         "rating": 1470.391235537322,
         "ratingLower": 1466.583965486586,
@@ -1522,7 +1590,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 34,
+        "rank": 35,
         "modelDisplayName": "claude-opus-4-5-20251101",
         "rating": 1469.0584808171195,
         "ratingLower": 1465.8665927728712,
@@ -1536,7 +1604,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 35,
+        "rank": 36,
         "modelDisplayName": "grok-4.5",
         "rating": 1468.6578219099113,
         "ratingLower": 1463.2221374593587,
@@ -1550,7 +1618,7 @@
         "contextLength": 500000
       },
       {
-        "rank": 36,
+        "rank": 37,
         "modelDisplayName": "ernie-5.1",
         "rating": 1468.0475839254732,
         "ratingLower": 1463.3896188736146,
@@ -1564,7 +1632,7 @@
         "contextLength": null
       },
       {
-        "rank": 37,
+        "rank": 38,
         "modelDisplayName": "mimo-v2.5-pro",
         "rating": 1467.6863863307615,
         "ratingLower": 1463.5660024031667,
@@ -1578,7 +1646,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 38,
+        "rank": 39,
         "modelDisplayName": "glm-5.1",
         "rating": 1467.3950976922722,
         "ratingLower": 1463.2028726169171,
@@ -1592,7 +1660,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 39,
+        "rank": 40,
         "modelDisplayName": "qwen3.5-max-preview",
         "rating": 1465.5417399874582,
         "ratingLower": 1460.564480143519,
@@ -1606,7 +1674,7 @@
         "contextLength": null
       },
       {
-        "rank": 40,
+        "rank": 41,
         "modelDisplayName": "gpt-5.4",
         "rating": 1465.519559042224,
         "ratingLower": 1461.705281030092,
@@ -1620,7 +1688,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 41,
+        "rank": 42,
         "modelDisplayName": "grok-4.1-thinking",
         "rating": 1465.5100058520861,
         "ratingLower": 1462.2845569172603,
@@ -1634,7 +1702,7 @@
         "contextLength": null
       },
       {
-        "rank": 42,
+        "rank": 43,
         "modelDisplayName": "gpt-5.6-terra-xhigh",
         "rating": 1464.1078222250753,
         "ratingLower": 1458.4414702282336,
@@ -1648,7 +1716,7 @@
         "contextLength": null
       },
       {
-        "rank": 43,
+        "rank": 44,
         "modelDisplayName": "grok-4.6-high",
         "rating": 1463.6171051750441,
         "ratingLower": 1453.4137323157452,
@@ -1662,7 +1730,7 @@
         "contextLength": 500000
       },
       {
-        "rank": 44,
+        "rank": 45,
         "modelDisplayName": "claude-sonnet-5-high",
         "rating": 1462.3761511472119,
         "ratingLower": 1457.2323888459393,
@@ -1676,7 +1744,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 45,
+        "rank": 46,
         "modelDisplayName": "kimi-k2.6",
         "rating": 1460.5838917611031,
         "ratingLower": 1456.042531162494,
@@ -1690,7 +1758,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 46,
+        "rank": 47,
         "modelDisplayName": "qwen3.6-max-preview",
         "rating": 1459.919309968847,
         "ratingLower": 1451.5663638487104,
@@ -1704,7 +1772,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 47,
+        "rank": 48,
         "modelDisplayName": "grok-4.1",
         "rating": 1459.367609269414,
         "ratingLower": 1456.1577366950369,
@@ -1718,7 +1786,7 @@
         "contextLength": null
       },
       {
-        "rank": 48,
+        "rank": 49,
         "modelDisplayName": "qwen3.7-plus",
         "rating": 1458.472680828949,
         "ratingLower": 1453.639745738382,
@@ -1732,7 +1800,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 49,
+        "rank": 50,
         "modelDisplayName": "gemini-3-flash (thinking-minimal)",
         "rating": 1458.1796098549503,
         "ratingLower": 1455.0684667592795,
@@ -1746,7 +1814,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 50,
+        "rank": 51,
         "modelDisplayName": "deepseek-v4-pro",
         "rating": 1458.1767726138548,
         "ratingLower": 1454.1589136463438,
@@ -1760,7 +1828,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 51,
+        "rank": 52,
         "modelDisplayName": "gemini-3.5-flash-lite",
         "rating": 1458.0938499631006,
         "ratingLower": 1452.2068218201446,
@@ -1774,7 +1842,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 52,
+        "rank": 53,
         "modelDisplayName": "glm-5",
         "rating": 1456.7996930658353,
         "ratingLower": 1452.458607304444,
@@ -1788,7 +1856,7 @@
         "contextLength": 202800
       },
       {
-        "rank": 53,
+        "rank": 54,
         "modelDisplayName": "hy3",
         "rating": 1456.524907034572,
         "ratingLower": 1447.6666148623415,
@@ -1802,7 +1870,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 54,
+        "rank": 55,
         "modelDisplayName": "claude-sonnet-4-5-20250929-high-32k",
         "rating": 1455.824897395622,
         "ratingLower": 1453.0300151000993,
@@ -1816,7 +1884,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 55,
+        "rank": 56,
         "modelDisplayName": "dola-seed-2.0-pro",
         "rating": 1455.551526998315,
         "ratingLower": 1452.0520235930912,
@@ -1830,7 +1898,7 @@
         "contextLength": null
       },
       {
-        "rank": 56,
+        "rank": 57,
         "modelDisplayName": "deepseek-v4-pro-high-preview",
         "rating": 1455.5127091321967,
         "ratingLower": 1451.4272216951854,
@@ -1844,7 +1912,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 57,
+        "rank": 58,
         "modelDisplayName": "claude-sonnet-4-5-20250929",
         "rating": 1454.872796728284,
         "ratingLower": 1451.9669891580809,
@@ -1858,7 +1926,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 58,
+        "rank": 59,
         "modelDisplayName": "gpt-5.1-high",
         "rating": 1454.795812640149,
         "ratingLower": 1451.0331963039093,
@@ -1872,7 +1940,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 59,
+        "rank": 60,
         "modelDisplayName": "gemma-4-31b",
         "rating": 1451.493605209364,
         "ratingLower": 1443.9045275786236,
@@ -1886,7 +1954,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 60,
+        "rank": 61,
         "modelDisplayName": "kimi-k2.5-thinking",
         "rating": 1450.2220445652304,
         "ratingLower": 1446.8539790548577,
@@ -1900,7 +1968,7 @@
         "contextLength": null
       },
       {
-        "rank": 61,
+        "rank": 62,
         "modelDisplayName": "gpt-5.6-luna-xhigh",
         "rating": 1450.180805393825,
         "ratingLower": 1444.5766853877149,
@@ -1914,7 +1982,7 @@
         "contextLength": null
       },
       {
-        "rank": 62,
+        "rank": 63,
         "modelDisplayName": "ernie-5.0-preview-1203",
         "rating": 1448.929378906118,
         "ratingLower": 1442.4083836339332,
@@ -1928,7 +1996,7 @@
         "contextLength": null
       },
       {
-        "rank": 63,
+        "rank": 64,
         "modelDisplayName": "claude-opus-4-1-20250805-thinking-16k",
         "rating": 1448.7656849600091,
         "ratingLower": 1445.3245033526196,
@@ -1942,7 +2010,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 64,
+        "rank": 65,
         "modelDisplayName": "gpt-5.3-chat-latest",
         "rating": 1448.6555509125149,
         "ratingLower": 1444.3175962892687,
@@ -1956,7 +2024,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 65,
+        "rank": 66,
         "modelDisplayName": "mimo-v2-pro",
         "rating": 1448.416420126443,
         "ratingLower": 1443.6639184177961,
@@ -1970,7 +2038,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 66,
+        "rank": 67,
         "modelDisplayName": "gpt-5.4-mini-high",
         "rating": 1448.1868361803186,
         "ratingLower": 1444.3282107087828,
@@ -1984,7 +2052,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 67,
+        "rank": 68,
         "modelDisplayName": "claude-opus-4-1-20250805",
         "rating": 1447.191393397333,
         "ratingLower": 1444.215500596246,
@@ -1998,7 +2066,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 68,
+        "rank": 69,
         "modelDisplayName": "ernie-5.0-0110",
         "rating": 1446.498388046189,
         "ratingLower": 1442.5256885662427,
@@ -2012,7 +2080,7 @@
         "contextLength": null
       },
       {
-        "rank": 69,
+        "rank": 70,
         "modelDisplayName": "gemini-2.5-pro",
         "rating": 1445.4052588540608,
         "ratingLower": 1442.9202923382718,
@@ -2026,7 +2094,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 70,
+        "rank": 71,
         "modelDisplayName": "gpt-4.5-preview-2025-02-27",
         "rating": 1444.6920659438367,
         "ratingLower": 1438.9886330944332,
@@ -2040,7 +2108,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 71,
+        "rank": 72,
         "modelDisplayName": "minimax-m3",
         "rating": 1443.6447532990983,
         "ratingLower": 1438.9865449274241,
@@ -2054,7 +2122,7 @@
         "contextLength": null
       },
       {
-        "rank": 72,
+        "rank": 73,
         "modelDisplayName": "qwen3.6-plus",
         "rating": 1443.6041668360951,
         "ratingLower": 1439.3569440031076,
@@ -2068,7 +2136,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 73,
+        "rank": 74,
         "modelDisplayName": "chatgpt-4o-latest-20250326",
         "rating": 1442.8951816344065,
         "ratingLower": 1440.092009018533,
@@ -2082,7 +2150,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 74,
+        "rank": 75,
         "modelDisplayName": "inkling",
         "rating": 1442.1704473604236,
         "ratingLower": 1436.4157715836552,
@@ -2096,7 +2164,7 @@
         "contextLength": 524288
       },
       {
-        "rank": 75,
+        "rank": 76,
         "modelDisplayName": "qwen3.5-397b-a17b",
         "rating": 1441.8460921635492,
         "ratingLower": 1438.3437191788546,
@@ -2110,7 +2178,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 76,
+        "rank": 77,
         "modelDisplayName": "glm-4.7",
         "rating": 1441.6639081539633,
         "ratingLower": 1435.5959816220395,
@@ -2124,7 +2192,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 77,
+        "rank": 78,
         "modelDisplayName": "grok-4.3",
         "rating": 1441.5325284831802,
         "ratingLower": 1437.563946929013,
@@ -2138,7 +2206,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 78,
+        "rank": 79,
         "modelDisplayName": "gpt-5.1",
         "rating": 1438.674151034307,
         "ratingLower": 1435.0344498712316,
@@ -2152,7 +2220,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 79,
+        "rank": 80,
         "modelDisplayName": "gemma-4-26b-a4b",
         "rating": 1438.2127641368636,
         "ratingLower": 1430.5888237448203,
@@ -2166,7 +2234,7 @@
         "contextLength": null
       },
       {
-        "rank": 80,
+        "rank": 81,
         "modelDisplayName": "deepseek-v4-flash-high-preview",
         "rating": 1438.174645013408,
         "ratingLower": 1433.955712045503,
@@ -2180,7 +2248,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 81,
+        "rank": 82,
         "modelDisplayName": "gpt-5.2-high",
         "rating": 1437.4618044580754,
         "ratingLower": 1433.8366813278508,
@@ -2194,7 +2262,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 82,
+        "rank": 83,
         "modelDisplayName": "longcat-flash-chat-2602-exp",
         "rating": 1435.7817944063884,
         "ratingLower": 1431.1500574542006,
@@ -2208,7 +2276,7 @@
         "contextLength": null
       },
       {
-        "rank": 83,
+        "rank": 84,
         "modelDisplayName": "gpt-5.2",
         "rating": 1435.512717957001,
         "ratingLower": 1432.261199813865,
@@ -2222,7 +2290,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 84,
+        "rank": 85,
         "modelDisplayName": "deepseek-v4-flash",
         "rating": 1435.4199889187405,
         "ratingLower": 1431.268144067271,
@@ -2236,7 +2304,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 85,
+        "rank": 86,
         "modelDisplayName": "qwen3-max-preview",
         "rating": 1434.347755649198,
         "ratingLower": 1429.8578408182,
@@ -2250,7 +2318,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 86,
+        "rank": 87,
         "modelDisplayName": "gpt-5-high",
         "rating": 1434.0909458786275,
         "ratingLower": 1429.594896267918,
@@ -2264,7 +2332,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 87,
+        "rank": 88,
         "modelDisplayName": "mimo-v2.5",
         "rating": 1434.0487969190467,
         "ratingLower": 1429.699581593459,
@@ -2278,7 +2346,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 88,
+        "rank": 89,
         "modelDisplayName": "glm-5v-turbo",
         "rating": 1433.2913812109252,
         "ratingLower": 1426.5713677078595,
@@ -2292,7 +2360,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 89,
+        "rank": 90,
         "modelDisplayName": "gemini-3.1-flash-lite-preview",
         "rating": 1432.1459891107081,
         "ratingLower": 1428.4120133349716,
@@ -2306,7 +2374,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 90,
+        "rank": 91,
         "modelDisplayName": "kimi-k2.5-instant",
         "rating": 1430.72627297411,
         "ratingLower": 1424.1483285766615,
@@ -2320,7 +2388,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 91,
+        "rank": 92,
         "modelDisplayName": "o3-2025-04-16",
         "rating": 1430.681376325559,
         "ratingLower": 1427.0735531907028,
@@ -2334,7 +2402,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 92,
+        "rank": 93,
         "modelDisplayName": "grok-4-1-fast-reasoning",
         "rating": 1430.6702640233475,
         "ratingLower": 1427.42776642511,
@@ -2348,7 +2416,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 93,
+        "rank": 94,
         "modelDisplayName": "mimo-v2-omni",
         "rating": 1430.1335597519055,
         "ratingLower": 1424.4317713174403,
@@ -2362,7 +2430,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 94,
+        "rank": 95,
         "modelDisplayName": "kimi-k2-thinking-turbo",
         "rating": 1429.800599217875,
         "ratingLower": 1426.6628053327436,
@@ -2376,7 +2444,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 95,
+        "rank": 96,
         "modelDisplayName": "mistral-medium-3.5",
         "rating": 1427.197722840135,
         "ratingLower": 1420.6302554554732,
@@ -2390,7 +2458,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 96,
+        "rank": 97,
         "modelDisplayName": "nvidia-nemotron-3-ultra-550b-a55b-nvfp4",
         "rating": 1426.6777697093055,
         "ratingLower": 1419.6515973394105,
@@ -2404,7 +2472,7 @@
         "contextLength": null
       },
       {
-        "rank": 97,
+        "rank": 98,
         "modelDisplayName": "gpt-5-chat",
         "rating": 1426.5864890328935,
         "ratingLower": 1422.307927727589,
@@ -2418,7 +2486,7 @@
         "contextLength": null
       },
       {
-        "rank": 98,
+        "rank": 99,
         "modelDisplayName": "muse-glimmer",
         "rating": 1425.9346111278505,
         "ratingLower": 1416.0184622617624,
@@ -2432,7 +2500,7 @@
         "contextLength": null
       },
       {
-        "rank": 99,
+        "rank": 100,
         "modelDisplayName": "amazon-nova-experimental-chat-26-02-10",
         "rating": 1425.6921919626157,
         "ratingLower": 1415.8644120285837,
@@ -2446,7 +2514,7 @@
         "contextLength": null
       },
       {
-        "rank": 100,
+        "rank": 101,
         "modelDisplayName": "deepseek-v3.2",
         "rating": 1425.2302968948804,
         "ratingLower": 1421.6917576569854,
@@ -2460,7 +2528,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 101,
+        "rank": 102,
         "modelDisplayName": "deepseek-v3.2-exp-thinking",
         "rating": 1425.0040795839645,
         "ratingLower": 1418.4687491542356,
@@ -2474,7 +2542,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 102,
+        "rank": 103,
         "modelDisplayName": "claude-opus-4-20250514-thinking-16k",
         "rating": 1424.945957194964,
         "ratingLower": 1420.5993593554492,
@@ -2488,7 +2556,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 103,
+        "rank": 104,
         "modelDisplayName": "glm-4.6",
         "rating": 1424.4204170529672,
         "ratingLower": 1420.5156289258503,
@@ -2502,7 +2570,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 104,
+        "rank": 105,
         "modelDisplayName": "qwen3-max-2025-09-23",
         "rating": 1423.552796798825,
         "ratingLower": 1417.122671156763,
@@ -2516,7 +2584,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 105,
+        "rank": 106,
         "modelDisplayName": "qwen3-235b-a22b-instruct-2507",
         "rating": 1422.9553227788058,
         "ratingLower": 1420.3776376271821,
@@ -2530,7 +2598,7 @@
         "contextLength": null
       },
       {
-        "rank": 106,
+        "rank": 107,
         "modelDisplayName": "deepseek-v3.2-thinking",
         "rating": 1422.6707238797587,
         "ratingLower": 1419.037752544667,
@@ -2544,7 +2612,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 107,
+        "rank": 108,
         "modelDisplayName": "deepseek-v3.2-exp",
         "rating": 1422.5666789881102,
         "ratingLower": 1416.1793745097705,
@@ -2558,7 +2626,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 108,
+        "rank": 109,
         "modelDisplayName": "deepseek-r1-0528",
         "rating": 1421.9153810227306,
         "ratingLower": 1416.2650055109077,
@@ -2572,7 +2640,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 109,
+        "rank": 110,
         "modelDisplayName": "grok-4-fast-chat",
         "rating": 1420.027713805117,
         "ratingLower": 1412.4157049960331,
@@ -2586,7 +2654,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 110,
+        "rank": 111,
         "modelDisplayName": "ernie-5.0-preview-1022",
         "rating": 1418.0551002892662,
         "ratingLower": 1409.2703602083484,
@@ -2600,7 +2668,7 @@
         "contextLength": null
       },
       {
-        "rank": 111,
+        "rank": 112,
         "modelDisplayName": "kimi-k2-0711-preview",
         "rating": 1417.8764026033696,
         "ratingLower": 1413.0174848569316,
@@ -2614,7 +2682,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 112,
+        "rank": 113,
         "modelDisplayName": "kimi-k2-0905-preview",
         "rating": 1417.8567223869575,
         "ratingLower": 1411.369523560387,
@@ -2628,7 +2696,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 113,
+        "rank": 114,
         "modelDisplayName": "deepseek-v3.1-terminus-thinking",
         "rating": 1417.4294581069128,
         "ratingLower": 1407.4605593899557,
@@ -2642,7 +2710,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 114,
+        "rank": 115,
         "modelDisplayName": "deepseek-v3.1",
         "rating": 1417.2128283707657,
         "ratingLower": 1411.2165671423422,
@@ -2656,7 +2724,7 @@
         "contextLength": null
       },
       {
-        "rank": 115,
+        "rank": 116,
         "modelDisplayName": "qwen3.5-122b-a10b",
         "rating": 1417.1730097891254,
         "ratingLower": 1412.795691420858,
@@ -2670,7 +2738,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 116,
+        "rank": 117,
         "modelDisplayName": "deepseek-v3.1-thinking",
         "rating": 1416.4704872567295,
         "ratingLower": 1409.8693783303004,
@@ -2684,7 +2752,7 @@
         "contextLength": null
       },
       {
-        "rank": 117,
+        "rank": 118,
         "modelDisplayName": "minimax-m2.7",
         "rating": 1416.1942405258137,
         "ratingLower": 1412.3280465677092,
@@ -2698,7 +2766,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 118,
+        "rank": 119,
         "modelDisplayName": "amazon-nova-experimental-chat-26-01-10",
         "rating": 1415.2586804892578,
         "ratingLower": 1405.4144276030615,
@@ -2712,7 +2780,7 @@
         "contextLength": null
       },
       {
-        "rank": 119,
+        "rank": 120,
         "modelDisplayName": "mistral-large-3",
         "rating": 1414.6893773000875,
         "ratingLower": 1411.5200725909795,
@@ -2726,7 +2794,7 @@
         "contextLength": null
       },
       {
-        "rank": 120,
+        "rank": 121,
         "modelDisplayName": "deepseek-v3.1-terminus",
         "rating": 1414.6340370979701,
         "ratingLower": 1405.031839869112,
@@ -2740,7 +2808,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 121,
+        "rank": 122,
         "modelDisplayName": "qwen3-vl-235b-a22b-instruct",
         "rating": 1414.4168918095802,
         "ratingLower": 1407.9511732267727,
@@ -2754,7 +2822,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 122,
+        "rank": 123,
         "modelDisplayName": "gpt-4.1-2025-04-14",
         "rating": 1414.0614345731026,
         "ratingLower": 1410.3686840859448,
@@ -2768,7 +2836,7 @@
         "contextLength": 1047576
       },
       {
-        "rank": 123,
+        "rank": 124,
         "modelDisplayName": "hunyuan-hy3-preview",
         "rating": 1412.913966449644,
         "ratingLower": 1405.37556868389,
@@ -2782,7 +2850,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 124,
+        "rank": 125,
         "modelDisplayName": "claude-haiku-4-5-20251001",
         "rating": 1412.5469102911902,
         "ratingLower": 1409.948435140384,
@@ -2796,7 +2864,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 125,
+        "rank": 126,
         "modelDisplayName": "claude-opus-4-20250514",
         "rating": 1412.5155063164764,
         "ratingLower": 1408.2402669819996,
@@ -2810,7 +2878,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 126,
+        "rank": 127,
         "modelDisplayName": "grok-3-preview-02-24",
         "rating": 1411.3908619793983,
         "ratingLower": 1407.0698959445813,
@@ -2824,7 +2892,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 127,
+        "rank": 128,
         "modelDisplayName": "glm-4.5",
         "rating": 1411.2801225471082,
         "ratingLower": 1406.405926568109,
@@ -2838,7 +2906,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 128,
+        "rank": 129,
         "modelDisplayName": "gemini-2.5-flash",
         "rating": 1410.15494585144,
         "ratingLower": 1407.6961383942228,
@@ -2852,7 +2920,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 129,
+        "rank": 130,
         "modelDisplayName": "grok-4-0709",
         "rating": 1409.3019090478028,
         "ratingLower": 1405.4131737438768,
@@ -2866,7 +2934,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 130,
+        "rank": 131,
         "modelDisplayName": "mistral-medium-2508",
         "rating": 1409.1176095719534,
         "ratingLower": 1406.4848131366314,
@@ -2880,7 +2948,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 131,
+        "rank": 132,
         "modelDisplayName": "qwen3.5-27b",
         "rating": 1408.0281173793048,
         "ratingLower": 1403.623808364765,
@@ -2894,7 +2962,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 132,
+        "rank": 133,
         "modelDisplayName": "gemini-2.5-flash-preview-09-2025",
         "rating": 1404.0053530778364,
         "ratingLower": 1399.964198209966,
@@ -2908,7 +2976,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 133,
+        "rank": 134,
         "modelDisplayName": "grok-4-fast-reasoning",
         "rating": 1403.8020850050943,
         "ratingLower": 1398.8021236163274,
@@ -2922,7 +2990,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 134,
+        "rank": 135,
         "modelDisplayName": "qwen3-235b-a22b-no-thinking",
         "rating": 1402.5958234570585,
         "ratingLower": 1398.0952769607254,
@@ -2936,7 +3004,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 135,
+        "rank": 136,
         "modelDisplayName": "gpt-5.4-nano-high",
         "rating": 1402.3112026723447,
         "ratingLower": 1398.4251230225395,
@@ -2950,7 +3018,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 136,
+        "rank": 137,
         "modelDisplayName": "o1-2024-12-17",
         "rating": 1402.1439669753668,
         "ratingLower": 1397.6799177873133,
@@ -2964,7 +3032,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 137,
+        "rank": 138,
         "modelDisplayName": "longcat-flash-chat",
         "rating": 1400.9990816295212,
         "ratingLower": 1394.6389921412397,
@@ -2978,7 +3046,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 138,
+        "rank": 139,
         "modelDisplayName": "qwen3-next-80b-a3b-instruct",
         "rating": 1400.72122720662,
         "ratingLower": 1395.9623375766053,
@@ -2992,7 +3060,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 139,
+        "rank": 140,
         "modelDisplayName": "claude-sonnet-4-20250514-thinking-32k",
         "rating": 1399.6145160711228,
         "ratingLower": 1395.2166019234312,
@@ -3006,7 +3074,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 140,
+        "rank": 141,
         "modelDisplayName": "qwen3-235b-a22b-thinking-2507",
         "rating": 1399.090849194745,
         "ratingLower": 1392.56727936563,
@@ -3020,7 +3088,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 141,
+        "rank": 142,
         "modelDisplayName": "deepseek-r1",
         "rating": 1398.1767066962868,
         "ratingLower": 1393.2913066838205,
@@ -3031,10 +3099,10 @@
         "modelUrl": "https://api-docs.deepseek.com/news/news250120",
         "inputPricePerMillion": 0.7,
         "outputPricePerMillion": 2.5,
-        "contextLength": 163840
+        "contextLength": 64000
       },
       {
-        "rank": 142,
+        "rank": 143,
         "modelDisplayName": "qwen3.5-flash",
         "rating": 1397.0133348074721,
         "ratingLower": 1393.2420861115402,
@@ -3048,7 +3116,7 @@
         "contextLength": null
       },
       {
-        "rank": 143,
+        "rank": 144,
         "modelDisplayName": "deepseek-v3-0324",
         "rating": 1395.5942578606555,
         "ratingLower": 1391.722350820527,
@@ -3062,7 +3130,7 @@
         "contextLength": 32768
       },
       {
-        "rank": 144,
+        "rank": 145,
         "modelDisplayName": "qwen3.5-35b-a3b",
         "rating": 1395.4925519497133,
         "ratingLower": 1391.1671648855222,
@@ -3076,7 +3144,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 145,
+        "rank": 146,
         "modelDisplayName": "qwen3-vl-235b-a22b-thinking",
         "rating": 1395.06216111191,
         "ratingLower": 1388.2917427915445,
@@ -3090,7 +3158,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 146,
+        "rank": 147,
         "modelDisplayName": "hunyuan-vision-1.5-thinking",
         "rating": 1394.7776005165488,
         "ratingLower": 1382.5722101958067,
@@ -3104,7 +3172,7 @@
         "contextLength": null
       },
       {
-        "rank": 147,
+        "rank": 148,
         "modelDisplayName": "step-3.5-flash",
         "rating": 1394.5290368709902,
         "ratingLower": 1390.8864706100903,
@@ -3118,7 +3186,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 148,
+        "rank": 149,
         "modelDisplayName": "amazon-nova-experimental-chat-12-10",
         "rating": 1393.863177193597,
         "ratingLower": 1384.351532943634,
@@ -3132,7 +3200,7 @@
         "contextLength": null
       },
       {
-        "rank": 149,
+        "rank": 150,
         "modelDisplayName": "mimo-v2-flash (non-thinking)",
         "rating": 1392.5208723376386,
         "ratingLower": 1388.96916113672,
@@ -3146,7 +3214,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 150,
+        "rank": 151,
         "modelDisplayName": "minimax-m2.5",
         "rating": 1390.2251336120028,
         "ratingLower": 1386.2426912124697,
@@ -3155,12 +3223,12 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m25",
-        "inputPricePerMillion": 0.225,
+        "inputPricePerMillion": 0.22,
         "outputPricePerMillion": 0.9,
         "contextLength": 204800
       },
       {
-        "rank": 151,
+        "rank": 152,
         "modelDisplayName": "o4-mini-2025-04-16",
         "rating": 1389.8165292879648,
         "ratingLower": 1385.8500101496002,
@@ -3174,7 +3242,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 152,
+        "rank": 153,
         "modelDisplayName": "gpt-5-mini-high",
         "rating": 1389.642935924137,
         "ratingLower": 1385.016536986578,
@@ -3188,7 +3256,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 153,
+        "rank": 154,
         "modelDisplayName": "claude-sonnet-4-20250514",
         "rating": 1389.4748627915792,
         "ratingLower": 1385.1186362791018,
@@ -3202,7 +3270,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 154,
+        "rank": 155,
         "modelDisplayName": "o1-preview",
         "rating": 1388.5195205261764,
         "ratingLower": 1383.513825902979,
@@ -3216,7 +3284,7 @@
         "contextLength": null
       },
       {
-        "rank": 155,
+        "rank": 156,
         "modelDisplayName": "claude-3-7-sonnet-20250219-thinking-32k",
         "rating": 1387.8391782595595,
         "ratingLower": 1383.6612765204873,
@@ -3230,7 +3298,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 156,
+        "rank": 157,
         "modelDisplayName": "qwen3-coder-480b-a35b-instruct",
         "rating": 1387.72706278512,
         "ratingLower": 1382.7847438905897,
@@ -3244,7 +3312,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 157,
+        "rank": 158,
         "modelDisplayName": "mistral-medium-2505",
         "rating": 1387.0332885624612,
         "ratingLower": 1382.3350371224494,
@@ -3258,7 +3326,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 158,
+        "rank": 159,
         "modelDisplayName": "hunyuan-t1-20250711",
         "rating": 1386.8384065433777,
         "ratingLower": 1378.2222733745675,
@@ -3272,7 +3340,7 @@
         "contextLength": null
       },
       {
-        "rank": 159,
+        "rank": 160,
         "modelDisplayName": "mimo-v2-flash (thinking)",
         "rating": 1386.2589615083946,
         "ratingLower": 1380.019989405598,
@@ -3286,7 +3354,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 160,
+        "rank": 161,
         "modelDisplayName": "minimax-m2.1-preview",
         "rating": 1384.1125758772807,
         "ratingLower": 1378.8966139018405,
@@ -3300,7 +3368,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 161,
+        "rank": 162,
         "modelDisplayName": "qwen3-30b-a3b-instruct-2507",
         "rating": 1383.2599437130255,
         "ratingLower": 1378.3865382020133,
@@ -3314,7 +3382,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 162,
+        "rank": 163,
         "modelDisplayName": "gpt-4.1-mini-2025-04-14",
         "rating": 1382.7853744557854,
         "ratingLower": 1378.484968943682,
@@ -3328,7 +3396,7 @@
         "contextLength": 1047576
       },
       {
-        "rank": 163,
+        "rank": 164,
         "modelDisplayName": "hunyuan-turbos-20250416",
         "rating": 1382.617143806347,
         "ratingLower": 1376.1627241811186,
@@ -3342,7 +3410,7 @@
         "contextLength": null
       },
       {
-        "rank": 164,
+        "rank": 165,
         "modelDisplayName": "gemini-2.5-flash-lite-preview-09-2025-no-thinking",
         "rating": 1379.6746851448693,
         "ratingLower": 1376.2506663883441,
@@ -3356,7 +3424,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 165,
+        "rank": 166,
         "modelDisplayName": "trinity-large-preview",
         "rating": 1378.7059343234855,
         "ratingLower": 1374.354370099727,
@@ -3370,7 +3438,7 @@
         "contextLength": 131000
       },
       {
-        "rank": 166,
+        "rank": 167,
         "modelDisplayName": "solar-pro4",
         "rating": 1377.3810249039343,
         "ratingLower": 1365.2063427279202,
@@ -3384,7 +3452,7 @@
         "contextLength": 524288
       },
       {
-        "rank": 167,
+        "rank": 168,
         "modelDisplayName": "glm-4.6v",
         "rating": 1377.1461806698728,
         "ratingLower": 1365.9210348020297,
@@ -3398,7 +3466,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 168,
+        "rank": 169,
         "modelDisplayName": "gemini-2.5-flash-lite-preview-06-17-thinking",
         "rating": 1374.8848461865703,
         "ratingLower": 1370.382626371781,
@@ -3412,7 +3480,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 169,
+        "rank": 170,
         "modelDisplayName": "qwen3-235b-a22b",
         "rating": 1374.8457948755208,
         "ratingLower": 1370.1567825067577,
@@ -3426,7 +3494,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 170,
+        "rank": 171,
         "modelDisplayName": "qwen2.5-max",
         "rating": 1374.1574629586685,
         "ratingLower": 1370.0596837187277,
@@ -3440,7 +3508,7 @@
         "contextLength": null
       },
       {
-        "rank": 171,
+        "rank": 172,
         "modelDisplayName": "claude-3-5-sonnet-20241022",
         "rating": 1373.4120252319653,
         "ratingLower": 1370.2281930963888,
@@ -3454,7 +3522,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 172,
+        "rank": 173,
         "modelDisplayName": "glm-4.5-air",
         "rating": 1373.0259224321962,
         "ratingLower": 1368.7895585271758,
@@ -3468,7 +3536,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 173,
+        "rank": 174,
         "modelDisplayName": "claude-3-7-sonnet-20250219",
         "rating": 1371.576967936472,
         "ratingLower": 1367.637797204069,
@@ -3482,7 +3550,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 174,
+        "rank": 175,
         "modelDisplayName": "trinity-large-thinking",
         "rating": 1369.2237433056735,
         "ratingLower": 1364.540212185374,
@@ -3496,7 +3564,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 175,
+        "rank": 176,
         "modelDisplayName": "qwen3-next-80b-a3b-thinking",
         "rating": 1369.0593408901264,
         "ratingLower": 1363.2329526696376,
@@ -3510,7 +3578,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 176,
+        "rank": 177,
         "modelDisplayName": "glm-4.7-flash",
         "rating": 1367.4166971217376,
         "ratingLower": 1361.6338717029284,
@@ -3524,7 +3592,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 177,
+        "rank": 178,
         "modelDisplayName": "gemma-3-27b-it",
         "rating": 1365.86565088486,
         "ratingLower": 1362.1898510936612,
@@ -3538,7 +3606,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 178,
+        "rank": 179,
         "modelDisplayName": "amazon-nova-experimental-chat-11-10",
         "rating": 1365.7362635458933,
         "ratingLower": 1361.3909543760597,
@@ -3552,7 +3620,7 @@
         "contextLength": null
       },
       {
-        "rank": 179,
+        "rank": 180,
         "modelDisplayName": "o3-mini-high",
         "rating": 1363.5086807799098,
         "ratingLower": 1358.250770033218,
@@ -3566,7 +3634,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 180,
+        "rank": 181,
         "modelDisplayName": "minimax-m1",
         "rating": 1363.2639548638417,
         "ratingLower": 1358.996690328642,
@@ -3580,7 +3648,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 181,
+        "rank": 182,
         "modelDisplayName": "grok-3-mini-high",
         "rating": 1361.5740655830114,
         "ratingLower": 1356.2352174029575,
@@ -3594,7 +3662,7 @@
         "contextLength": null
       },
       {
-        "rank": 182,
+        "rank": 183,
         "modelDisplayName": "nvidia-nemotron-3-super-120b-a12b",
         "rating": 1360.4734546892187,
         "ratingLower": 1353.2127342936997,
@@ -3608,7 +3676,7 @@
         "contextLength": null
       },
       {
-        "rank": 183,
+        "rank": 184,
         "modelDisplayName": "gemini-2.0-flash-001",
         "rating": 1360.3665498487048,
         "ratingLower": 1356.583276786284,
@@ -3622,7 +3690,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 184,
+        "rank": 185,
         "modelDisplayName": "deepseek-v3",
         "rating": 1358.508010135937,
         "ratingLower": 1353.7589382464735,
@@ -3636,7 +3704,7 @@
         "contextLength": null
       },
       {
-        "rank": 185,
+        "rank": 186,
         "modelDisplayName": "mistral-small-2506",
         "rating": 1357.1046070284756,
         "ratingLower": 1351.9072781442778,
@@ -3650,7 +3718,7 @@
         "contextLength": 32000
       },
       {
-        "rank": 186,
+        "rank": 187,
         "modelDisplayName": "grok-3-mini-beta",
         "rating": 1356.4085325058581,
         "ratingLower": 1351.400381521094,
@@ -3664,7 +3732,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 187,
+        "rank": 188,
         "modelDisplayName": "intellect-3",
         "rating": 1355.863890981623,
         "ratingLower": 1347.5630492234095,
@@ -3678,7 +3746,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 188,
+        "rank": 189,
         "modelDisplayName": "command-a-03-2025",
         "rating": 1353.902862247206,
         "ratingLower": 1350.452381844408,
@@ -3692,7 +3760,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 189,
+        "rank": 190,
         "modelDisplayName": "gemini-2.0-flash-lite-preview-02-05",
         "rating": 1353.566283230106,
         "ratingLower": 1349.2529492132446,
@@ -3706,7 +3774,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 190,
+        "rank": 191,
         "modelDisplayName": "glm-4.5v",
         "rating": 1353.3872572168493,
         "ratingLower": 1345.0560403172376,
@@ -3720,7 +3788,7 @@
         "contextLength": 65536
       },
       {
-        "rank": 191,
+        "rank": 192,
         "modelDisplayName": "gpt-oss-120b",
         "rating": 1352.2256327794503,
         "ratingLower": 1347.8826777102415,
@@ -3734,7 +3802,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 192,
+        "rank": 193,
         "modelDisplayName": "gemini-1.5-pro-002",
         "rating": 1351.1931885099948,
         "ratingLower": 1347.8009879444967,
@@ -3748,7 +3816,7 @@
         "contextLength": 2097152
       },
       {
-        "rank": 193,
+        "rank": 194,
         "modelDisplayName": "amazon-nova-experimental-chat-10-20",
         "rating": 1349.4464026671385,
         "ratingLower": 1343.2816068108475,
@@ -3762,7 +3830,7 @@
         "contextLength": null
       },
       {
-        "rank": 194,
+        "rank": 195,
         "modelDisplayName": "hunyuan-turbos-20250226",
         "rating": 1348.9083403148725,
         "ratingLower": 1337.1904741548435,
@@ -3776,7 +3844,7 @@
         "contextLength": null
       },
       {
-        "rank": 195,
+        "rank": 196,
         "modelDisplayName": "step-3",
         "rating": 1348.472205819739,
         "ratingLower": 1341.0789346937822,
@@ -3790,7 +3858,7 @@
         "contextLength": 65536
       },
       {
-        "rank": 196,
+        "rank": 197,
         "modelDisplayName": "nvidia-nemotron-3.5-lightning-30b-a3b-nvfp4",
         "rating": 1348.3980567208023,
         "ratingLower": 1337.371413663934,
@@ -3804,7 +3872,7 @@
         "contextLength": null
       },
       {
-        "rank": 197,
+        "rank": 198,
         "modelDisplayName": "o3-mini",
         "rating": 1347.8727002197088,
         "ratingLower": 1344.3435115792672,
@@ -3818,7 +3886,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 198,
+        "rank": 199,
         "modelDisplayName": "llama-3.1-nemotron-ultra-253b-v1",
         "rating": 1347.546579247577,
         "ratingLower": 1335.8641976352837,
@@ -3832,7 +3900,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 199,
+        "rank": 200,
         "modelDisplayName": "amazon-nova-experimental-chat-10-09",
         "rating": 1347.468895013617,
         "ratingLower": 1336.6326565634658,
@@ -3841,34 +3909,6 @@
         "organization": "Amazon",
         "license": "Proprietary",
         "modelUrl": "https://nova.amazon.com/faqs",
-        "inputPricePerMillion": null,
-        "outputPricePerMillion": null,
-        "contextLength": null
-      },
-      {
-        "rank": 200,
-        "modelDisplayName": "qwen3-32b",
-        "rating": 1347.1136668879576,
-        "ratingLower": 1337.6558910515107,
-        "ratingUpper": 1356.5714427244043,
-        "votes": 3926,
-        "organization": "Alibaba",
-        "license": "Apache 2.0",
-        "modelUrl": "https://qwenlm.github.io/blog/qwen3/",
-        "inputPricePerMillion": 0.08,
-        "outputPricePerMillion": 0.28,
-        "contextLength": 131072
-      },
-      {
-        "rank": 0,
-        "modelDisplayName": "inkling-small",
-        "rating": 1430.5408686010203,
-        "ratingLower": 1419.3923614396585,
-        "ratingUpper": 1441.689375762382,
-        "votes": 0,
-        "organization": "Thinky",
-        "license": "Apache 2.0",
-        "modelUrl": null,
         "inputPricePerMillion": null,
         "outputPricePerMillion": null,
         "contextLength": null
@@ -3993,6 +4033,20 @@
       },
       {
         "rank": 8,
+        "modelDisplayName": "gemini-3.7-flash-high",
+        "rating": 1587.8354137795939,
+        "ratingLower": 1574.6707461630335,
+        "ratingUpper": 1601.0000813961542,
+        "votes": 2544,
+        "organization": "Google",
+        "license": "Proprietary",
+        "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/",
+        "inputPricePerMillion": 0.75,
+        "outputPricePerMillion": 3.75,
+        "contextLength": null
+      },
+      {
+        "rank": 9,
         "modelDisplayName": "glm-5.2-max",
         "rating": 1586.9435811771734,
         "ratingLower": 1578.793466324274,
@@ -4006,7 +4060,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 9,
+        "rank": 10,
         "modelDisplayName": "deepseek-v4-flash-high",
         "rating": 1582.108887462124,
         "ratingLower": 1569.7277270647253,
@@ -4020,7 +4074,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 10,
+        "rank": 11,
         "modelDisplayName": "claude-opus-4-8-high",
         "rating": 1563.9081752256648,
         "ratingLower": 1556.5422683449995,
@@ -4034,7 +4088,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 11,
+        "rank": 12,
         "modelDisplayName": "claude-opus-4-7",
         "rating": 1558.1057948915688,
         "ratingLower": 1551.7056485126836,
@@ -4048,7 +4102,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 12,
+        "rank": 13,
         "modelDisplayName": "claude-opus-4-7-high",
         "rating": 1557.4000018105621,
         "ratingLower": 1551.0379122778793,
@@ -4062,7 +4116,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 13,
+        "rank": 14,
         "modelDisplayName": "grok-4.5",
         "rating": 1554.0653131258894,
         "ratingLower": 1545.1698509272617,
@@ -4076,7 +4130,7 @@
         "contextLength": 500000
       },
       {
-        "rank": 14,
+        "rank": 15,
         "modelDisplayName": "claude-opus-4-6-high",
         "rating": 1545.3358865199746,
         "ratingLower": 1539.4347661187317,
@@ -4090,7 +4144,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 15,
+        "rank": 16,
         "modelDisplayName": "claude-sonnet-5-high",
         "rating": 1541.3481094861186,
         "ratingLower": 1532.9084108995955,
@@ -4104,7 +4158,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 16,
+        "rank": 17,
         "modelDisplayName": "claude-opus-4-8",
         "rating": 1538.8305166003297,
         "ratingLower": 1531.5714439041026,
@@ -4118,7 +4172,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 17,
+        "rank": 18,
         "modelDisplayName": "muse-spark-1.1",
         "rating": 1538.4095204560865,
         "ratingLower": 1529.4022643274423,
@@ -4132,7 +4186,7 @@
         "contextLength": null
       },
       {
-        "rank": 18,
+        "rank": 19,
         "modelDisplayName": "gemini-3.6-flash-high",
         "rating": 1537.7440883071922,
         "ratingLower": 1528.4098075167217,
@@ -4141,12 +4195,12 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
-        "inputPricePerMillion": 0.75,
-        "outputPricePerMillion": 3.75,
+        "inputPricePerMillion": 0.375,
+        "outputPricePerMillion": 1.875,
         "contextLength": 1048576
       },
       {
-        "rank": 19,
+        "rank": 20,
         "modelDisplayName": "claude-opus-4-6",
         "rating": 1537.093152054263,
         "ratingLower": 1531.3496538858892,
@@ -4160,7 +4214,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 20,
+        "rank": 21,
         "modelDisplayName": "muse-spark-1.2 (xHigh)",
         "rating": 1535.0843236286328,
         "ratingLower": 1521.0416835269912,
@@ -4174,7 +4228,7 @@
         "contextLength": null
       },
       {
-        "rank": 21,
+        "rank": 22,
         "modelDisplayName": "claude-sonnet-4-6",
         "rating": 1524.1361160390775,
         "ratingLower": 1518.6021155406386,
@@ -4188,7 +4242,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 22,
+        "rank": 23,
         "modelDisplayName": "hy3",
         "rating": 1523.1106161784226,
         "ratingLower": 1509.6190908241006,
@@ -4202,7 +4256,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 23,
+        "rank": 24,
         "modelDisplayName": "gpt-5.6-terra-xhigh (codex-harness)",
         "rating": 1522.8353051362928,
         "ratingLower": 1513.325249336896,
@@ -4216,7 +4270,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 24,
+        "rank": 25,
         "modelDisplayName": "seed-2.1-pro-preview",
         "rating": 1522.1605215850425,
         "ratingLower": 1514.020752648683,
@@ -4230,7 +4284,7 @@
         "contextLength": null
       },
       {
-        "rank": 25,
+        "rank": 26,
         "modelDisplayName": "gpt-5.6-luna-xhigh (codex-harness)",
         "rating": 1518.5012538838403,
         "ratingLower": 1509.1059753842055,
@@ -4244,7 +4298,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 26,
+        "rank": 27,
         "modelDisplayName": "qwen3.7-max-20260517",
         "rating": 1517.1442116796372,
         "ratingLower": 1509.5415177626553,
@@ -4258,7 +4312,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 27,
+        "rank": 28,
         "modelDisplayName": "glm-5.1",
         "rating": 1511.2564069380912,
         "ratingLower": 1503.7867480808613,
@@ -4272,7 +4326,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 28,
+        "rank": 29,
         "modelDisplayName": "kimi-k2.6",
         "rating": 1509.0097443132106,
         "ratingLower": 1501.5885150638378,
@@ -4286,7 +4340,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 29,
+        "rank": 30,
         "modelDisplayName": "gpt-5.5-xhigh (codex-harness)",
         "rating": 1508.8516892570947,
         "ratingLower": 1502.3276900030146,
@@ -4300,7 +4354,7 @@
         "contextLength": null
       },
       {
-        "rank": 30,
+        "rank": 31,
         "modelDisplayName": "gemini-3.5-flash-high",
         "rating": 1505.9045616583087,
         "ratingLower": 1495.960946215696,
@@ -4314,7 +4368,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 31,
+        "rank": 32,
         "modelDisplayName": "claude-opus-4-5-20251101-high-32k",
         "rating": 1494.3528744541218,
         "ratingLower": 1486.018864963504,
@@ -4328,7 +4382,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 32,
+        "rank": 33,
         "modelDisplayName": "gemini-3.5-flash",
         "rating": 1492.4407895017437,
         "ratingLower": 1478.9299047900902,
@@ -4342,7 +4396,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 33,
+        "rank": 34,
         "modelDisplayName": "minimax-m3",
         "rating": 1490.5431225275183,
         "ratingLower": 1483.3161918811543,
@@ -4356,7 +4410,7 @@
         "contextLength": null
       },
       {
-        "rank": 34,
+        "rank": 35,
         "modelDisplayName": "gemini-3.5-flash-medium",
         "rating": 1488.2451547841706,
         "ratingLower": 1480.7436048876705,
@@ -4370,7 +4424,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 35,
+        "rank": 36,
         "modelDisplayName": "gpt-5.5-high (codex-harness)",
         "rating": 1486.2028406036966,
         "ratingLower": 1479.7732083579176,
@@ -4384,7 +4438,7 @@
         "contextLength": null
       },
       {
-        "rank": 36,
+        "rank": 37,
         "modelDisplayName": "qwen3.6-max-preview",
         "rating": 1478.6688118590848,
         "ratingLower": 1465.9075420083036,
@@ -4398,7 +4452,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 37,
+        "rank": 38,
         "modelDisplayName": "mimo-v2.5-pro",
         "rating": 1473.805584643309,
         "ratingLower": 1467.3818070158836,
@@ -4412,7 +4466,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 38,
+        "rank": 39,
         "modelDisplayName": "kimi-k2.7-code",
         "rating": 1473.1070035362839,
         "ratingLower": 1463.4044837132662,
@@ -4426,7 +4480,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 39,
+        "rank": 40,
         "modelDisplayName": "claude-opus-4-5-20251101",
         "rating": 1468.0655118223426,
         "ratingLower": 1460.8316769514945,
@@ -4440,7 +4494,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 40,
+        "rank": 41,
         "modelDisplayName": "deepseek-v4-pro-high-preview",
         "rating": 1464.104508456747,
         "ratingLower": 1457.5892031601277,
@@ -4454,7 +4508,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 41,
+        "rank": 42,
         "modelDisplayName": "gpt-5.4-high (codex-harness)",
         "rating": 1463.0144294620623,
         "ratingLower": 1443.570339902362,
@@ -4468,7 +4522,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 42,
+        "rank": 43,
         "modelDisplayName": "qwen3.6-plus",
         "rating": 1459.1592135906462,
         "ratingLower": 1453.1405493407128,
@@ -4482,7 +4536,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 43,
+        "rank": 44,
         "modelDisplayName": "gpt-5.5 (codex-harness)",
         "rating": 1458.267874250945,
         "ratingLower": 1451.7917837817579,
@@ -4496,7 +4550,7 @@
         "contextLength": null
       },
       {
-        "rank": 44,
+        "rank": 45,
         "modelDisplayName": "gemini-3.5-flash-lite",
         "rating": 1449.446607008213,
         "ratingLower": 1406.6711954111768,
@@ -4510,7 +4564,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 45,
+        "rank": 46,
         "modelDisplayName": "gemini-3.1-pro-preview",
         "rating": 1447.0966887494617,
         "ratingLower": 1441.724419555562,
@@ -4524,7 +4578,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 46,
+        "rank": 47,
         "modelDisplayName": "deepseek-v4-pro",
         "rating": 1445.0354388274743,
         "ratingLower": 1438.5090475809548,
@@ -4538,7 +4592,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 47,
+        "rank": 48,
         "modelDisplayName": "gpt-5.4-medium (codex-harness)",
         "rating": 1442.257076164932,
         "ratingLower": 1423.5891960187487,
@@ -4552,7 +4606,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 48,
+        "rank": 49,
         "modelDisplayName": "mimo-v2.5",
         "rating": 1438.1244607960218,
         "ratingLower": 1431.5371030772976,
@@ -4566,7 +4620,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 49,
+        "rank": 50,
         "modelDisplayName": "gemini-3-flash",
         "rating": 1437.7809803226237,
         "ratingLower": 1429.0639218642273,
@@ -4580,7 +4634,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 50,
+        "rank": 51,
         "modelDisplayName": "gemini-3-pro",
         "rating": 1437.6994595016959,
         "ratingLower": 1429.1993020389045,
@@ -4594,7 +4648,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 51,
+        "rank": 52,
         "modelDisplayName": "kimi-k2.5-thinking",
         "rating": 1436.1107634945054,
         "ratingLower": 1430.6279697870561,
@@ -4608,7 +4662,7 @@
         "contextLength": null
       },
       {
-        "rank": 52,
+        "rank": 53,
         "modelDisplayName": "glm-5",
         "rating": 1435.5721302788565,
         "ratingLower": 1427.2383333015432,
@@ -4622,7 +4676,7 @@
         "contextLength": 202800
       },
       {
-        "rank": 53,
+        "rank": 54,
         "modelDisplayName": "glm-4.7",
         "rating": 1434.0929989512686,
         "ratingLower": 1421.7303476950049,
@@ -4636,7 +4690,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 54,
+        "rank": 55,
         "modelDisplayName": "mimo-v2-pro",
         "rating": 1433.3451726950184,
         "ratingLower": 1425.065914806965,
@@ -4650,7 +4704,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 55,
+        "rank": 56,
         "modelDisplayName": "deepseek-v4-flash-high-preview",
         "rating": 1431.154790568198,
         "ratingLower": 1423.9908061512256,
@@ -4664,7 +4718,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 56,
+        "rank": 57,
         "modelDisplayName": "gpt-5-medium",
         "rating": 1418.7984109162164,
         "ratingLower": 1403.0598548755902,
@@ -4678,7 +4732,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 57,
+        "rank": 58,
         "modelDisplayName": "gpt-5.2",
         "rating": 1417.5359987844076,
         "ratingLower": 1394.6425152603297,
@@ -4692,7 +4746,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 58,
+        "rank": 59,
         "modelDisplayName": "gpt-5.3-codex (codex-harness)",
         "rating": 1408.5119060705915,
         "ratingLower": 1394.6327402876568,
@@ -4706,7 +4760,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 59,
+        "rank": 60,
         "modelDisplayName": "inkling",
         "rating": 1406.0265192034958,
         "ratingLower": 1397.61163929112,
@@ -4720,7 +4774,7 @@
         "contextLength": 524288
       },
       {
-        "rank": 60,
+        "rank": 61,
         "modelDisplayName": "kimi-k2.5-instant",
         "rating": 1404.8806644720617,
         "ratingLower": 1392.6459097500785,
@@ -4734,7 +4788,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 61,
+        "rank": 62,
         "modelDisplayName": "qwen3.5-397b-a17b",
         "rating": 1400.1436195981812,
         "ratingLower": 1394.644077829496,
@@ -4748,7 +4802,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 62,
+        "rank": 63,
         "modelDisplayName": "glm-5v-turbo",
         "rating": 1400.0661233847736,
         "ratingLower": 1386.0220423037233,
@@ -4762,7 +4816,7 @@
         "contextLength": 202752
       },
       {
-        "rank": 63,
+        "rank": 64,
         "modelDisplayName": "gpt-5.4-mini-high",
         "rating": 1397.7649629838054,
         "ratingLower": 1391.0622706026286,
@@ -4776,7 +4830,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 64,
+        "rank": 65,
         "modelDisplayName": "minimax-m2.7",
         "rating": 1397.517407685926,
         "ratingLower": 1391.335825263514,
@@ -4790,7 +4844,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 65,
+        "rank": 66,
         "modelDisplayName": "claude-sonnet-4-5-20250929-high-32k",
         "rating": 1392.2376372014637,
         "ratingLower": 1384.4797601464954,
@@ -4804,7 +4858,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 66,
+        "rank": 67,
         "modelDisplayName": "gpt-5.1-medium",
         "rating": 1390.7809692481371,
         "ratingLower": 1379.1779223826197,
@@ -4818,7 +4872,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 67,
+        "rank": 68,
         "modelDisplayName": "gpt-5.4",
         "rating": 1389.8064306620604,
         "ratingLower": 1374.6844949314313,
@@ -4832,7 +4886,7 @@
         "contextLength": 1050000
       },
       {
-        "rank": 68,
+        "rank": 69,
         "modelDisplayName": "claude-opus-4-1-20250805",
         "rating": 1388.6044700767243,
         "ratingLower": 1377.7981940998227,
@@ -4846,7 +4900,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 69,
+        "rank": 70,
         "modelDisplayName": "minimax-m2.1-preview",
         "rating": 1386.8905713960917,
         "ratingLower": 1377.2207303962934,
@@ -4860,7 +4914,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 70,
+        "rank": 71,
         "modelDisplayName": "claude-sonnet-4-5-20250929",
         "rating": 1385.3208630800523,
         "ratingLower": 1378.0091075663854,
@@ -4874,7 +4928,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 71,
+        "rank": 72,
         "modelDisplayName": "minimax-m2.5",
         "rating": 1384.0314092846857,
         "ratingLower": 1375.5881524434685,
@@ -4883,12 +4937,12 @@
         "organization": "MiniMax",
         "license": "Modified MIT",
         "modelUrl": "https://www.minimax.io/news/minimax-m25",
-        "inputPricePerMillion": 0.225,
+        "inputPricePerMillion": 0.22,
         "outputPricePerMillion": 0.9,
         "contextLength": 204800
       },
       {
-        "rank": 72,
+        "rank": 73,
         "modelDisplayName": "gemini-3-flash (thinking-minimal)",
         "rating": 1382.8452658671458,
         "ratingLower": 1377.5353453085388,
@@ -4902,7 +4956,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 73,
+        "rank": 74,
         "modelDisplayName": "grok-4.20-beta-0309-reasoning",
         "rating": 1373.7379885696155,
         "ratingLower": 1367.5073986178063,
@@ -4916,7 +4970,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 74,
+        "rank": 75,
         "modelDisplayName": "solar-pro4",
         "rating": 1372.569474105807,
         "ratingLower": 1355.6586179758765,
@@ -4930,7 +4984,7 @@
         "contextLength": 524288
       },
       {
-        "rank": 75,
+        "rank": 76,
         "modelDisplayName": "gpt-5.3-codex (codex-harness)",
         "rating": 1369.7504194138157,
         "ratingLower": 1358.2320438324107,
@@ -4944,7 +4998,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 76,
+        "rank": 77,
         "modelDisplayName": "gemma-4-31b",
         "rating": 1364.866554347469,
         "ratingLower": 1357.27995184879,
@@ -4958,7 +5012,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 77,
+        "rank": 78,
         "modelDisplayName": "gemma-4-26b-a4b",
         "rating": 1361.5301175185461,
         "ratingLower": 1344.283468613168,
@@ -4972,7 +5026,7 @@
         "contextLength": null
       },
       {
-        "rank": 78,
+        "rank": 79,
         "modelDisplayName": "deepseek-v3.2-thinking",
         "rating": 1360.2683650279446,
         "ratingLower": 1351.0554557338533,
@@ -4986,7 +5040,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 79,
+        "rank": 80,
         "modelDisplayName": "muse-glimmer",
         "rating": 1359.0424272280243,
         "ratingLower": 1342.6035957741117,
@@ -5000,7 +5054,7 @@
         "contextLength": null
       },
       {
-        "rank": 80,
+        "rank": 81,
         "modelDisplayName": "qwen3.5-122b-a10b",
         "rating": 1357.6653350589295,
         "ratingLower": 1349.8755664650944,
@@ -5014,7 +5068,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 81,
+        "rank": 82,
         "modelDisplayName": "qwen3.5-27b",
         "rating": 1357.1454663158245,
         "ratingLower": 1348.9795248338999,
@@ -5028,7 +5082,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 82,
+        "rank": 83,
         "modelDisplayName": "hunyuan-hy3-preview",
         "rating": 1356.3574342141362,
         "ratingLower": 1338.7531587699061,
@@ -5042,7 +5096,7 @@
         "contextLength": null
       },
       {
-        "rank": 83,
+        "rank": 84,
         "modelDisplayName": "grok-4.3",
         "rating": 1355.1527466230095,
         "ratingLower": 1348.382859612122,
@@ -5056,7 +5110,7 @@
         "contextLength": 1000000
       },
       {
-        "rank": 84,
+        "rank": 85,
         "modelDisplayName": "laguna-m.1",
         "rating": 1347.565411596537,
         "ratingLower": 1337.9540418331972,
@@ -5070,7 +5124,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 85,
+        "rank": 86,
         "modelDisplayName": "gpt-5.1",
         "rating": 1340.5363676997438,
         "ratingLower": 1332.0165122950468,
@@ -5084,7 +5138,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 86,
+        "rank": 87,
         "modelDisplayName": "glm-4.6",
         "rating": 1339.9185619979671,
         "ratingLower": 1329.0735762933666,
@@ -5098,7 +5152,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 87,
+        "rank": 88,
         "modelDisplayName": "gpt-5.2-codex",
         "rating": 1338.2405171260327,
         "ratingLower": 1329.244547640606,
@@ -5112,7 +5166,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 88,
+        "rank": 89,
         "modelDisplayName": "gpt-5.1-codex",
         "rating": 1335.890820014041,
         "ratingLower": 1324.2100472634127,
@@ -5126,7 +5180,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 89,
+        "rank": 90,
         "modelDisplayName": "mimo-v2-flash (non-thinking)",
         "rating": 1330.105813410949,
         "ratingLower": 1320.178931529064,
@@ -5140,7 +5194,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 90,
+        "rank": 91,
         "modelDisplayName": "claude-haiku-4-5-20251001",
         "rating": 1326.052896081435,
         "ratingLower": 1320.9383074420239,
@@ -5154,7 +5208,7 @@
         "contextLength": 200000
       },
       {
-        "rank": 91,
+        "rank": 92,
         "modelDisplayName": "deepseek-v3.2",
         "rating": 1324.4605797860722,
         "ratingLower": 1316.4039372244486,
@@ -5168,7 +5222,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 92,
+        "rank": 93,
         "modelDisplayName": "kimi-k2-thinking-turbo",
         "rating": 1322.337836553759,
         "ratingLower": 1314.873480845391,
@@ -5182,7 +5236,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 93,
+        "rank": 94,
         "modelDisplayName": "laguna-xs.2",
         "rating": 1302.8709824942837,
         "ratingLower": 1291.7287494823709,
@@ -5196,7 +5250,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 94,
+        "rank": 95,
         "modelDisplayName": "minimax-m2",
         "rating": 1296.7751155199678,
         "ratingLower": 1285.7613597245727,
@@ -5210,7 +5264,7 @@
         "contextLength": 204800
       },
       {
-        "rank": 95,
+        "rank": 96,
         "modelDisplayName": "mimo-v2-flash (thinking)",
         "rating": 1292.3296915414944,
         "ratingLower": 1275.7408050274967,
@@ -5224,7 +5278,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 96,
+        "rank": 97,
         "modelDisplayName": "qwen3-coder-480b-a35b-instruct",
         "rating": 1273.2170771763856,
         "ratingLower": 1265.4011377052766,
@@ -5238,7 +5292,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 97,
+        "rank": 98,
         "modelDisplayName": "deepseek-v3.2-exp",
         "rating": 1271.4744689621523,
         "ratingLower": 1257.8793464013822,
@@ -5252,7 +5306,7 @@
         "contextLength": 163840
       },
       {
-        "rank": 98,
+        "rank": 99,
         "modelDisplayName": "mistral-medium-3.5",
         "rating": 1265.7177063793802,
         "ratingLower": 1250.3774568232786,
@@ -5266,7 +5320,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 99,
+        "rank": 100,
         "modelDisplayName": "KAT-Coder-Pro-V1",
         "rating": 1255.1261910291933,
         "ratingLower": 1235.2426880942908,
@@ -5280,7 +5334,7 @@
         "contextLength": 256000
       },
       {
-        "rank": 100,
+        "rank": 101,
         "modelDisplayName": "gemini-3.1-flash-lite-preview",
         "rating": 1254.2556629598125,
         "ratingLower": 1247.2889539578057,
@@ -5294,7 +5348,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 101,
+        "rank": 102,
         "modelDisplayName": "qwen3.5-35b-a3b",
         "rating": 1249.5795371542438,
         "ratingLower": 1231.739294402316,
@@ -5308,7 +5362,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 102,
+        "rank": 103,
         "modelDisplayName": "gpt-5.1-codex-mini",
         "rating": 1243.4272046235812,
         "ratingLower": 1221.140335307914,
@@ -5322,7 +5376,7 @@
         "contextLength": 400000
       },
       {
-        "rank": 103,
+        "rank": 104,
         "modelDisplayName": "grok-4-1-fast-reasoning",
         "rating": 1239.7652317376758,
         "ratingLower": 1228.5587845134266,
@@ -5336,7 +5390,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 104,
+        "rank": 105,
         "modelDisplayName": "trinity-large-thinking",
         "rating": 1238.614869911763,
         "ratingLower": 1218.1196240420652,
@@ -5350,7 +5404,7 @@
         "contextLength": 262144
       },
       {
-        "rank": 105,
+        "rank": 106,
         "modelDisplayName": "qwen3.5-flash",
         "rating": 1238.1345883184813,
         "ratingLower": 1218.0219257834242,
@@ -5364,7 +5418,7 @@
         "contextLength": null
       },
       {
-        "rank": 106,
+        "rank": 107,
         "modelDisplayName": "mistral-large-3",
         "rating": 1229.8670832655234,
         "ratingLower": 1204.0500029138298,
@@ -5378,7 +5432,7 @@
         "contextLength": null
       },
       {
-        "rank": 107,
+        "rank": 108,
         "modelDisplayName": "gemini-2.5-pro",
         "rating": 1225.341529813616,
         "ratingLower": 1209.3575608037665,
@@ -5392,7 +5446,7 @@
         "contextLength": 1048576
       },
       {
-        "rank": 108,
+        "rank": 109,
         "modelDisplayName": "grok-4.1-thinking",
         "rating": 1209.5616767601307,
         "ratingLower": 1184.5408310984471,
@@ -5406,7 +5460,7 @@
         "contextLength": null
       },
       {
-        "rank": 109,
+        "rank": 110,
         "modelDisplayName": "devstral-2",
         "rating": 1193.3390050083924,
         "ratingLower": 1172.1603735568438,
@@ -5420,7 +5474,7 @@
         "contextLength": null
       },
       {
-        "rank": 110,
+        "rank": 111,
         "modelDisplayName": "granite-4.1-8b",
         "rating": 1191.7151237446167,
         "ratingLower": 1172.9775289657925,
@@ -5434,7 +5488,7 @@
         "contextLength": 131072
       },
       {
-        "rank": 111,
+        "rank": 112,
         "modelDisplayName": "mercury-2",
         "rating": 1166.221749010126,
         "ratingLower": 1141.0809682369556,
@@ -5448,7 +5502,7 @@
         "contextLength": 128000
       },
       {
-        "rank": 112,
+        "rank": 113,
         "modelDisplayName": "grok-code-fast-1",
         "rating": 1164.1518083071785,
         "ratingLower": 1135.8278788842479,
@@ -5462,7 +5516,7 @@
         "contextLength": null
       },
       {
-        "rank": 113,
+        "rank": 114,
         "modelDisplayName": "grok-4-fast-reasoning",
         "rating": 1161.5861440760732,
         "ratingLower": 1133.9404221818354,
@@ -5476,7 +5530,7 @@
         "contextLength": 2000000
       },
       {
-        "rank": 114,
+        "rank": 115,
         "modelDisplayName": "devstral-medium-2507",
         "rating": 1079.7547391144612,
         "ratingLower": 1048.7214948186165,

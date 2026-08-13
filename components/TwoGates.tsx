@@ -127,9 +127,8 @@ export function TwoGates({ insights, settings }: { insights: Insights; settings:
             style={{ borderColor: "var(--text-muted)" }}
             aria-hidden="true"
           />
-          {ghost.label} — the cheapest credible option at{" "}
-          {`$${ghost.config.meanCostUsd.toFixed(2)}`}/task. The hollow markers show why it is not
-          the answer.
+          {ghost.label} — the {`$${ghost.config.meanCostUsd.toFixed(2)}`} temptation. Hollow
+          markers show why it loses.
         </p>
       )}
     </div>

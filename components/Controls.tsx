@@ -63,7 +63,10 @@ export function Controls({
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {/* The two floors are the whole judgment; a regular reader never needs
+          more. The penalty exponents and the formula still exist — they moved
+          behind a fold, because four sliders and an equation read as an exam. */}
+      <div className="grid gap-5 sm:grid-cols-2">
         <Slider
           label="Ship floor"
           value={settings.shipFloor}
@@ -72,7 +75,7 @@ export function Controls({
           max={0.75}
           step={0.005}
           onChange={(shipFloor) => onChange({ ...settings, shipFloor })}
-          help="Minimum share of real repo tasks it has to finish. This is what stops cheap-but-unreliable models winning on price alone."
+          help="How much of the job it must actually finish. Stops cheap-but-flaky models winning on price."
         />
         <Slider
           label="Craft floor"
@@ -82,40 +85,51 @@ export function Controls({
           max={0.9}
           step={0.01}
           onChange={(craftFloor) => onChange({ ...settings, craftFloor })}
-          help="How often a human must prefer its web work over a typical model's. Drop this below 70% and gpt-5.6-luna [max] comes back — cheapest on the board, and judged worse than everything above it."
-        />
-        <Slider
-          label="Output-token penalty"
-          value={settings.beta}
-          display={settings.beta.toFixed(2)}
-          min={0}
-          max={0.6}
-          step={0.05}
-          onChange={(beta) => onChange({ ...settings, beta })}
-          help="How much to penalise verbose models. Tokens mostly stand in for wall-clock time, since dollars are already counted in cost."
-        />
-        <Slider
-          label="Agent-step penalty"
-          value={settings.gamma}
-          display={settings.gamma.toFixed(2)}
-          min={0}
-          max={0.6}
-          step={0.05}
-          onChange={(gamma) => onChange({ ...settings, gamma })}
-          help="How much to penalise models that take many turns to finish a task."
+          help="How often humans must prefer its code. Drop it under 65% and the $0.61 gpt-5.6-luna storms back."
         />
       </div>
 
-      <p className="mt-5 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-        <span className="font-mono">
-          BangBuck = ship^{(1 - settings.craftWeight).toFixed(1)} × craft^
-          {settings.craftWeight.toFixed(1)} ÷ (cost × tokens^{settings.beta.toFixed(2)} × steps^
-          {settings.gamma.toFixed(2)})
-        </span>
-        , computed only for configs clearing <em>both</em> floors. The two capability terms multiply
-        rather than average, so being good at one cannot cover for being weak at the other. Token and
-        step penalties are relative to the leanest config in the set.
-      </p>
+      <details className="mt-5 group">
+        <summary
+          className="cursor-pointer select-none text-xs"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <span className="underline underline-offset-2 group-open:no-underline">
+            Advanced — token & step penalties, and the formula
+          </span>
+        </summary>
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          <Slider
+            label="Output-token penalty"
+            value={settings.beta}
+            display={settings.beta.toFixed(2)}
+            min={0}
+            max={0.6}
+            step={0.05}
+            onChange={(beta) => onChange({ ...settings, beta })}
+            help="Penalises verbose models — tokens stand in for wall-clock time."
+          />
+          <Slider
+            label="Agent-step penalty"
+            value={settings.gamma}
+            display={settings.gamma.toFixed(2)}
+            min={0}
+            max={0.6}
+            step={0.05}
+            onChange={(gamma) => onChange({ ...settings, gamma })}
+            help="Penalises models that take many turns to finish."
+          />
+        </div>
+        <p className="mt-4 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <span className="font-mono">
+            BangBuck = ship^{(1 - settings.craftWeight).toFixed(1)} × craft^
+            {settings.craftWeight.toFixed(1)} ÷ (cost × tokens^{settings.beta.toFixed(2)} × steps^
+            {settings.gamma.toFixed(2)})
+          </span>
+          , over configs clearing <em>both</em> floors. The capability terms multiply, so strength on
+          one axis cannot cover weakness on the other.
+        </p>
+      </details>
     </section>
   );
 }

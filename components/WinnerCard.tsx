@@ -76,8 +76,17 @@ export function WinnerCard({
             {insights.leadMultiple && insights.runnerUp && (
               <>
                 {" "}
-                — a BangBuck score {multiple(insights.leadMultiple)} the next best option,{" "}
-                {insights.runnerUp.label}
+                —{" "}
+                {insights.leadMultiple < 1.05 ? (
+                  // A 1.0x lead is a coin flip, and printing "1.0x better" would
+                  // dress noise up as a ranking. Say what it is.
+                  <>in a photo finish with {insights.runnerUp.label}</>
+                ) : (
+                  <>
+                    a BangBuck score {multiple(insights.leadMultiple)} the next best option,{" "}
+                    {insights.runnerUp.label}
+                  </>
+                )}
               </>
             )}
             .
@@ -135,60 +144,43 @@ export function WinnerCard({
         >
           Why it wins
         </div>
+        {/* One claim per line, numbers doing the talking. The long-form argument
+            lived here once; it read as homework. */}
         <ul className="grid gap-3 sm:grid-cols-2">
           <Reason>
             <strong style={{ color: "var(--text-primary)" }}>
-              {insights.pctOfFrontierScore.toFixed(0)}% of the top score for{" "}
-              {insights.pctOfFrontierPrice.toFixed(1)}% of the price.
+              {insights.pctOfFrontierScore.toFixed(0)}% of the top score,{" "}
+              {insights.pctOfFrontierPrice.toFixed(0)}% of the price
             </strong>{" "}
-            {pct(c.passAt1, 1)} vs {insights.frontier.label}&rsquo;s{" "}
-            {pct(insights.frontier.config.passAt1, 1)}, at {usdPrecise(c.meanCostUsd)} vs{" "}
-            {usdPrecise(insights.frontier.config.meanCostUsd)} —{" "}
-            {multiple(insights.cheaperThanFrontier)} cheaper.
+            — vs {insights.frontier.label} at {usdPrecise(insights.frontier.config.meanCostUsd)}.
           </Reason>
 
           {insights.bestExcludedOnCraft && insights.winnerPreferredOverExcluded && (
             <Reason>
               <strong style={{ color: "var(--text-primary)" }}>
-                The cheap answer was considered, and rejected.
+                The {usdPrecise(insights.bestExcludedOnCraft.config.meanCostUsd)} temptation? Vetoed.
               </strong>{" "}
-              On completion and price alone the winner would be{" "}
-              {insights.bestExcludedOnCraft.label} at{" "}
-              {usdPrecise(insights.bestExcludedOnCraft.config.meanCostUsd)} per task. It is out
-              because humans prefer this model&rsquo;s web work{" "}
-              {pct(insights.winnerPreferredOverExcluded, 0)} of the time — finishing a task and
-              writing code worth keeping are not the same skill.
+              Humans prefer this code {pct(insights.winnerPreferredOverExcluded, 0)} of the time over{" "}
+              {insights.bestExcludedOnCraft.label}.
             </Reason>
           )}
 
           {insights.cheapestBetter && (
             <Reason>
               <strong style={{ color: "var(--text-primary)" }}>
-                Beating it on capability costs {multiple(insights.cheapestBetterPriceMultiple!)} more.
+                Better costs {multiple(insights.cheapestBetterPriceMultiple!)} more
               </strong>{" "}
-              The cheapest config stronger on the two axes combined is{" "}
-              {insights.cheapestBetter.label}, at +
-              {usdPrecise(insights.cheapestBetterExtraCost!)} per task.
-            </Reason>
-          )}
-
-          {insights.bestCheaper && (
-            <Reason>
-              <strong style={{ color: "var(--text-primary)" }}>Going cheaper costs you.</strong>{" "}
-              The strongest option under {usdPrecise(c.meanCostUsd)} is {insights.bestCheaper.label}:
-              it saves {usdPrecise(insights.bestCheaperSaving!)} per task, at{" "}
-              {pct(insights.bestCheaper.ship, 1)} ship and {pct(insights.bestCheaper.craft ?? 0, 0)}{" "}
-              craft against this model&rsquo;s {pct(w.ship, 1)} and {pct(w.craft ?? 0, 0)}.
+              — {insights.cheapestBetter.label}, +{usdPrecise(insights.cheapestBetterExtraCost!)}
+              /task.
             </Reason>
           )}
 
           <Reason>
-            <strong style={{ color: "var(--text-primary)" }}>It clears both bars.</strong>{" "}
-            {insights.qualifiedCount} of {insights.totalCount} configs are good enough on completion{" "}
-            <em>and</em> on judged code quality to be worth running; among those, this one costs the
-            least per unit of work. Arena rates it exactly, not by inheritance from a sibling.
+            <strong style={{ color: "var(--text-primary)" }}>
+              {insights.qualifiedCount} of {insights.totalCount} even qualify
+            </strong>{" "}
+            — and this one is the cheapest of them per unit of work.
           </Reason>
-
         </ul>
       </div>
     </section>

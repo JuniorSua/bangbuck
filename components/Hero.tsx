@@ -31,12 +31,9 @@ export function Hero({ snapshot }: { snapshot: Snapshot }) {
         className="mt-6 max-w-xl text-[15px] leading-relaxed sm:text-base"
         style={{ color: "var(--text-secondary)" }}
       >
-        Leaderboards rank AI models by raw capability, so the most expensive model always wins. This
-        ranks coding models by how much work you get per dollar — using{" "}
-        <span style={{ color: "var(--text-primary)" }}>measured benchmark cost</span>, not list price.
-        A model has to clear two bars to compete:{" "}
-        <span style={{ color: "var(--text-primary)" }}>finish the job</span>, and write code a human
-        would actually keep.
+        Two bars: <span style={{ color: "var(--text-primary)" }}>finish the job</span>, and{" "}
+        <span style={{ color: "var(--text-primary)" }}>write code worth keeping</span>. Then the
+        cheapest survivor wins — measured cost per task, never list price.
       </p>
 
       <dl className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs" style={{ color: "var(--text-muted)" }}>
