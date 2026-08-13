@@ -10,7 +10,11 @@ import type { ArenaEntry, DeepSweConfig } from "./types";
  */
 export function familyKey(name: string): string {
   const withoutHarness = name.replace(/\s*\(.*\)\s*$/, "");
-  const withoutEffort = withoutHarness.replace(/[-_](low|medium|high|xhigh|max|thinking)$/i, "");
+  // Arena sometimes date-stamps an entry ("deepseek-v4-pro-max-20260813"). The
+  // date is a snapshot tag, not part of the model's identity, and it must be
+  // stripped BEFORE the effort suffix, which it otherwise hides.
+  const withoutDate = withoutHarness.replace(/[-_]\d{8}$/, "");
+  const withoutEffort = withoutDate.replace(/[-_](low|medium|high|xhigh|max|thinking)$/i, "");
   return withoutEffort.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
@@ -89,8 +93,11 @@ function distance(c: { effort: string | null }, target: number): number {
 /** Splits an Arena display name into its family key and its effort suffix, if any. */
 function describe(displayName: string): { family: string; effort: string | null } {
   const withoutHarness = displayName.replace(/\s*\(.*\)\s*$/, "").toLowerCase();
-  const match = /^(.*?)[-_](low|medium|high|xhigh|max)$/.exec(withoutHarness);
-  const base = (match ? match[1] : withoutHarness).replace(/[-_]thinking$/, "");
+  // Same date-stamp rule as familyKey, and it must run BEFORE the effort parse:
+  // "…-max-20260813" hides its effort suffix behind the date.
+  const withoutDate = withoutHarness.replace(/[-_]\d{8}$/, "");
+  const match = /^(.*?)[-_](low|medium|high|xhigh|max)$/.exec(withoutDate);
+  const base = (match ? match[1] : withoutDate).replace(/[-_]thinking$/, "");
   return { family: base.replace(/[^a-z0-9]/g, ""), effort: match ? match[2] : null };
 }
 

@@ -69,13 +69,15 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 53 configs, 12 of them exactly", () => {
-    // 53 as of the 2026-08-07 DeepSWE run, which added muse-spark-1.2 [xhigh]
-    // and deepseek-v4-flash [max]. Exact matches stay at 12 — both newcomers
-    // borrow their family's nearest-effort Arena entry.
+  it("rates every one of the 58 configs, 16 of them exactly", () => {
+    // 58 as of the 2026-08-13 DeepSWE run (the grok-4.6 ladder plus
+    // deepseek-v4-pro [max]). Exact matches jumped 12 -> 16 for two reasons:
+    // the newcomers brought real config-level Arena entries, and the join now
+    // strips Arena's date stamps ("deepseek-v4-pro-max-20260813"), which had
+    // been hiding effort suffixes and silently blocking exact matches.
     expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
-    expect(r.all).toHaveLength(53);
-    expect(r.insights!.exactCraftCount).toBe(12);
+    expect(r.all).toHaveLength(58);
+    expect(r.insights!.exactCraftCount).toBe(16);
   });
 });
 
@@ -194,9 +196,9 @@ describe("craftFloorRegimes", () => {
 describe("the Everyday tier", () => {
   const r = computeRanking(snap, EVERYDAY);
 
-  it("qualifies 12 configs", () => {
-    expect(r.qualified).toHaveLength(12);
-    expect(r.all).toHaveLength(53);
+  it("qualifies 15 configs — the grok-4.6 ladder added three", () => {
+    expect(r.qualified).toHaveLength(15);
+    expect(r.all).toHaveLength(58);
   });
 
   it("is a statistical tie between gpt-5.6-sol [high] and claude-opus-5 [medium]", () => {
@@ -207,8 +209,18 @@ describe("the Everyday tier", () => {
     expect(r.insights!.leadMultiple).toBeLessThan(1.06);
   });
 
-  it("puts claude-opus-5 [high] sixth — capable, but you overpay for it here", () => {
-    expect(r.qualified[5].label).toBe("claude-opus-5 [high]");
+  it("puts claude-opus-5 [high] eighth — capable, but you overpay for it here", () => {
+    // Slid from sixth when grok-4.6 [medium] and [high] entered above it.
+    expect(r.qualified[7].label).toBe("claude-opus-5 [high]");
+  });
+
+  it("debuts grok-4.6 [medium] on the everyday podium", () => {
+    // The first genuinely new podium entrant since the two-axis rebuild:
+    // 67.5% ship at $3.45 with 77% craft. It does not threaten the top two —
+    // sol [high] and opus [medium] both beat it on ship AND price — but it is
+    // the best config xAI has ever placed here.
+    expect(r.qualified[2].label).toBe("grok-4.6 [medium]");
+    expect(r.qualified[2].bb).toBeCloseTo(8.63, 1);
   });
 });
 
@@ -226,7 +238,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(53);
+    expect(r.all).toHaveLength(58);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -466,13 +478,13 @@ describe("unrankedContenders — models the formula cannot touch", () => {
     expect(computeRanking(snap, DEFAULT_SETTINGS).all.some((s) => s.label === "qwen3.8-max [xhigh]")).toBe(true);
   });
 
-  it("graduated deepseek too — grok-4.6-high is the current occupant", () => {
-    // deepseek-v4-flash [max] was measured on 2026-08-07 ($0.10/task, 53.3%
-    // ship) and left the waiting room the same way qwen did three days earlier.
-    const names = unrankedContenders(snap, EVERYDAY).map((c) => c.entry.modelDisplayName);
-    expect(names).not.toContain("deepseek-v4-flash-high");
-    expect(names).toContain("grok-4.6-high");
-    expect(computeRanking(snap, EVERYDAY).all.some((s) => s.label === "deepseek-v4-flash [max]")).toBe(true);
+  it("is empty at both tiers — every credible contender is now measured", () => {
+    // Three graduations in nine days: qwen3.8-max (Aug 4), deepseek-v4-flash
+    // (Aug 7), grok-4.6 (Aug 13). The waiting room emptying is the pipeline
+    // working, not a bug — and the Radar section hides itself when it does.
+    expect(unrankedContenders(snap, DEFAULT_SETTINGS)).toHaveLength(0);
+    expect(unrankedContenders(snap, EVERYDAY)).toHaveLength(0);
+    expect(computeRanking(snap, EVERYDAY).all.some((s) => s.label.startsWith("grok-4.6 ["))).toBe(true);
   });
 
   it("never lists a model DeepSWE has measured at any effort", () => {
@@ -534,7 +546,7 @@ describe("qwen3.8-max [xhigh] — measured, and the vendor claim checked out", (
     ]);
     const ev = computeRanking(snap, EVERYDAY);
     expect(ev.qualified[0].label).toBe("gpt-5.6-sol [high]");
-    expect(ev.qualified).toHaveLength(12);
+    expect(ev.qualified).toHaveLength(15);
   });
 });
 
@@ -566,6 +578,35 @@ describe("vendor claims stay out of the ranking", () => {
   });
 });
 
+describe("the date-stamp join fix", () => {
+  it("matches deepseek-v4-pro [max] to Arena's date-stamped entry, exactly", () => {
+    // Arena lists it as "deepseek-v4-pro-max-20260813". Before the fix the date
+    // hid the -max suffix, the join fell through to the base model's 1445, and
+    // the config would have shown ~54% craft instead of its real ~75%.
+    const dated = snap.arenaWebdev!.entries.find((e) => /^deepseek-v4-pro-max-\d{8}$/.test(e.modelDisplayName));
+    expect(dated).toBeDefined();
+    const m = craftFor(
+      snap.deepswe.configs.find((c) => c.modelDisplay === "deepseek-v4-pro" && c.effort === "max")!,
+      snap.arenaWebdev!.entries,
+    );
+    expect(m.kind).toBe("exact");
+    expect(m.kind !== "none" && m.entry.modelDisplayName).toBe(dated!.modelDisplayName);
+  });
+
+  it("keeps deepseek-v4-pro [max] out on ship, by a hair on craft too", () => {
+    // The most disruptive near-miss on the board: $0.06 per task — 100x cheaper
+    // than the winner — at 62.8% ship (CI up to 69.2) and 74.9% craft, 0.1
+    // points under the high-power craft bar. If a future revision adds ten ship
+    // points this whole page changes; the pipeline will catch it the day
+    // DeepSWE does.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const d = r.all.find((s) => s.label === "deepseek-v4-pro [max]")!;
+    expect(d.config.meanCostUsd).toBeLessThan(0.07);
+    expect(d.failed).toBe("both");
+    expect(d.craft).toBeCloseTo(0.749, 2);
+  });
+});
+
 describe("snapshot integrity", () => {
   it("carries live pricing, not the stale artifact's", () => {
     const luna = snap.deepswe.configs.find(
@@ -575,9 +616,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 53 configs and both Arena boards", () => {
-    // 53 since the 2026-08-07 run added muse-spark-1.2 and deepseek-v4-flash.
-    expect(snap.deepswe.configs).toHaveLength(53);
+  it("has 58 configs and both Arena boards", () => {
+    // 58 since the 2026-08-13 run added the grok-4.6 ladder and deepseek-v4-pro.
+    expect(snap.deepswe.configs).toHaveLength(58);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);

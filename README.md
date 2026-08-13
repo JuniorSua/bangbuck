@@ -54,7 +54,7 @@ actually carry the judgment.
 
 ### Craft coverage — read this before trusting a row
 
-Arena rates only **12 of the 53** configurations exactly. The rest borrow the nearest reasoning
+Arena rates only **16 of the 58** configurations exactly. The rest borrow the nearest reasoning
 effort of the same model, and every table row marks this with `~`.
 
 Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
@@ -90,8 +90,11 @@ here with Alibaba's claimed **56.6 on DeepSWE 1.1** shown as self-reported. On 4
 **57.5% (CI 54.8–60.1) at $3.73/task** — the claim sat inside the measured interval, and the model
 moved from this section into the ranking automatically, where the Ship gate excludes it exactly as
 its own numbers predicted. The pipeline worked end to end: honest waiting room, measured
-graduation, no hand-editing. It has now happened twice: `deepseek-v4-flash [max]` graduated on
-7 Aug ($0.10/task measured — and 53.3% ship, gated out). `grok-4.6-high` is the current occupant.
+graduation, no hand-editing. It has now happened three times — qwen3.8-max (4 Aug),
+deepseek-v4-flash (7 Aug), grok-4.6 (13 Aug) — and the waiting room is currently empty, so the
+section hides itself. One join subtlety it surfaced: Arena date-stamps some entries
+("deepseek-v4-pro-max-20260813"), and the stamp must be stripped before the effort suffix or the
+join silently falls through to the base model's rating. `familyKey`/`describe` handle it.
 
 Self-reported figures live in `lib/notes.ts`, never in `data/snapshot.json`, and a test asserts none
 of them can reach the ranking. Every note carries a URL a reader can open.
@@ -309,7 +312,7 @@ circle, which reads as a design choice rather than a gap.
 
 BangBuck does not run benchmarks. It reads published results and applies a cost-efficiency formula.
 
-- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 53 configurations across 113
+- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 58 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
 - **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on
