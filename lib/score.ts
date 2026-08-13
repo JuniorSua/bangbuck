@@ -49,6 +49,11 @@ import type { ArenaEntry, DeepSweConfig, Snapshot } from "./types";
  * configs craft spans roughly 1.3x while cost spans 20x. Cost dominates the
  * ranking; capability differences are second-order.
  *
+ * The token/step penalties, by contrast, are NOT decoration — they are the
+ * owner's stated criteria made operational, and at the margin they decide
+ * crowns (see the note on DEFAULT_SETTINGS). Treat beta/gamma as part of the
+ * judgment, not as smoothing.
+ *
  * The consequence is that a soft "bias toward coding" does not work. Weighting
  * alone would still have crowned luna. What changes the answer is the GATE — a
  * config must clear a floor on each axis independently, and failing either one
@@ -117,8 +122,18 @@ export const DEFAULT_SETTINGS: Settings = {
   shipFloor: TIER_PRESETS[0].shipFloor,
   craftFloor: TIER_PRESETS[0].craftFloor,
   craftWeight: 0.6,
-  beta: 0.2,
-  gamma: 0.2,
+  // 0.25, raised from 0.20 on 2026-08-13, and the change is a recorded owner
+  // decision rather than a tuning drift. At 0.20 gemini-3.7-flash [medium]
+  // took the everyday tier on price while burning 3.3x the tokens, 3.2x the
+  // steps and 2.1x the measured wall-clock of the runner-up, clearing the ship
+  // floor by half a point on a CI that straddles it. The owner's standing
+  // criterion — result against cost, output tokens and agent steps together —
+  // says a config that heavy should not win on a $1.40 discount. At 0.25 the
+  // leanest capable config wins with a margin that does not sit on the second
+  // decimal of an exponent. Sweep beta_gamma in scripts/sensitivity.ts before
+  // touching this again.
+  beta: 0.25,
+  gamma: 0.25,
 };
 
 export interface ScoredConfig {

@@ -23,7 +23,7 @@ CRAFT  Arena WebDev Elo -> P(win)  human-judged  is the result worth keeping?
 3. Efficiency BangBuck = K / (cost × tokens^beta × steps^gamma)
 ```
 
-Defaults: `shipFloor 0.725`, `craftFloor 0.75`, `craftWeight 0.60`, `beta 0.20`, `gamma 0.20` —
+Defaults: `shipFloor 0.725`, `craftFloor 0.75`, `craftWeight 0.60`, `beta 0.25`, `gamma 0.25` —
 all in `DEFAULT_SETTINGS` in `lib/score.ts`, all sliders in the UI.
 
 ### Why two axes
@@ -99,16 +99,23 @@ join silently falls through to the base model's rating. `familyKey`/`describe` h
 Self-reported figures live in `lib/notes.ts`, never in `data/snapshot.json`, and a test asserts none
 of them can reach the ranking. Every note carries a URL a reader can open.
 
-### A weakness that resolved itself
+### The penalty decision of 13 Aug 2026
 
-Until 13 Aug the everyday winner was **dominated**: `gpt-5.6-sol [high]` won while `claude-opus-5
-[medium]` was cheaper *and* more capable, kept on top only by the token/step penalties. Two tests
-pinned that honestly. The gemini-3.7-flash data dissolved it — `gemini-3.7-flash [medium]` is
-cheaper than everything above it in capability, nothing dominates it, and it stays first even with
-the penalties at zero. The tests now pin the healthy state instead; the history lives in this
-paragraph and the git log.
+For a few hours `gemini-3.7-flash [medium]` held the everyday crown at the old `beta = gamma =
+0.20`: $2.03/task, edging sol by 1.4% — while burning **3.3× the tokens, 3.2× the steps and 2.1×
+the measured wall-clock** of the runner-up, and clearing the ship floor by half a point on a CI
+that straddles it. An audit found the crown flipped back at `0.22`: it sat on the second decimal
+of a tiebreaker.
 
-### The old weakness, for the record
+The owner's standing criterion is result against **cost, output tokens and agent steps together**,
+so the penalties rose to `0.25` — the point where the leanest capable config wins with a stable
+margin. Consequence, pinned by tests as a decision rather than a weakness: the everyday winner
+(`gpt-5.6-sol [high]`) is dominated on capability-and-price by `claude-opus-5 [medium]`, and wins
+because it is 23% leaner on tokens and 29% leaner on steps. On the four axes the site actually
+scores, neither dominates the other. Remove the penalties entirely and gemini takes the crown back
+— that counterfactual is also a test, as the record of what the penalties are holding back.
+
+### The old two-axis domination note, for the record
 
 At the everyday tier the winner is **dominated**: `claude-opus-5 [medium]` is both cheaper ($3.29 vs
 $3.47) and more capable (0.762 vs 0.740) than `gpt-5.6-sol [high]`, which wins only on the token and

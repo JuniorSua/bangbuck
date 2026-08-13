@@ -80,8 +80,10 @@ describe("BangBuck at default settings (High power)", () => {
   const r = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("crowns claude-opus-5 [high]", () => {
+    // BB re-agreed 4.92 -> 3.84 when the penalties rose to 0.25; heavy configs
+    // pay more everywhere, so absolute scores compress while the order holds.
     expect(r.qualified[0].label).toBe("claude-opus-5 [high]");
-    expect(r.qualified[0].bb).toBeCloseTo(4.92, 1);
+    expect(r.qualified[0].bb).toBeCloseTo(3.84, 1);
   });
 
   it("leads by 1.36x", () => {
@@ -141,9 +143,11 @@ describe("the Craft gate — the reason this version exists", () => {
 describe("craftFloorRegimes", () => {
   it("collapses the whole Craft sweep into a handful of stable answers", () => {
     const r = craftFloorRegimes(snap, EVERYDAY);
+    // gemini-3.7-flash [medium] held a band here for the few hours the
+    // penalties sat at 0.20; at 0.25 its token weight prices it out of every
+    // band and the sweep returns to five stable answers.
     expect(r.map((x) => x.winner?.label)).toEqual([
       "gpt-5.6-luna [max]",
-      "gemini-3.7-flash [medium]",
       "gpt-5.6-sol [high]",
       "claude-opus-5 [medium]",
       "kimi-k3 [max]",
@@ -197,15 +201,18 @@ describe("the Everyday tier", () => {
     expect(r.all).toHaveLength(61);
   });
 
-  it("crowns gemini-3.7-flash [medium] — the first everyday handover", () => {
-    // The everyday answer changed for the first time since the two-axis
-    // rebuild: 65.5% ship at $2.03 with 73% craft, edging gpt-5.6-sol [high]
-    // by 1.4%. Still a photo finish, and presented as one — but the new
-    // leader is the cheapest qualifier the tier has ever had.
-    expect(r.qualified[0].label).toBe("gemini-3.7-flash [medium]");
-    expect(r.qualified[1].label).toBe("gpt-5.6-sol [high]");
-    expect(r.qualified[2].label).toBe("claude-opus-5 [medium]");
-    expect(r.insights!.leadMultiple).toBeLessThan(1.06);
+  it("crowns gpt-5.6-sol [high], with gemini-3.7-flash [medium] third", () => {
+    // The 2026-08-13 decision, pinned. At beta=gamma=0.20 gemini [medium] took
+    // this tier by 1.4% on a $2.03 price while burning 3.3x the tokens, 3.2x
+    // the steps and 2.1x the wall-clock of sol — and clearing the ship floor
+    // on a CI that straddles it. The owner's criterion is result against cost,
+    // tokens and steps TOGETHER, so the penalties rose to 0.25 and the leanest
+    // capable config wins with a margin that is not knife-edged. Gemini keeps
+    // the podium on price, which is exactly as much as its heaviness earns.
+    expect(r.qualified[0].label).toBe("gpt-5.6-sol [high]");
+    expect(r.qualified[1].label).toBe("claude-opus-5 [medium]");
+    expect(r.qualified[2].label).toBe("gemini-3.7-flash [medium]");
+    expect(r.insights!.leadMultiple).toBeCloseTo(1.07, 1);
   });
 
   it("puts claude-opus-5 [high] tenth — capable, but you overpay for it here", () => {
@@ -217,7 +224,7 @@ describe("the Everyday tier", () => {
 
   it("keeps grok-4.6 [medium] in the top five", () => {
     expect(r.qualified[4].label).toBe("grok-4.6 [medium]");
-    expect(r.qualified[4].bb).toBeCloseTo(8.63, 1);
+    expect(r.qualified[4].bb).toBeCloseTo(6.89, 1);
   });
 });
 
@@ -325,25 +332,27 @@ describe("invariants that must hold at any setting", () => {
     expect(dominated).toBe(false);
   });
 
-  it("no longer crowns a dominated config at the everyday tier", () => {
-    // This test used to pin the opposite as a known weakness: gpt-5.6-sol
-    // [high] won everyday while claude-opus-5 [medium] was cheaper AND more
-    // capable, kept on top only by the token/step penalties. The 2026-08-13
-    // data resolved it — gemini-3.7-flash [medium] is cheaper than every
-    // config above it in capability, so nothing dominates the winner.
+  it("crowns an everyday winner that is dominated on capability-and-price — by design", () => {
+    // Pinned as a DECISION, not a weakness. claude-opus-5 [medium] is cheaper
+    // and more capable than gpt-5.6-sol [high]; sol wins because it is 23%
+    // leaner on tokens and 29% leaner on steps, and the owner's criterion
+    // counts those axes as first-class. Two-axis domination is therefore not
+    // the whole story here — four-axis is, and on four axes neither config
+    // dominates the other.
     const r = computeRanking(snap, EVERYDAY);
     const w = r.qualified[0];
-    const dominated = r.qualified.some(
-      (o) => o !== w && o.config.meanCostUsd <= w.config.meanCostUsd && o.capability! > w.capability!,
-    );
-    expect(dominated).toBe(false);
+    const opus = r.qualified.find((s) => s.label === "claude-opus-5 [medium]")!;
+    expect(opus.config.meanCostUsd).toBeLessThan(w.config.meanCostUsd);
+    expect(opus.capability!).toBeGreaterThan(w.capability!);
+    expect(w.config.meanOutputTokens).toBeLessThan(opus.config.meanOutputTokens);
+    expect(w.config.meanAgentSteps).toBeLessThan(opus.config.meanAgentSteps);
   });
 
-  it("keeps the everyday winner with the penalties switched off", () => {
-    // The old winner depended on the token/step penalties to stay ahead of a
-    // cheaper, stronger config. The new one does not: cheapest capable config
-    // wins with beta = gamma = 0 too, so the answer no longer rests on the
-    // tiebreakers.
+  it("hands the crown to the token-heaviest podium config if the penalties are removed", () => {
+    // The counterfactual that justifies the penalties existing: at beta=gamma=0
+    // gemini-3.7-flash [medium] wins on price while burning 3.3x the tokens of
+    // the actual winner. The penalties are carrying the owner's judgment, and
+    // this test is the record of what they are holding back.
     const r = computeRanking(snap, { ...EVERYDAY, beta: 0, gamma: 0 });
     expect(r.qualified[0].label).toBe("gemini-3.7-flash [medium]");
   });
@@ -397,12 +406,14 @@ describe("robustness of the two headline answers", () => {
     const minTok = Math.min(...snap.deepswe.configs.map((c) => c.meanOutputTokens));
     const minStep = Math.min(...snap.deepswe.configs.map((c) => c.meanAgentSteps));
     const craft = 1 / (1 + Math.pow(10, (r.referenceElo - craftEloOf(w)) / 400));
-    const k = Math.pow(w.config.passAt1, 0.4) * Math.pow(craft, 0.6);
+    const k =
+      Math.pow(w.config.passAt1, 1 - DEFAULT_SETTINGS.craftWeight) *
+      Math.pow(craft, DEFAULT_SETTINGS.craftWeight);
     const bb =
       (k * 100) /
       (w.config.meanCostUsd *
-        Math.pow(w.config.meanOutputTokens / minTok, 0.2) *
-        Math.pow(w.config.meanAgentSteps / minStep, 0.2));
+        Math.pow(w.config.meanOutputTokens / minTok, DEFAULT_SETTINGS.beta) *
+        Math.pow(w.config.meanAgentSteps / minStep, DEFAULT_SETTINGS.gamma));
     expect(w.bb).toBeCloseTo(bb, 10);
   });
 });
