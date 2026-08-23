@@ -52,10 +52,10 @@ describe("the two axes", () => {
 
   it("scores claude-opus-5 [high] at 81% craft and gpt-5.6-luna [max] at 64%", () => {
     const find = (label: string) => r.all.find((s) => s.label === label)!;
-    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1664.4, 0);
-    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.805, 2);
-    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1518.3, 0);
-    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.641, 2);
+    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1662.6, 0);
+    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.802, 2);
+    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1517.6, 0);
+    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.638, 2);
   });
 
   it("is conjunctive — a hole on one axis cannot be filled by the other", () => {
@@ -67,11 +67,12 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 61 configs, 17 of them exactly", () => {
-    // 61 as of the second 2026-08-13 DeepSWE run, which added the
-    // gemini-3.7-flash ladder (its [high] matches Arena exactly, hence 17).
+  it("rates every one of the 62 configs, 17 of them exactly", () => {
+    // 62 as of the 2026-08-20 DeepSWE run, which added glm-5.3 [max]. Exact
+    // matches hold at 17: glm-5.3 gained one, and deepseek-v4-pro [max] lost
+    // one when Arena relabelled its entry from -max to -high (see below).
     expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
-    expect(r.all).toHaveLength(61);
+    expect(r.all).toHaveLength(62);
     expect(r.insights!.exactCraftCount).toBe(17);
   });
 });
@@ -196,9 +197,9 @@ describe("craftFloorRegimes", () => {
 describe("the Everyday tier", () => {
   const r = computeRanking(snap, EVERYDAY);
 
-  it("qualifies 17 configs", () => {
-    expect(r.qualified).toHaveLength(17);
-    expect(r.all).toHaveLength(61);
+  it("qualifies 18 configs", () => {
+    expect(r.qualified).toHaveLength(18);
+    expect(r.all).toHaveLength(62);
   });
 
   it("crowns gpt-5.6-sol [high], with gemini-3.7-flash [medium] third", () => {
@@ -215,11 +216,11 @@ describe("the Everyday tier", () => {
     expect(r.insights!.leadMultiple).toBeCloseTo(1.07, 1);
   });
 
-  it("puts claude-opus-5 [high] tenth — capable, but you overpay for it here", () => {
-    // Sixth, then eighth, now tenth: each refresh has added cheaper qualifiers
+  it("puts claude-opus-5 [high] eleventh — capable, but you overpay for it here", () => {
+    // Sixth, eighth, tenth, now eleventh: every refresh adds cheaper qualifiers
     // above it while the high-power tier keeps crowning it. Both true at once
     // is the two-tier design working.
-    expect(r.qualified[9].label).toBe("claude-opus-5 [high]");
+    expect(r.qualified[10].label).toBe("claude-opus-5 [high]");
   });
 
   it("keeps grok-4.6 [medium] in the top five", () => {
@@ -242,7 +243,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(61);
+    expect(r.all).toHaveLength(62);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -459,7 +460,7 @@ describe("craft matching", () => {
     const m = craftFor(low, webdev);
     expect(m.kind).toBe("family");
     expect(m.kind === "family" && m.borrowedFrom).toBe("high");
-    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1664.4, 0);
+    expect(m.kind !== "none" && m.entry.rating).toBeCloseTo(1662.6, 0);
   });
 
   it("reports no match for a family Arena does not carry", () => {
@@ -479,13 +480,14 @@ describe("unrankedContenders — models the formula cannot touch", () => {
     expect(computeRanking(snap, DEFAULT_SETTINGS).all.some((s) => s.label === "qwen3.8-max [xhigh]")).toBe(true);
   });
 
-  it("is empty at both tiers — every credible contender is now measured", () => {
-    // Three graduations in nine days: qwen3.8-max (Aug 4), deepseek-v4-flash
-    // (Aug 7), grok-4.6 (Aug 13). The waiting room emptying is the pipeline
-    // working, not a bug — and the Radar section hides itself when it does.
-    expect(unrankedContenders(snap, DEFAULT_SETTINGS)).toHaveLength(0);
-    expect(unrankedContenders(snap, EVERYDAY)).toHaveLength(0);
-    expect(computeRanking(snap, EVERYDAY).all.some((s) => s.label.startsWith("grok-4.6 ["))).toBe(true);
+  it("refills as new models arrive — qwen3.8-27b is waiting", () => {
+    // The room emptied on Aug 13 after three graduations, then refilled: Arena
+    // rates qwen3.8-27b ninth on WebDev (1595) and DeepSWE has not run it. The
+    // cycle is the pipeline working, and the Radar section appears and hides
+    // itself with the queue.
+    const names = unrankedContenders(snap, EVERYDAY).map((c) => c.entry.modelDisplayName);
+    expect(names).toContain("qwen3.8-27b");
+    expect(snap.deepswe.configs.some((c) => c.modelDisplay.includes("qwen3.8-27b"))).toBe(false);
   });
 
   it("never lists a model DeepSWE has measured at any effort", () => {
@@ -577,31 +579,36 @@ describe("vendor claims stay out of the ranking", () => {
 });
 
 describe("the date-stamp join fix", () => {
-  it("matches deepseek-v4-pro [max] to Arena's date-stamped entry, exactly", () => {
-    // Arena lists it as "deepseek-v4-pro-max-20260813". Before the fix the date
-    // hid the -max suffix, the join fell through to the base model's 1445, and
-    // the config would have shown ~54% craft instead of its real ~75%.
-    const dated = snap.arenaWebdev!.entries.find((e) => /^deepseek-v4-pro-max-\d{8}$/.test(e.modelDisplayName));
+  it("still reaches Arena's date-stamped entry after it was relabelled", () => {
+    // Arena listed this as "deepseek-v4-pro-max-20260813" on Aug 13 and
+    // "deepseek-v4-pro-high-20260813" by Aug 20 — same model, reclassified
+    // effort. The date strip is what matters and it still works: the [max]
+    // config reaches the 1582 dated entry by borrowing the -high sibling.
+    // Without the strip the join would fall through to the undated base model
+    // at 1445, showing ~55% craft instead of ~72%.
+    const dated = snap.arenaWebdev!.entries.find((e) =>
+      /^deepseek-v4-pro-\w+-\d{8}$/.test(e.modelDisplayName),
+    );
     expect(dated).toBeDefined();
     const m = craftFor(
       snap.deepswe.configs.find((c) => c.modelDisplay === "deepseek-v4-pro" && c.effort === "max")!,
       snap.arenaWebdev!.entries,
     );
-    expect(m.kind).toBe("exact");
     expect(m.kind !== "none" && m.entry.modelDisplayName).toBe(dated!.modelDisplayName);
+    expect(m.kind !== "none" && m.entry.rating).toBeGreaterThan(1500);
   });
 
-  it("keeps deepseek-v4-pro [max] out on ship, by a hair on craft too", () => {
-    // The most disruptive near-miss on the board: $0.06 per task — 100x cheaper
-    // than the winner — at 62.8% ship (CI up to 69.2) and 74.9% craft, 0.1
-    // points under the high-power craft bar. If a future revision adds ten ship
-    // points this whole page changes; the pipeline will catch it the day
-    // DeepSWE does.
+  it("keeps deepseek-v4-pro [max] out, and its price advantage shrank 4x", () => {
+    // Flagged on Aug 13 as the most disruptive near-miss: $0.06 per task, 100x
+    // cheaper than the winner. The Aug 20 re-run repriced it to $0.24 — still
+    // cheap, no longer extraordinary — and its craft fell to 72% when Arena
+    // relabelled the dated entry. It was gated on ship either way, so the
+    // ranking never moved; the watch item is simply less urgent than it looked.
     const r = computeRanking(snap, DEFAULT_SETTINGS);
     const d = r.all.find((s) => s.label === "deepseek-v4-pro [max]")!;
-    expect(d.config.meanCostUsd).toBeLessThan(0.07);
+    expect(d.config.meanCostUsd).toBeCloseTo(0.241, 2);
     expect(d.failed).toBe("both");
-    expect(d.craft).toBeCloseTo(0.749, 2);
+    expect(d.ship).toBeLessThan(EVERYDAY.shipFloor);
   });
 });
 
@@ -614,9 +621,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 61 configs and both Arena boards", () => {
-    // 61 since the second 2026-08-13 run added the gemini-3.7-flash ladder.
-    expect(snap.deepswe.configs).toHaveLength(61);
+  it("has 62 configs and both Arena boards", () => {
+    // 62 since the 2026-08-20 run added glm-5.3 [max].
+    expect(snap.deepswe.configs).toHaveLength(62);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);
