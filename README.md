@@ -54,7 +54,7 @@ actually carry the judgment.
 
 ### Craft coverage — read this before trusting a row
 
-Arena rates only **17 of the 62** configurations exactly. The rest borrow the nearest reasoning
+Arena rates only **17 of the 63** configurations exactly. The rest borrow the nearest reasoning
 effort of the same model, and every table row marks this with `~`.
 
 Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
@@ -92,7 +92,8 @@ moved from this section into the ranking automatically, where the Ship gate excl
 its own numbers predicted. The pipeline worked end to end: honest waiting room, measured
 graduation, no hand-editing. Four graduations so far — qwen3.8-max (4 Aug), deepseek-v4-flash
 (7 Aug), grok-4.6 (13 Aug), glm-5.3 (20 Aug) — and the room refills as fast as it empties;
-`qwen3.8-27b` is the current occupant. The section appears and hides itself with the queue. One join subtlety it surfaced: Arena date-stamps some entries, and the stamp must be stripped
+`qwen3.8-27b` and `qwen3.8-flash-next` are the current occupants. The section appears and hides
+itself with the queue. One join subtlety it surfaced: Arena date-stamps some entries, and the stamp must be stripped
 before the effort suffix or the join silently falls through to the base model's rating.
 `familyKey`/`describe` handle it. Arena also *relabels* those entries between refreshes — the same
 deepseek model went from `-max-20260813` to `-high-20260813` in a week — so a test asserts the
@@ -171,6 +172,24 @@ Settings live in the query string, so "here is the same data under my assumption
 default appear. Values outside 0..1 are ignored rather than trusted, so a hand-edited URL cannot
 render a nonsense ranking. Written with `replaceState` so dragging a slider does not fill the back
 button.
+
+---
+
+## ⚠️ The second data trap: unvoted Arena entries
+
+**An Elo with zero votes is a prior, not a rating.** Arena publishes rows for models it has listed
+but not yet judged. They are recognisable three ways: `votes: 0`, `rank: 0` (its sentinel — real
+rows are 1-based), and a confidence interval *narrower* than genuinely low-vote entries, because it
+describes the prior rather than evidence.
+
+`glm-5.3-flash` arrived this way on 2026-08-26: rating 1634, 0 votes, a 36-point CI against 85
+points for a real 228-vote row. Trusting it would have granted **76% Craft — clearing both floors —
+on no evidence at all.** It was gated out on Ship anyway, which is luck rather than a safeguard.
+
+`isRated()` in `lib/normalize.ts` is the guard, applied everywhere Craft is derived: the join, the
+reference median, the chat index, and the contender list. A config with no rated entry reports
+`unrated` and cannot qualify at any setting. Five tests pin it, including the counterfactual showing
+what the prior would have scored.
 
 ---
 
@@ -330,7 +349,7 @@ circle, which reads as a design choice rather than a gap.
 
 BangBuck does not run benchmarks. It reads published results and applies a cost-efficiency formula.
 
-- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 62 configurations across 113
+- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 63 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
 - **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on

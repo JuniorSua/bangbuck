@@ -4,6 +4,7 @@ import {
   configLabel,
   craftFor,
   familyKey,
+  isRated,
   organizationFor,
 } from "./normalize";
 import type { CraftMatch } from "./normalize";
@@ -96,10 +97,13 @@ export function craftElo(probability: number, referenceElo: number): number {
 /**
  * Named tiers — the two questions people actually arrive with.
  *
- * High power is the default because it is the one with a decisive answer. At the
- * everyday bar the top two configs land within 4% of each other, which is noise
- * dressed up as a ranking; at the high-power bar the winner leads by 1.36x and is
- * one of the few configs Arena rates exactly rather than by inheritance.
+ * High power is the default. It was chosen because it had the decisive answer
+ * while everyday was a coin flip — and on 2026-08-26 those swapped: a ~23% cut
+ * to the gpt-5.6-sol ladder blew everyday open to 1.40x and squeezed high power
+ * down to 1.03x. The default stands, because the tiers answer different
+ * questions rather than competing, but do not read "high power" as "the
+ * confident one" any more. The card says "photo finish" under 1.05x whichever
+ * tier is in that state.
  */
 export const TIER_PRESETS = [
   {
@@ -229,8 +233,11 @@ function baselines(configs: DeepSweConfig[]) {
  * whereas "beats a typical model" spreads the field out and reads plainly.
  */
 export function referenceElo(entries: ArenaEntry[]): number {
-  if (!entries.length) return 1400;
-  const sorted = entries.map((e) => e.rating).sort((a, b) => a - b);
+  // Unvoted priors would drag the median that every Craft score is measured
+  // against — see isRated.
+  const rated = entries.filter(isRated);
+  if (!rated.length) return 1400;
+  const sorted = rated.map((e) => e.rating).sort((a, b) => a - b);
   return sorted[Math.floor(sorted.length / 2)];
 }
 
@@ -424,6 +431,7 @@ export function unrankedContenders(snapshot: Snapshot, settings: Settings): Cont
   const reference = referenceElo(webdev);
 
   return webdev
+    .filter(isRated)
     .filter((e) => !measured.has(familyKey(e.modelDisplayName)))
     .map((entry) => ({
       entry,
@@ -432,6 +440,96 @@ export function unrankedContenders(snapshot: Snapshot, settings: Settings): Cont
     }))
     .filter((c) => c.craft >= settings.craftFloor)
     .sort((a, b) => b.craft - a.craft);
+}
+
+/**
+ * The best config on each axis the site measures, among those that qualify.
+ *
+ * The ranking answers one question well — best value overall — and a reader with
+ * a different priority has had to squint at fifty rows to answer theirs. These
+ * are the honest one-line answers to "cheapest?", "most capable?", "fastest?".
+ *
+ * Drawn only from QUALIFIED configs on purpose. The cheapest config overall is
+ * always something that barely works; "cheapest thing worth running" is the
+ * useful question, and the floors already encode what "worth running" means.
+ *
+ * Wall-clock is included because DeepSWE measures it and nothing on the site has
+ * ever shown it, even though it is the thing tokens and steps stand in for.
+ */
+export interface Category {
+  id: string;
+  label: string;
+  /** What the winner is best AT, phrased for a caption. */
+  blurb: string;
+  winner: ScoredConfig;
+  /** The winning value, preformatted. */
+  value: string;
+}
+
+export function categoryWinners(ranking: Ranking): Category[] {
+  const q = ranking.qualified;
+  if (!q.length) return [];
+
+  const pick = (better: (a: ScoredConfig, b: ScoredConfig) => boolean) =>
+    q.reduce((best, c) => (better(c, best) ? c : best));
+
+  const tok = (n: number) => `${(n / 1000).toFixed(1)}k`;
+  const usd = (n: number) => `$${n.toFixed(2)}`;
+  const pc = (n: number) => `${(n * 100).toFixed(1)}%`;
+
+  return [
+    {
+      id: "value",
+      label: "Best value",
+      blurb: "most work per dollar, all axes counted",
+      winner: pick((a, b) => a.bb > b.bb),
+      value: pick((a, b) => a.bb > b.bb).bb.toFixed(2),
+    },
+    {
+      id: "cheapest",
+      label: "Cheapest",
+      blurb: "lowest measured cost that still clears both bars",
+      winner: pick((a, b) => a.config.meanCostUsd < b.config.meanCostUsd),
+      value: usd(pick((a, b) => a.config.meanCostUsd < b.config.meanCostUsd).config.meanCostUsd),
+    },
+    {
+      id: "capable",
+      label: "Most capable",
+      blurb: "finishes the most tasks, price no object",
+      winner: pick((a, b) => a.ship > b.ship),
+      value: pc(pick((a, b) => a.ship > b.ship).ship),
+    },
+    {
+      id: "craft",
+      label: "Best code",
+      blurb: "humans prefer its work most often",
+      winner: pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)),
+      value: `${((pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)).craft ?? 0) * 100).toFixed(0)}%`,
+    },
+    {
+      id: "lean",
+      label: "Leanest",
+      blurb: "fewest output tokens per task",
+      winner: pick((a, b) => a.config.meanOutputTokens < b.config.meanOutputTokens),
+      value: tok(
+        pick((a, b) => a.config.meanOutputTokens < b.config.meanOutputTokens).config.meanOutputTokens,
+      ),
+    },
+    {
+      id: "fastest",
+      label: "Fastest",
+      blurb: "least wall-clock time per task",
+      winner: pick(
+        (a, b) => (a.config.meanDurationSeconds ?? Infinity) < (b.config.meanDurationSeconds ?? Infinity),
+      ),
+      value: `${(
+        (pick(
+          (a, b) =>
+            (a.config.meanDurationSeconds ?? Infinity) < (b.config.meanDurationSeconds ?? Infinity),
+        ).config.meanDurationSeconds ?? 0) / 60
+      ).toFixed(1)} min`,
+    },
+  ];
 }
 
 /** One band of Craft floors over which the winner does not change. */

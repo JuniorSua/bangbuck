@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  categoryWinners,
   computeRanking,
   DEFAULT_SETTINGS,
   unrankedContenders,
@@ -17,6 +18,7 @@ import { Hero } from "./Hero";
 import { SectionHead } from "./SectionHead";
 import { StickyAnswer } from "./StickyAnswer";
 import { Radar } from "./Radar";
+import { Categories } from "./Categories";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -55,6 +57,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const ranking = useMemo(() => computeRanking(snapshot, settings), [snapshot, settings]);
   const contenders = useMemo(() => unrankedContenders(snapshot, settings), [snapshot, settings]);
+  const categories = useMemo(() => categoryWinners(ranking), [ranking]);
 
   // Read once on mount rather than during render: the server has no location, and
   // initialising state from it directly would mismatch on hydration.
@@ -88,14 +91,21 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <WinnerCard insights={ranking.insights} settings={settings} />
         </section>
 
+        {categories.length > 0 && (
+          <section className="reveal">
+            <SectionHead n={2} title="Best in each category" aside="all clear both bars" />
+            <Categories categories={categories} />
+          </section>
+        )}
+
         <section className="reveal">
-          <SectionHead n={2} title="Set your bar" aside="the formula is a judgment call" />
+          <SectionHead n={3} title="Set your bar" aside="the formula is a judgment call" />
           <Controls settings={settings} onChange={setSettings} />
         </section>
 
         <section className="reveal">
           <SectionHead
-            n={3}
+            n={4}
             title="What paying more buys"
             aside={`${ranking.qualified.length} of ${ranking.all.length} still standing`}
           />
@@ -104,7 +114,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
 
         <section className="reveal">
           <SectionHead
-            n={4}
+            n={5}
             title="The whole field"
             aside="dimmed rows failed a floor"
           />
@@ -114,7 +124,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         {contenders.length > 0 && (
           <section className="reveal">
             <SectionHead
-              n={5}
+              n={6}
               title="Rated, but not rankable"
               aside={`${contenders.length} waiting on DeepSWE`}
             />
@@ -123,7 +133,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         )}
 
         <section className="reveal">
-          <SectionHead n={6} title="Receipts" aside="nothing here is measured by us" />
+          <SectionHead n={7} title="Receipts" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>
       </div>

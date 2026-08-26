@@ -30,7 +30,7 @@ export function familyKey(name: string): string {
  */
 export function buildArenaIndex(entries: ArenaEntry[]): Map<string, ArenaEntry> {
   const index = new Map<string, ArenaEntry>();
-  for (const entry of entries) {
+  for (const entry of entries.filter(isRated)) {
     const key = familyKey(entry.modelDisplayName);
     const existing = index.get(key);
     if (!existing || entry.rating > existing.rating) index.set(key, entry);
@@ -43,6 +43,26 @@ export function arenaFor(
   index: Map<string, ArenaEntry>,
 ): ArenaEntry | null {
   return index.get(familyKey(config.model)) ?? null;
+}
+
+/**
+ * Is this Arena entry an actual measurement?
+ *
+ * An Elo with no votes behind it is a prior, not a rating. Arena publishes such
+ * rows for models it has listed but not yet judged: they carry `rank: 0` (its
+ * sentinel — every real row is 1-based) and a confidence interval narrower than
+ * genuinely low-vote entries, because the interval describes the prior rather
+ * than any evidence. glm-5.3-flash arrived this way on 2026-08-26 with a 1634
+ * rating, 0 votes and a 36-point CI, against 85 points for a real 228-vote row.
+ *
+ * Trusting it would have handed that model a 76% Craft score — clearing BOTH
+ * floors — on the strength of nothing. It happened to be gated out on Ship
+ * anyway, which is luck, not a safeguard. So unvoted entries are excluded
+ * everywhere Craft is derived, and a config left with no rated entry reports
+ * `unrated` rather than borrowing a number nobody measured.
+ */
+export function isRated(entry: ArenaEntry): boolean {
+  return entry.votes > 0;
 }
 
 /** Reasoning efforts in ascending order, used to measure "nearness" between configs. */
@@ -73,6 +93,7 @@ export type CraftMatch =
 export function craftFor(config: DeepSweConfig, entries: ArenaEntry[]): CraftMatch {
   const family = familyKey(config.model);
   const candidates = entries
+    .filter(isRated)
     .map((entry) => ({ entry, ...describe(entry.modelDisplayName) }))
     .filter((c) => c.family === family);
   if (!candidates.length) return { kind: "none" };

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import snapshot from "../data/snapshot.json";
 import {
+  categoryWinners,
   computeRanking,
   craftElo,
   craftFloorRegimes,
@@ -12,7 +13,7 @@ import {
   unrankedContenders,
   valueFrontier,
 } from "./score";
-import { craftFor, familyKey } from "./normalize";
+import { craftFor, familyKey, isRated } from "./normalize";
 import { MODEL_NOTES, noteFor } from "./notes";
 import { linearTicks, rangeTicks } from "./metrics";
 import { canonicalVendor } from "./vendors";
@@ -67,12 +68,13 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates every one of the 62 configs, 17 of them exactly", () => {
-    // 62 as of the 2026-08-20 DeepSWE run, which added glm-5.3 [max]. Exact
-    // matches hold at 17: glm-5.3 gained one, and deepseek-v4-pro [max] lost
-    // one when Arena relabelled its entry from -max to -high (see below).
-    expect(r.all.filter((s) => s.craft === null)).toHaveLength(0);
-    expect(r.all).toHaveLength(62);
+  it("rates 62 of the 63 configs, 17 of them exactly", () => {
+    // 63 as of the 2026-08-26 run, which added glm-5.3-flash [max]. That one
+    // is deliberately UNRATED: Arena listed it with a 1634 prior and zero
+    // votes, and isRated refuses to treat a prior as a measurement.
+    expect(r.all).toHaveLength(63);
+    expect(r.all.filter((s) => s.craft === null)).toHaveLength(1);
+    expect(r.all.find((s) => s.craft === null)!.label).toBe("glm-5.3-flash [max]");
     expect(r.insights!.exactCraftCount).toBe(17);
   });
 });
@@ -87,8 +89,14 @@ describe("BangBuck at default settings (High power)", () => {
     expect(r.qualified[0].bb).toBeCloseTo(3.84, 1);
   });
 
-  it("leads by 1.36x", () => {
-    expect(r.insights!.leadMultiple).toBeCloseTo(1.36, 1);
+  it("leads by only 1.03x — high power is now the photo finish", () => {
+    // The tiers swapped character on 2026-08-26. OpenAI cut the gpt-5.6-sol
+    // ladder ~23%, which brought sol [max] from $8.39 to $6.46 and almost onto
+    // claude-opus-5 [high] at $6.08. Opus still wins — more craft (80% vs 76%)
+    // and cheaper — but sol is leaner on both tokens and steps, so the margin
+    // is now noise. The card says "photo finish" below 1.05x for exactly this.
+    expect(r.insights!.leadMultiple).toBeCloseTo(1.035, 2);
+    expect(r.qualified[1].label).toBe("gpt-5.6-sol [max]");
   });
 
   it("admits exactly the four configs that clear both floors", () => {
@@ -199,10 +207,10 @@ describe("the Everyday tier", () => {
 
   it("qualifies 18 configs", () => {
     expect(r.qualified).toHaveLength(18);
-    expect(r.all).toHaveLength(62);
+    expect(r.all).toHaveLength(63);
   });
 
-  it("crowns gpt-5.6-sol [high], with gemini-3.7-flash [medium] third", () => {
+  it("crowns gpt-5.6-sol [high] decisively — everyday is no longer a tie", () => {
     // The 2026-08-13 decision, pinned. At beta=gamma=0.20 gemini [medium] took
     // this tier by 1.4% on a $2.03 price while burning 3.3x the tokens, 3.2x
     // the steps and 2.1x the wall-clock of sol — and clearing the ship floor
@@ -210,22 +218,26 @@ describe("the Everyday tier", () => {
     // tokens and steps TOGETHER, so the penalties rose to 0.25 and the leanest
     // capable config wins with a margin that is not knife-edged. Gemini keeps
     // the podium on price, which is exactly as much as its heaviness earns.
+    // The same 23% price cut that squeezed high power blew everyday open: sol
+    // [high] fell $3.47 -> $2.66 and its lead went 1.07x -> 1.40x. It is now
+    // the cheapest config on the everyday podium AND the leanest, which is the
+    // owner's criteria pointing the same way for once.
     expect(r.qualified[0].label).toBe("gpt-5.6-sol [high]");
     expect(r.qualified[1].label).toBe("claude-opus-5 [medium]");
     expect(r.qualified[2].label).toBe("gemini-3.7-flash [medium]");
-    expect(r.insights!.leadMultiple).toBeCloseTo(1.07, 1);
+    expect(r.insights!.leadMultiple).toBeCloseTo(1.40, 1);
   });
 
-  it("puts claude-opus-5 [high] eleventh — capable, but you overpay for it here", () => {
+  it("keeps claude-opus-5 [high] eleventh — capable, but you overpay for it here", () => {
     // Sixth, eighth, tenth, now eleventh: every refresh adds cheaper qualifiers
     // above it while the high-power tier keeps crowning it. Both true at once
     // is the two-tier design working.
     expect(r.qualified[10].label).toBe("claude-opus-5 [high]");
   });
 
-  it("keeps grok-4.6 [medium] in the top five", () => {
-    expect(r.qualified[4].label).toBe("grok-4.6 [medium]");
-    expect(r.qualified[4].bb).toBeCloseTo(6.89, 1);
+  it("keeps grok-4.6 [medium] in the top six", () => {
+    expect(r.qualified[5].label).toBe("grok-4.6 [medium]");
+    expect(r.qualified[5].bb).toBeCloseTo(6.89, 1);
   });
 });
 
@@ -243,7 +255,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(62);
+    expect(r.all).toHaveLength(63);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -333,20 +345,22 @@ describe("invariants that must hold at any setting", () => {
     expect(dominated).toBe(false);
   });
 
-  it("crowns an everyday winner that is dominated on capability-and-price — by design", () => {
-    // Pinned as a DECISION, not a weakness. claude-opus-5 [medium] is cheaper
-    // and more capable than gpt-5.6-sol [high]; sol wins because it is 23%
-    // leaner on tokens and 29% leaner on steps, and the owner's criterion
-    // counts those axes as first-class. Two-axis domination is therefore not
-    // the whole story here — four-axis is, and on four axes neither config
-    // dominates the other.
+  it("crowns an everyday winner that is now cheapest AND leanest", () => {
+    // This test has tracked an awkward truth twice: the everyday winner used to
+    // be dominated on capability-and-price and held its crown only through the
+    // penalties. The 2026-08-26 price cut ended that. gpt-5.6-sol [high] is now
+    // cheaper than claude-opus-5 [medium] outright, and leaner on both tokens
+    // and steps, so nothing about the crown is awkward any more.
     const r = computeRanking(snap, EVERYDAY);
     const w = r.qualified[0];
     const opus = r.qualified.find((s) => s.label === "claude-opus-5 [medium]")!;
-    expect(opus.config.meanCostUsd).toBeLessThan(w.config.meanCostUsd);
-    expect(opus.capability!).toBeGreaterThan(w.capability!);
+    expect(w.config.meanCostUsd).toBeLessThan(opus.config.meanCostUsd);
     expect(w.config.meanOutputTokens).toBeLessThan(opus.config.meanOutputTokens);
     expect(w.config.meanAgentSteps).toBeLessThan(opus.config.meanAgentSteps);
+    const dominated = r.qualified.some(
+      (o) => o !== w && o.config.meanCostUsd <= w.config.meanCostUsd && o.capability! > w.capability!,
+    );
+    expect(dominated).toBe(false);
   });
 
   it("hands the crown to the token-heaviest podium config if the penalties are removed", () => {
@@ -376,10 +390,17 @@ describe("robustness of the two headline answers", () => {
   const winnerAt = (s: Partial<typeof DEFAULT_SETTINGS>, base = DEFAULT_SETTINGS) =>
     computeRanking(snap, { ...base, ...s }).qualified[0]?.label;
 
-  it("holds claude-opus-5 [high] at high power across every penalty setting", () => {
-    for (const b of [0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.6]) {
+  it("holds claude-opus-5 [high] at high power up to a 0.35 penalty", () => {
+    // Re-agreed, and the narrowing is the point. Before the price cut opus held
+    // at every setting 0 to 0.6; now gpt-5.6-sol [max] takes it at 0.40 and
+    // above, because sol is leaner on tokens and steps and heavy penalties
+    // reward that. The default 0.25 sits comfortably inside opus territory, but
+    // the margin is a photo finish and this test is where that will show up
+    // first if it erodes further.
+    for (const b of [0, 0.05, 0.1, 0.2, 0.25, 0.3, 0.35]) {
       expect(winnerAt({ beta: b, gamma: b })).toBe("claude-opus-5 [high]");
     }
+    expect(winnerAt({ beta: 0.4, gamma: 0.4 })).toBe("gpt-5.6-sol [max]");
   });
 
   it("holds it across every craft weight from 0 to 1", () => {
@@ -388,15 +409,16 @@ describe("robustness of the two headline answers", () => {
     }
   });
 
-  it("keeps the everyday podium a three-way photo finish under any craft weight", () => {
-    // Was a two-way tie; gemini-3.7-flash [medium] made it three. The site
-    // reports a near-tie rather than a ranking, so it must STAY one whatever
-    // the weight — if some weight separated them, the copy would be wrong.
+  it("holds the everyday podium under any craft weight, no longer a tie", () => {
+    // Same three configs at every weight, but the spread widened from under
+    // 1.15x to about 1.45x when sol got cheaper. The site drops its "photo
+    // finish" wording above 1.05x, so this pins that the copy is right to.
     const PODIUM = ["claude-opus-5 [medium]", "gemini-3.7-flash [medium]", "gpt-5.6-sol [high]"];
     for (const craftWeight of [0, 0.3, 0.6, 1]) {
       const r = computeRanking(snap, { ...EVERYDAY, craftWeight });
       expect(r.qualified.slice(0, 3).map((s) => s.label).sort()).toEqual(PODIUM);
-      expect(r.qualified[0].bb / r.qualified[2].bb).toBeLessThan(1.15);
+      expect(r.qualified[0].label).toBe("gpt-5.6-sol [high]");
+      expect(r.qualified[0].bb / r.qualified[2].bb).toBeGreaterThan(1.3);
     }
   });
 
@@ -578,6 +600,118 @@ describe("vendor claims stay out of the ranking", () => {
   });
 });
 
+describe("categoryWinners", () => {
+  const r = computeRanking(snap, EVERYDAY);
+  const cats = categoryWinners(r);
+
+  it("answers each axis from qualified configs only", () => {
+    // The cheapest config overall is always something that barely works. Every
+    // category answer must be something the floors already vouched for.
+    expect(cats.length).toBeGreaterThan(0);
+    for (const c of cats) {
+      expect(c.winner.qualified).toBe(true);
+      expect(r.qualified).toContain(c.winner);
+      expect(c.value.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("actually picks the extreme on each axis", () => {
+    // A category that names anything other than the true best would be worse
+    // than not having the section at all.
+    const by = (id: string) => cats.find((c) => c.id === id)!.winner;
+    const q = r.qualified;
+    expect(by("value").bb).toBe(Math.max(...q.map((s) => s.bb)));
+    expect(by("cheapest").config.meanCostUsd).toBe(Math.min(...q.map((s) => s.config.meanCostUsd)));
+    expect(by("capable").ship).toBe(Math.max(...q.map((s) => s.ship)));
+    expect(by("craft").craft).toBe(Math.max(...q.map((s) => s.craft ?? 0)));
+    expect(by("lean").config.meanOutputTokens).toBe(
+      Math.min(...q.map((s) => s.config.meanOutputTokens)),
+    );
+    expect(by("fastest").config.meanDurationSeconds).toBe(
+      Math.min(...q.map((s) => s.config.meanDurationSeconds ?? Infinity)),
+    );
+  });
+
+  it("names the best-value winner first", () => {
+    expect(cats[0].id).toBe("value");
+    expect(cats[0].winner.label).toBe(r.qualified[0].label);
+  });
+
+  it("has gpt-5.6-sol [high] sweeping value, leanest and fastest", () => {
+    // The 2026-08-26 price cut left one config best on four axes at once. That
+    // is what a decisive ranking looks like, and it is worth pinning: if these
+    // ever split apart again, the everyday answer got close.
+    const by = (id: string) => cats.find((c) => c.id === id)!.winner.label;
+    expect(by("value")).toBe("gpt-5.6-sol [high]");
+    expect(by("lean")).toBe("gpt-5.6-sol [high]");
+    expect(by("fastest")).toBe("gpt-5.6-sol [high]");
+  });
+
+  it("returns nothing when nothing qualifies", () => {
+    const none = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
+    expect(categoryWinners(none)).toEqual([]);
+  });
+});
+
+describe("unvoted Arena entries are priors, not ratings", () => {
+  const webdev = snap.arenaWebdev!.entries;
+
+  it("finds the zero-vote entry and refuses to score from it", () => {
+    // glm-5.3-flash arrived 2026-08-26 rated 1634 with 0 votes and rank 0.
+    // Trusting it would have granted 76% Craft — clearing BOTH floors — on no
+    // evidence at all. It was gated out on Ship anyway, which is luck.
+    const unvoted = webdev.filter((e) => e.votes === 0);
+    expect(unvoted.length).toBeGreaterThan(0);
+    for (const e of unvoted) {
+      expect(isRated(e)).toBe(false);
+      expect(e.rank).toBe(0); // Arena's own sentinel corroborates
+    }
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const flash = r.all.find((s) => s.label === "glm-5.3-flash [max]")!;
+    expect(flash.craft).toBeNull();
+    expect(flash.craftMatch.kind).toBe("none");
+    expect(flash.failed).toBe("unrated");
+    expect(flash.qualified).toBe(false);
+  });
+
+  it("shows the prior would have cleared both floors if trusted", () => {
+    // The counterfactual, so the guard's value is on the record rather than
+    // assumed. If this ever stops clearing the floors the hazard is smaller,
+    // but the rule still stands.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const prior = snap.arenaWebdev!.entries.find((e) => e.modelDisplayName === "glm-5.3-flash")!;
+    const wouldBe = craftProbability(prior.rating, r.referenceElo);
+    expect(wouldBe).toBeGreaterThan(DEFAULT_SETTINGS.craftFloor);
+  });
+
+  it("keeps unvoted entries out of the reference median", () => {
+    // The median every Craft score is measured against must come from real
+    // votes, or one prior drags the whole axis.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const ratedOnly = webdev.filter(isRated).map((e) => e.rating).sort((a, b) => a - b);
+    expect(r.referenceElo).toBe(ratedOnly[Math.floor(ratedOnly.length / 2)]);
+  });
+
+  it("keeps unvoted entries out of the contender list", () => {
+    // A prior must not put a model in the waiting room either — that would
+    // advertise it as "Arena-rated" when Arena has judged nothing.
+    for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
+      for (const c of unrankedContenders(snap, settings)) {
+        expect(c.entry.votes).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("never lets an unrated config qualify at any setting", () => {
+    for (const shipFloor of [0.1, 0.5, 0.65, 0.725]) {
+      for (const craftFloor of [0, 0.5, 0.7, 0.75]) {
+        const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor, craftFloor });
+        for (const c of r.qualified) expect(c.craft).not.toBeNull();
+      }
+    }
+  });
+});
+
 describe("the date-stamp join fix", () => {
   it("still reaches Arena's date-stamped entry after it was relabelled", () => {
     // Arena listed this as "deepseek-v4-pro-max-20260813" on Aug 13 and
@@ -606,7 +740,9 @@ describe("the date-stamp join fix", () => {
     // ranking never moved; the watch item is simply less urgent than it looked.
     const r = computeRanking(snap, DEFAULT_SETTINGS);
     const d = r.all.find((s) => s.label === "deepseek-v4-pro [max]")!;
-    expect(d.config.meanCostUsd).toBeCloseTo(0.241, 2);
+    // Repriced twice more since: $0.06 -> $0.24 -> $1.67. The "100x cheaper
+    // than the winner" framing I used on Aug 13 aged badly in under two weeks.
+    expect(d.config.meanCostUsd).toBeCloseTo(1.67, 1);
     expect(d.failed).toBe("both");
     expect(d.ship).toBeLessThan(EVERYDAY.shipFloor);
   });
@@ -621,9 +757,9 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 62 configs and both Arena boards", () => {
-    // 62 since the 2026-08-20 run added glm-5.3 [max].
-    expect(snap.deepswe.configs).toHaveLength(62);
+  it("has 63 configs and both Arena boards", () => {
+    // 63 since the 2026-08-26 run added glm-5.3-flash [max].
+    expect(snap.deepswe.configs).toHaveLength(63);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);

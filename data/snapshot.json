@@ -1,12 +1,9 @@
 {
-  "capturedAt": "2026-08-23T17:08:25.724Z",
+  "capturedAt": "2026-08-26T15:54:46.259Z",
   "deepswe": {
-    "generatedAt": "2026-08-20T07:48:24.252395+00:00",
+    "generatedAt": "2026-08-26T07:38:24.821609+00:00",
     "nTasksInSet": 113,
-    "latestJob": {
-      "name": "20260818-glm-5.3",
-      "finished_at": "2026-08-20T07:35:00.619175"
-    },
+    "latestJob": null,
     "sourceUrl": "https://deepswe.datacurve.ai/",
     "configs": [
       {
@@ -74,7 +71,7 @@
         "ciLo": 0.6983684441682949,
         "ciHi": 0.7549648891650385,
         "nRuns": 4,
-        "meanCostUsd": 8.386436346666667,
+        "meanCostUsd": 6.455954682467823,
         "meanOutputTokens": 60013.64444444444,
         "meanAgentSteps": 61.25333333333333,
         "meanInputTokens": 7907652.344444444,
@@ -92,7 +89,7 @@
         "ciLo": 0.6991259559533886,
         "ciHi": 0.7155081903880748,
         "nRuns": 4,
-        "meanCostUsd": 4.703663860310422,
+        "meanCostUsd": 3.5986416572286237,
         "meanOutputTokens": 40744.59201773836,
         "meanAgentSteps": 44,
         "meanInputTokens": 4259318.379157428,
@@ -164,7 +161,7 @@
         "ciLo": 0.679691851565629,
         "ciHi": 0.7083347559731736,
         "nRuns": 4,
-        "meanCostUsd": 3.4698331108647453,
+        "meanCostUsd": 2.661832088842267,
         "meanOutputTokens": 28450.31929046563,
         "meanAgentSteps": 36.889135254988915,
         "meanInputTokens": 2713572.2505543237,
@@ -272,7 +269,7 @@
         "ciLo": 0.6319549876432895,
         "ciHi": 0.7117950123567105,
         "nRuns": 4,
-        "meanCostUsd": 0.6056233620535715,
+        "meanCostUsd": 0.6056233620535714,
         "meanOutputTokens": 73399.70758928571,
         "meanAgentSteps": 101.68080357142857,
         "meanInputTokens": 15443718.330357144,
@@ -406,6 +403,24 @@
         "medianPeakContextTokens": 107945.5
       },
       {
+        "model": "glm-5-3-flash",
+        "modelDisplay": "glm-5.3-flash",
+        "effort": "max",
+        "config": "mini_swe_agent_glm_5_3_flash_max",
+        "harness": "mini-swe-agent",
+        "passAt1": 0.6339285714285714,
+        "passAt4": 0.8495575221238938,
+        "ciLo": 0.590148863911635,
+        "ciHi": 0.6777082789455078,
+        "nRuns": 4,
+        "meanCostUsd": 0.24098185622767856,
+        "meanOutputTokens": 72829.77008928571,
+        "meanAgentSteps": 122.890625,
+        "meanInputTokens": 12387025.401785715,
+        "meanDurationSeconds": 1537.7995419129463,
+        "medianPeakContextTokens": 136183.5
+      },
+      {
         "model": "deepseek-v4-pro",
         "modelDisplay": "deepseek-v4-pro",
         "effort": "max",
@@ -416,7 +431,7 @@
         "ciLo": 0.5649842780985077,
         "ciHi": 0.6916528900430852,
         "nRuns": 4,
-        "meanCostUsd": 0.24138687892256638,
+        "meanCostUsd": 1.6660232187256647,
         "meanOutputTokens": 105998.91814159292,
         "meanAgentSteps": 154.71238938053096,
         "meanInputTokens": 24191606.099557523,
@@ -434,7 +449,7 @@
         "ciLo": 0.5947858925334765,
         "ciHi": 0.6264530455196208,
         "nRuns": 4,
-        "meanCostUsd": 1.8620318075221238,
+        "meanCostUsd": 1.4157802656590275,
         "meanOutputTokens": 18425.216814159292,
         "meanAgentSteps": 30.913716814159294,
         "meanInputTokens": 1505793.9557522123,
@@ -452,7 +467,7 @@
         "ciLo": 0.5805269394851535,
         "ciHi": 0.6230128835236961,
         "nRuns": 4,
-        "meanCostUsd": 1.7017533805309737,
+        "meanCostUsd": 1.7017533805309735,
         "meanOutputTokens": 39616.53982300885,
         "meanAgentSteps": 43.06637168141593,
         "meanInputTokens": 3246355.4668141594,
@@ -650,7 +665,7 @@
         "ciLo": 0.49432091479689105,
         "ciHi": 0.5809003241411621,
         "nRuns": 4,
-        "meanCostUsd": 0.907501021238938,
+        "meanCostUsd": 0.9075010212389382,
         "meanOutputTokens": 21517.03982300885,
         "meanAgentSteps": 33.51327433628319,
         "meanInputTokens": 1557052.774336283,
@@ -686,7 +701,7 @@
         "ciLo": 0.4975163385576403,
         "ciHi": 0.5688553428582889,
         "nRuns": 4,
-        "meanCostUsd": 0.10023560370265487,
+        "meanCostUsd": 0.46407388012739975,
         "meanOutputTokens": 107687.02212389381,
         "meanAgentSteps": 152.87610619469027,
         "meanInputTokens": 19829931.451327432,
@@ -830,7 +845,7 @@
         "ciLo": 0.42965787629426033,
         "ciHi": 0.47742176972343875,
         "nRuns": 4,
-        "meanCostUsd": 1.0742664646017699,
+        "meanCostUsd": 0.8170052734939612,
         "meanOutputTokens": 10579.141592920354,
         "meanAgentSteps": 23.358407079646017,
         "meanInputTokens": 690833.657079646,
@@ -848,7 +863,7 @@
         "ciLo": 0.4132822036270294,
         "ciHi": 0.47167354858536004,
         "nRuns": 4,
-        "meanCostUsd": 0.15558015,
+        "meanCostUsd": 0.15558014999999997,
         "meanOutputTokens": 25778.274336283186,
         "meanAgentSteps": 49.02212389380531,
         "meanInputTokens": 3372477.7876106193,
@@ -1118,7 +1133,7 @@
         "ciLo": 0.0071835281016603,
         "ciHi": 0.023789923225773328,
         "nRuns": 4,
-        "meanCostUsd": 0.014481247876106194,
+        "meanCostUsd": 0.014481247876106192,
         "meanOutputTokens": 3127.754424778761,
         "meanAgentSteps": 12.464601769911505,
         "meanInputTokens": 150031.52876106196,
@@ -1351,8 +1366,8 @@
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
-        "inputPricePerMillion": 5,
-        "outputPricePerMillion": 30,
+        "inputPricePerMillion": 4,
+        "outputPricePerMillion": 20,
         "contextLength": null
       },
       {
@@ -1407,8 +1422,8 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
-        "inputPricePerMillion": 0.375,
-        "outputPricePerMillion": 1.875,
+        "inputPricePerMillion": 0.75,
+        "outputPricePerMillion": 3.75,
         "contextLength": 1048576
       },
       {
@@ -1476,7 +1491,7 @@
         "votes": 26770,
         "organization": "SpaceXAI",
         "license": "Proprietary",
-        "modelUrl": "https://grok.com",
+        "modelUrl": "https://grok.com/",
         "inputPricePerMillion": null,
         "outputPricePerMillion": null,
         "contextLength": null
@@ -1743,8 +1758,8 @@
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
-        "inputPricePerMillion": 2.5,
-        "outputPricePerMillion": 15,
+        "inputPricePerMillion": 2,
+        "outputPricePerMillion": 12,
         "contextLength": null
       },
       {
@@ -1899,7 +1914,7 @@
         "modelUrl": "https://huggingface.co/zai-org/GLM-5",
         "inputPricePerMillion": 1,
         "outputPricePerMillion": 3.2,
-        "contextLength": 202800
+        "contextLength": 204800
       },
       {
         "rank": 56,
@@ -2009,8 +2024,8 @@
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
-        "inputPricePerMillion": 1,
-        "outputPricePerMillion": 6,
+        "inputPricePerMillion": 0.2,
+        "outputPricePerMillion": 1.2,
         "contextLength": null
       },
       {
@@ -2191,9 +2206,9 @@
         "organization": "MiniMax",
         "license": "MiniMax Community License",
         "modelUrl": "https://www.minimax.io/models/text/m3",
-        "inputPricePerMillion": 0.6,
-        "outputPricePerMillion": 2.4,
-        "contextLength": null
+        "inputPricePerMillion": 0.3,
+        "outputPricePerMillion": 1.2,
+        "contextLength": 524288
       },
       {
         "rank": 77,
@@ -2261,7 +2276,7 @@
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3.8-27B",
-        "inputPricePerMillion": 0.5,
+        "inputPricePerMillion": 0.4,
         "outputPricePerMillion": 3,
         "contextLength": null
       },
@@ -2975,8 +2990,8 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "http://aistudio.google.com/app/prompts/new_chat?model=gemini-2.5-flash",
-        "inputPricePerMillion": 0.15,
-        "outputPricePerMillion": 1.25,
+        "inputPricePerMillion": 0.3,
+        "outputPricePerMillion": 2.5,
         "contextLength": 1048576
       },
       {
@@ -4031,8 +4046,8 @@
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://openai.com/index/gpt-5-6/",
-        "inputPricePerMillion": 5,
-        "outputPricePerMillion": 30,
+        "inputPricePerMillion": 4,
+        "outputPricePerMillion": 20,
         "contextLength": 1050000
       },
       {
@@ -4059,7 +4074,7 @@
         "organization": "Alibaba",
         "license": "Apache 2.0",
         "modelUrl": "https://huggingface.co/Qwen/Qwen3.8-27B",
-        "inputPricePerMillion": 0.5,
+        "inputPricePerMillion": 0.4,
         "outputPricePerMillion": 3,
         "contextLength": null
       },
@@ -4227,8 +4242,8 @@
         "organization": "Google",
         "license": "Proprietary",
         "modelUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
-        "inputPricePerMillion": 0.375,
-        "outputPricePerMillion": 1.875,
+        "inputPricePerMillion": 0.75,
+        "outputPricePerMillion": 3.75,
         "contextLength": 1048576
       },
       {
@@ -4451,9 +4466,9 @@
         "organization": "MiniMax",
         "license": "MiniMax Community License",
         "modelUrl": "https://www.minimax.io/models/text/m3",
-        "inputPricePerMillion": 0.6,
-        "outputPricePerMillion": 2.4,
-        "contextLength": null
+        "inputPricePerMillion": 0.3,
+        "outputPricePerMillion": 1.2,
+        "contextLength": 524288
       },
       {
         "rank": 38,
@@ -4759,8 +4774,8 @@
         "organization": "OpenAI",
         "license": "Proprietary",
         "modelUrl": "https://platform.openai.com/docs/models/gpt-5",
-        "inputPricePerMillion": 0.625,
-        "outputPricePerMillion": 5,
+        "inputPricePerMillion": 1.25,
+        "outputPricePerMillion": 10,
         "contextLength": 400000
       },
       {
@@ -5588,6 +5603,34 @@
         "inputPricePerMillion": 0.4,
         "outputPricePerMillion": 2,
         "contextLength": 128000
+      },
+      {
+        "rank": 0,
+        "modelDisplayName": "glm-5.3-flash",
+        "rating": 1634.3220909607517,
+        "ratingLower": 1616.4020909607516,
+        "ratingUpper": 1652.2420909607517,
+        "votes": 0,
+        "organization": "Z.ai",
+        "license": "MIT",
+        "modelUrl": "https://z.ai/blog/glm-5.3-flash",
+        "inputPricePerMillion": 0.15,
+        "outputPricePerMillion": 0.5,
+        "contextLength": 1000000
+      },
+      {
+        "rank": 0,
+        "modelDisplayName": "qwen3.8-flash-next",
+        "rating": 1617.4308781179836,
+        "ratingLower": 1602.3920793285374,
+        "ratingUpper": 1632.4696769074299,
+        "votes": 592,
+        "organization": "Alibaba",
+        "license": "qwen-community-1.0",
+        "modelUrl": "https://qwen.ai/blog?id=qwen3.8-flash-next",
+        "inputPricePerMillion": 0.16,
+        "outputPricePerMillion": 0.47,
+        "contextLength": 1000000
       }
     ]
   }
