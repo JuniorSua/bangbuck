@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import snapshot from "../data/snapshot.json";
 import {
+  bbAtFloorCraft,
   categoryWinners,
   computeRanking,
   craftElo,
@@ -11,6 +12,7 @@ import {
   referenceElo,
   TIER_PRESETS,
   unrankedContenders,
+  unratedMeasured,
   valueFrontier,
 } from "./score";
 import { craftFor, familyKey, isRated } from "./normalize";
@@ -37,10 +39,13 @@ describe("the two axes", () => {
   const r = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("measures Craft against the WebDev board's median", () => {
-    // Re-agreed as the board grows (1409 -> 1418.9 -> 1417.7 -> 1418.8). The
-    // reference is the board's median, so it is supposed to move when the board
-    // does; the high-power answer has held through every shift.
-    expect(r.referenceElo).toBeCloseTo(1418.8, 0);
+    // Re-agreed as the board grows (1409 -> 1418.9 -> 1417.7 -> 1418.8 ->
+    // 1434.6). The 2026-09-03 jump of +15.8 is the largest yet: claude-fable-5.1
+    // entered at 1763, the strongest WebDev rating ever recorded here, and
+    // pulled the median up with it. Craft is RELATIVE, so every config's craft
+    // percentage fell without any model getting worse — and gpt-5.6-sol [max]
+    // was gated out of high power because of it. See the dedicated test below.
+    expect(r.referenceElo).toBeCloseTo(1434.6, 0);
     expect(referenceElo(snap.arenaWebdev!.entries)).toBe(r.referenceElo);
   });
 
@@ -51,12 +56,15 @@ describe("the two axes", () => {
     expect(craftElo(craftProbability(1667, 1409), 1409)).toBeCloseTo(1667, 6);
   });
 
-  it("scores claude-opus-5 [high] at 81% craft and gpt-5.6-luna [max] at 64%", () => {
+  it("scores claude-opus-5 [high] at 79% craft and gpt-5.6-luna [max] at 62%", () => {
+    // Both Elos essentially unchanged; both craft percentages down ~1.5 points
+    // purely because the median rose. This is the relative axis working as
+    // designed, and is why these numbers are re-agreed rather than pinned loose.
     const find = (label: string) => r.all.find((s) => s.label === label)!;
-    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1662.6, 0);
-    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.802, 2);
-    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1517.6, 0);
-    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.638, 2);
+    expect(craftEloOf(find("claude-opus-5 [high]"))).toBeCloseTo(1662.3, 0);
+    expect(find("claude-opus-5 [high]").craft).toBeCloseTo(0.788, 2);
+    expect(craftEloOf(find("gpt-5.6-luna [max]"))).toBeCloseTo(1518.8, 0);
+    expect(find("gpt-5.6-luna [max]").craft).toBeCloseTo(0.619, 2);
   });
 
   it("is conjunctive — a hole on one axis cannot be filled by the other", () => {
@@ -68,14 +76,16 @@ describe("the two axes", () => {
     expect(r2.all.every((s) => s.capability === null || s.capability <= 1)).toBe(true);
   });
 
-  it("rates 62 of the 63 configs, 17 of them exactly", () => {
-    // 63 as of the 2026-08-26 run, which added glm-5.3-flash [max]. That one
-    // is deliberately UNRATED: Arena listed it with a 1634 prior and zero
-    // votes, and isRated refuses to treat a prior as a measurement.
-    expect(r.all).toHaveLength(63);
-    expect(r.all.filter((s) => s.craft === null)).toHaveLength(1);
-    expect(r.all.find((s) => s.craft === null)!.label).toBe("glm-5.3-flash [max]");
-    expect(r.insights!.exactCraftCount).toBe(17);
+  it("rates 65 of the 70 configs, 18 of them exactly", () => {
+    // 70 as of the 2026-09-03 run: the five-config gpt-6-astra ladder plus two
+    // gemini-3.8-flash. All five astra configs are UNRATED — Arena carries no
+    // gpt-6 entry on either board — which is the largest data gap the site has
+    // had, and the reason the "not rankable yet" section now has two halves.
+    expect(r.all).toHaveLength(70);
+    const unrated = r.all.filter((s) => s.craft === null);
+    expect(unrated).toHaveLength(5);
+    expect(unrated.every((s) => s.label.startsWith("gpt-6-astra"))).toBe(true);
+    expect(r.insights!.exactCraftCount).toBe(18);
   });
 });
 
@@ -89,20 +99,18 @@ describe("BangBuck at default settings (High power)", () => {
     expect(r.qualified[0].bb).toBeCloseTo(3.84, 1);
   });
 
-  it("leads by only 1.03x — high power is now the photo finish", () => {
-    // The tiers swapped character on 2026-08-26. OpenAI cut the gpt-5.6-sol
-    // ladder ~23%, which brought sol [max] from $8.39 to $6.46 and almost onto
-    // claude-opus-5 [high] at $6.08. Opus still wins — more craft (80% vs 76%)
-    // and cheaper — but sol is leaner on both tokens and steps, so the margin
-    // is now noise. The card says "photo finish" below 1.05x for exactly this.
-    expect(r.insights!.leadMultiple).toBeCloseTo(1.035, 2);
-    expect(r.qualified[1].label).toBe("gpt-5.6-sol [max]");
+  it("leads by 1.68x again, because the runner-up was gated out", () => {
+    // Not a widening on merit. gpt-5.6-sol [max] held second at 1.03x until the
+    // rising median pushed its craft under the floor; with it gone the gap to
+    // the next config is structural. High power is now all-Anthropic, which is
+    // worth noticing rather than celebrating.
+    expect(r.insights!.leadMultiple).toBeCloseTo(1.68, 1);
+    expect(r.qualified[1].label).toBe("claude-opus-5 [xhigh]");
   });
 
-  it("admits exactly the four configs that clear both floors", () => {
+  it("admits exactly the three configs that clear both floors", () => {
     expect(r.qualified.map((s) => s.label)).toEqual([
       "claude-opus-5 [high]",
-      "gpt-5.6-sol [max]",
       "claude-opus-5 [xhigh]",
       "claude-opus-5 [max]",
     ]);
@@ -207,7 +215,7 @@ describe("the Everyday tier", () => {
 
   it("qualifies 18 configs", () => {
     expect(r.qualified).toHaveLength(18);
-    expect(r.all).toHaveLength(63);
+    expect(r.all).toHaveLength(70);
   });
 
   it("crowns gpt-5.6-sol [high] decisively — everyday is no longer a tie", () => {
@@ -237,7 +245,7 @@ describe("the Everyday tier", () => {
 
   it("keeps grok-4.6 [medium] in the top six", () => {
     expect(r.qualified[5].label).toBe("grok-4.6 [medium]");
-    expect(r.qualified[5].bb).toBeCloseTo(6.89, 1);
+    expect(r.qualified[5].bb).toBeCloseTo(6.77, 1);
   });
 });
 
@@ -245,8 +253,10 @@ describe("the floors", () => {
   it("distinguishes why a config was rejected", () => {
     const r = computeRanking(snap, DEFAULT_SETTINGS);
     const find = (label: string) => r.all.find((s) => s.label === label)!;
-    // Clears ship at 73.2% but not craft; the reverse for terra.
-    expect(find("gpt-5.6-sol [xhigh]").failed).toBe("ship");
+    // sol [xhigh] now misses BOTH: 70.7% ship under the 72.5% bar, and its
+    // craft slipped under 75% when the median rose.
+    expect(find("gpt-5.6-sol [xhigh]").failed).toBe("both");
+    expect(find("gpt-5.6-sol [max]").failed).toBe("craft");
     expect(find("gpt-5.6-luna [max]").failed).toBe("both");
     expect(find("claude-opus-5 [max]").failed).toBeNull();
   });
@@ -255,7 +265,7 @@ describe("the floors", () => {
     const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor: 0.99 });
     expect(r.qualified).toHaveLength(0);
     expect(r.insights).toBeNull();
-    expect(r.all).toHaveLength(63);
+    expect(r.all).toHaveLength(70);
   });
 
   it("keeps BB scores stable as the floors move", () => {
@@ -390,17 +400,13 @@ describe("robustness of the two headline answers", () => {
   const winnerAt = (s: Partial<typeof DEFAULT_SETTINGS>, base = DEFAULT_SETTINGS) =>
     computeRanking(snap, { ...base, ...s }).qualified[0]?.label;
 
-  it("holds claude-opus-5 [high] at high power up to a 0.35 penalty", () => {
-    // Re-agreed, and the narrowing is the point. Before the price cut opus held
-    // at every setting 0 to 0.6; now gpt-5.6-sol [max] takes it at 0.40 and
-    // above, because sol is leaner on tokens and steps and heavy penalties
-    // reward that. The default 0.25 sits comfortably inside opus territory, but
-    // the margin is a photo finish and this test is where that will show up
-    // first if it erodes further.
-    for (const b of [0, 0.05, 0.1, 0.2, 0.25, 0.3, 0.35]) {
+  it("holds claude-opus-5 [high] at high power across every penalty setting", () => {
+    // Robust again, but for an uncomfortable reason: the config that took it at
+    // 0.40 last refresh, gpt-5.6-sol [max], is no longer in the tier at all.
+    // Stability by elimination is not the same as stability on merit.
+    for (const b of [0, 0.05, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]) {
       expect(winnerAt({ beta: b, gamma: b })).toBe("claude-opus-5 [high]");
     }
-    expect(winnerAt({ beta: 0.4, gamma: 0.4 })).toBe("gpt-5.6-sol [max]");
   });
 
   it("holds it across every craft weight from 0 to 1", () => {
@@ -445,9 +451,17 @@ describe("why-it-won insights", () => {
   const { insights } = computeRanking(snap, DEFAULT_SETTINGS);
 
   it("reports the winner against the raw capability frontier", () => {
-    expect(insights!.frontier.label).toBe("claude-opus-5 [max]");
-    expect(insights!.pctOfFrontierScore).toBeCloseTo(98.9, 0);
-    expect(insights!.cheaperThanFrontier).toBeCloseTo(1.95, 1);
+    // The frontier is now an UNRATED config: gpt-6-astra [xhigh] has the highest
+    // ship on the board at 74.1%. `frontier` is defined on ship alone, so it is
+    // correct to name it — and the contrast is the story of this refresh.
+    expect(insights!.frontier.label).toBe("gpt-6-astra [xhigh]");
+    expect(insights!.frontier.craft).toBeNull();
+    expect(insights!.pctOfFrontierScore).toBeCloseTo(98.3, 0);
+    // Only 1.07x cheaper now, because the frontier is no longer a $11.84 Opus
+    // but a $6.52 astra. The gap between "best value" and "most capable" has
+    // nearly closed on price — the interesting part is that it closed via a
+    // config the site cannot rank.
+    expect(insights!.cheaperThanFrontier).toBeCloseTo(1.07, 1);
   });
 
   it("shows what beating it on capability would cost", () => {
@@ -457,7 +471,7 @@ describe("why-it-won insights", () => {
 
   it("computes the per-$100 hero stat", () => {
     expect(insights!.winner.solvedPer100).toBeCloseTo(12, 0);
-    expect(insights!.frontier.solvedPer100).toBeCloseTo(6, 0);
+    expect(insights!.frontier.solvedPer100).toBeCloseTo(11, 0);
   });
 });
 
@@ -557,18 +571,14 @@ describe("qwen3.8-max [xhigh] — measured, and the vendor claim checked out", (
   });
 
   it("keeps its strong Craft, borrowed from the family's max entry", () => {
-    expect(q.craft).toBeCloseTo(0.807, 2);
+    expect(q.craft).toBeCloseTo(0.795, 2);
     expect(q.craftMatch.kind).toBe("family");
     expect(q.organization).toBe("Alibaba");
   });
 
   it("leaves the high-power answer untouched", () => {
-    expect(r.qualified.map((s) => s.label)).toEqual([
-      "claude-opus-5 [high]",
-      "gpt-5.6-sol [max]",
-      "claude-opus-5 [xhigh]",
-      "claude-opus-5 [max]",
-    ]);
+    expect(r.qualified[0].label).toBe("claude-opus-5 [high]");
+    expect(r.qualified.every((s) => s.label.startsWith("claude-opus-5"))).toBe(true);
   });
 });
 
@@ -656,45 +666,33 @@ describe("categoryWinners", () => {
 describe("unvoted Arena entries are priors, not ratings", () => {
   const webdev = snap.arenaWebdev!.entries;
 
-  it("finds the zero-vote entry and refuses to score from it", () => {
-    // glm-5.3-flash arrived 2026-08-26 rated 1634 with 0 votes and rank 0.
-    // Trusting it would have granted 76% Craft — clearing BOTH floors — on no
-    // evidence at all. It was gated out on Ship anyway, which is luck.
-    const unvoted = webdev.filter((e) => e.votes === 0);
-    expect(unvoted.length).toBeGreaterThan(0);
-    for (const e of unvoted) {
-      expect(isRated(e)).toBe(false);
-      expect(e.rank).toBe(0); // Arena's own sentinel corroborates
-    }
-    const r = computeRanking(snap, DEFAULT_SETTINGS);
-    const flash = r.all.find((s) => s.label === "glm-5.3-flash [max]")!;
-    expect(flash.craft).toBeNull();
-    expect(flash.craftMatch.kind).toBe("none");
-    expect(flash.failed).toBe("unrated");
-    expect(flash.qualified).toBe(false);
+  it("classifies by votes, not by rating or rank", () => {
+    // Tested on the function rather than on whatever the board happens to hold
+    // this week — the guard has to be right when the next prior appears, and
+    // the last one has already graduated.
+    expect(isRated({ ...webdev[0], votes: 0 })).toBe(false);
+    expect(isRated({ ...webdev[0], votes: 1 })).toBe(true);
+    expect(isRated({ ...webdev[0], votes: 0, rating: 1900, rank: 1 })).toBe(false);
   });
 
-  it("shows the prior would have cleared both floors if trusted", () => {
-    // The counterfactual, so the guard's value is on the record rather than
-    // assumed. If this ever stops clearing the floors the hazard is smaller,
-    // but the rule still stands.
-    const r = computeRanking(snap, DEFAULT_SETTINGS);
-    const prior = snap.arenaWebdev!.entries.find((e) => e.modelDisplayName === "glm-5.3-flash")!;
-    const wouldBe = craftProbability(prior.rating, r.referenceElo);
-    expect(wouldBe).toBeGreaterThan(DEFAULT_SETTINGS.craftFloor);
+  it("was vindicated: glm-5.3-flash's prior was 27 points optimistic", () => {
+    // The reason this guard exists. On 2026-08-26 Arena listed it at 1634 with
+    // zero votes; by 2026-09-03 real votes put it at 1607 with rank 14. Trusting
+    // the prior would have overstated its Craft for a week. Kept as the standing
+    // evidence that an unvoted Elo is not a small approximation of the truth.
+    const real = webdev.find((e) => e.modelDisplayName === "glm-5.3-flash");
+    expect(real).toBeDefined();
+    expect(real!.votes).toBeGreaterThan(0);
+    expect(real!.rating).toBeLessThan(1634);
   });
 
   it("keeps unvoted entries out of the reference median", () => {
-    // The median every Craft score is measured against must come from real
-    // votes, or one prior drags the whole axis.
     const r = computeRanking(snap, DEFAULT_SETTINGS);
     const ratedOnly = webdev.filter(isRated).map((e) => e.rating).sort((a, b) => a - b);
     expect(r.referenceElo).toBe(ratedOnly[Math.floor(ratedOnly.length / 2)]);
   });
 
   it("keeps unvoted entries out of the contender list", () => {
-    // A prior must not put a model in the waiting room either — that would
-    // advertise it as "Arena-rated" when Arena has judged nothing.
     for (const settings of [DEFAULT_SETTINGS, EVERYDAY]) {
       for (const c of unrankedContenders(snap, settings)) {
         expect(c.entry.votes).toBeGreaterThan(0);
@@ -703,12 +701,80 @@ describe("unvoted Arena entries are priors, not ratings", () => {
   });
 
   it("never lets an unrated config qualify at any setting", () => {
+    // The invariant that must hold whether or not a prior is on the board today.
     for (const shipFloor of [0.1, 0.5, 0.65, 0.725]) {
       for (const craftFloor of [0, 0.5, 0.7, 0.75]) {
         const r = computeRanking(snap, { ...DEFAULT_SETTINGS, shipFloor, craftFloor });
         for (const c of r.qualified) expect(c.craft).not.toBeNull();
       }
     }
+  });
+});
+
+describe("gpt-6-astra — measured, unrated, and the biggest gap yet", () => {
+  const r = computeRanking(snap, DEFAULT_SETTINGS);
+
+  it("has the highest Ship on the board and no Craft at all", () => {
+    // Arena carries no gpt-6 entry on either board, so all five configs are
+    // unrated and none can qualify — regardless of how good the measured half
+    // looks. This is the Craft gate refusing to guess, which is the point.
+    const astra = r.all.filter((s) => s.label.startsWith("gpt-6-astra"));
+    expect(astra).toHaveLength(5);
+    for (const a of astra) {
+      expect(a.craft).toBeNull();
+      expect(a.failed).toBe("unrated");
+      expect(a.qualified).toBe(false);
+    }
+    const topShip = [...r.all].sort((a, b) => b.ship - a.ship)[0];
+    expect(topShip.label).toBe("gpt-6-astra [xhigh]");
+    expect(topShip.ship).toBeGreaterThan(0.74);
+  });
+
+  it("would win high power outright even at the WORST passing craft", () => {
+    // The honest floor of its potential, and the reason it gets a section of
+    // its own rather than a dimmed table row. astra [medium] matches the
+    // winner's ship exactly while costing 28% less and using ~3x fewer tokens
+    // and steps; at a bare 75% craft it would still beat the crown by >2x.
+    const astra = r.all.find((s) => s.label === "gpt-6-astra [medium]")!;
+    const winner = r.qualified[0];
+    expect(astra.ship).toBeCloseTo(winner.ship, 2);
+    expect(astra.config.meanCostUsd).toBeLessThan(winner.config.meanCostUsd);
+    expect(astra.config.meanOutputTokens).toBeLessThan(winner.config.meanOutputTokens / 2);
+    expect(astra.config.meanAgentSteps).toBeLessThan(winner.config.meanAgentSteps / 2);
+
+    const potential = bbAtFloorCraft(astra, r, DEFAULT_SETTINGS)!;
+    expect(potential).toBeGreaterThan(winner.bb * 2);
+  });
+
+  it("returns null potential for configs that already have a Craft score", () => {
+    expect(bbAtFloorCraft(r.qualified[0], r, DEFAULT_SETTINGS)).toBeNull();
+  });
+
+  it("lists the unrated set by Ship, best first", () => {
+    const m = unratedMeasured(r);
+    expect(m).toHaveLength(5);
+    for (let i = 1; i < m.length; i++) expect(m[i].ship).toBeLessThanOrEqual(m[i - 1].ship);
+  });
+});
+
+describe("Craft is relative, so a fixed floor tightens as the field improves", () => {
+  it("gated gpt-5.6-sol [max] out of high power without it getting worse", () => {
+    // The subtlest result of this refresh. sol [max]'s Elo is unchanged at
+    // 1617.7. claude-fable-5.1 entered the board at 1763 and dragged the median
+    // from 1419.1 to 1434.6, which pushed sol's craft from 75.8% to 74.1% —
+    // under a 75% floor it had cleared for weeks. Nothing about the model
+    // changed; the bar it is measured against moved. Worth knowing before
+    // reading any craft drop as a regression.
+    const r = computeRanking(snap, DEFAULT_SETTINGS);
+    const sol = r.all.find((s) => s.label === "gpt-5.6-sol [max]")!;
+    expect(craftEloOf(sol)).toBeCloseTo(1617.7, 0);
+    expect(sol.failed).toBe("craft");
+    expect(sol.ship).toBeGreaterThan(DEFAULT_SETTINGS.shipFloor);
+
+    // At the previous median it would still qualify — the proof it was the
+    // reference, not the model, that moved.
+    expect(craftProbability(craftEloOf(sol), 1419.14)).toBeGreaterThan(DEFAULT_SETTINGS.craftFloor);
+    expect(craftProbability(craftEloOf(sol), r.referenceElo)).toBeLessThan(DEFAULT_SETTINGS.craftFloor);
   });
 });
 
@@ -757,16 +823,22 @@ describe("snapshot integrity", () => {
     expect(luna.meanCostUsd).toBeCloseTo(0.6056, 3);
   });
 
-  it("has 63 configs and both Arena boards", () => {
-    // 63 since the 2026-08-26 run added glm-5.3-flash [max].
-    expect(snap.deepswe.configs).toHaveLength(63);
+  it("has 70 configs and both Arena boards", () => {
+    // 70 since the 2026-09-03 run added gpt-6-astra x5 and gemini-3.8-flash x2.
+    expect(snap.deepswe.configs).toHaveLength(70);
     expect(snap.arena!.entries.length).toBeGreaterThan(50);
     expect(snap.arenaWebdev!.slug).toBe("code-webdev");
     expect(snap.arenaWebdev!.entries.length).toBeGreaterThan(100);
   });
 
-  it("has claude-opus-5-max topping the WebDev board", () => {
-    expect(snap.arenaWebdev!.entries[0].modelDisplayName).toBe("claude-opus-5-max");
+  it("has claude-fable-5.1-max topping the WebDev board", () => {
+    // New #1 as of 2026-09-03 at 1763 Elo — the strongest WebDev rating this
+    // site has recorded, and the single biggest cause of the median jump.
+    // DeepSWE has not run claude-fable-5.1, so it sits in the waiting room.
+    const top = snap.arenaWebdev!.entries.filter((e) => e.votes > 0)[0];
+    expect(top.modelDisplayName).toBe("claude-fable-5.1-max");
+    expect(top.rating).toBeGreaterThan(1750);
+    expect(snap.deepswe.configs.some((c) => c.modelDisplay.startsWith("claude-fable-5.1"))).toBe(false);
   });
 });
 

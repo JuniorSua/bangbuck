@@ -420,6 +420,48 @@ export interface Contender {
 }
 
 /**
+ * The mirror case: configs DeepSWE measured that Arena has never rated.
+ *
+ * `unrankedContenders` covers models Arena likes that DeepSWE has not run. This
+ * is the opposite gap, and it is the more painful one, because here the
+ * expensive half of the data already exists — real pass@1, real cost per task,
+ * real tokens and steps — and a single missing human-preference rating is all
+ * that stands between the config and a ranking.
+ *
+ * gpt-6-astra arrived this way on 2026-09-03 holding the highest Ship on the
+ * board. Left to the table alone it would sit dimmed in row forty behind a dash,
+ * which reads as "we judged it and it lost". We did not judge it at all.
+ *
+ * Sorted by Ship, because that is the measured axis these do have.
+ */
+export function unratedMeasured(ranking: Ranking): ScoredConfig[] {
+  return ranking.all.filter((s) => s.craft === null).sort((a, b) => b.ship - a.ship);
+}
+
+/**
+ * What a config would score if its Craft came in exactly at the reader's floor.
+ *
+ * The honest floor of its potential: it assumes the least passing grade rather
+ * than a flattering guess, so "even at the minimum it would win" is a claim the
+ * data supports. Returns null when the config already has a real Craft score.
+ */
+export function bbAtFloorCraft(
+  config: ScoredConfig,
+  ranking: Ranking,
+  settings: Settings,
+): number | null {
+  if (config.craft !== null) return null;
+  const base = {
+    minOutputTokens: Math.min(...ranking.all.map((s) => s.config.meanOutputTokens)),
+    minAgentSteps: Math.min(...ranking.all.map((s) => s.config.meanAgentSteps)),
+  };
+  const k =
+    Math.pow(config.ship, 1 - settings.craftWeight) *
+    Math.pow(settings.craftFloor, settings.craftWeight);
+  return bangBuck(config.config, k, settings, base);
+}
+
+/**
  * Models clearing the Craft floor that the Ship axis has no data for.
  *
  * Matched by family key against DeepSWE's roster, so a model already benchmarked

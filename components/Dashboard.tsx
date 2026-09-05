@@ -2,10 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  bbAtFloorCraft,
   categoryWinners,
   computeRanking,
   DEFAULT_SETTINGS,
   unrankedContenders,
+  unratedMeasured,
   type Settings,
 } from "@/lib/score";
 import type { Snapshot } from "@/lib/types";
@@ -58,6 +60,22 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
   const ranking = useMemo(() => computeRanking(snapshot, settings), [snapshot, settings]);
   const contenders = useMemo(() => unrankedContenders(snapshot, settings), [snapshot, settings]);
   const categories = useMemo(() => categoryWinners(ranking), [ranking]);
+
+  // Configs DeepSWE measured that Arena never rated, plus what each would score
+  // if its Craft came in at exactly the reader's floor — the honest floor of
+  // its potential rather than a flattering guess.
+  const measured = useMemo(() => unratedMeasured(ranking), [ranking]);
+  const measuredPotential = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const s of measured) {
+      const bb = bbAtFloorCraft(s, ranking, settings);
+      if (bb !== null) m.set(s.label, bb);
+    }
+    // Stashed under a reserved key so the component can say "would beat today's
+    // winner" without needing the whole ranking passed down.
+    if (ranking.qualified[0]) m.set("__winner__", ranking.qualified[0].bb);
+    return m;
+  }, [measured, ranking, settings]);
 
   // Read once on mount rather than during render: the server has no location, and
   // initialising state from it directly would mismatch on hydration.
@@ -121,14 +139,19 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <RankTable ranking={ranking} />
         </section>
 
-        {contenders.length > 0 && (
+        {(contenders.length > 0 || measured.length > 0) && (
           <section className="reveal">
             <SectionHead
               n={6}
-              title="Rated, but not rankable"
-              aside={`${contenders.length} waiting on DeepSWE`}
+              title="Not rankable yet"
+              aside={`${measured.length + contenders.length} missing half their data`}
             />
-            <Radar contenders={contenders} settings={settings} />
+            <Radar
+              contenders={contenders}
+              measured={measured}
+              measuredPotential={measuredPotential}
+              settings={settings}
+            />
           </section>
         )}
 

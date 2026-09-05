@@ -1,8 +1,8 @@
 "use client";
 
-import type { Contender, Settings } from "@/lib/score";
+import type { Contender, ScoredConfig, Settings } from "@/lib/score";
 import { noteFor } from "@/lib/notes";
-import { pct } from "@/lib/format";
+import { pct, usdPrecise, tokens as fmtTokens } from "@/lib/format";
 import { canonicalVendor } from "@/lib/vendors";
 import { VendorMark } from "./VendorMark";
 
@@ -21,14 +21,99 @@ import { VendorMark } from "./VendorMark";
  */
 export function Radar({
   contenders,
+  measured,
+  measuredPotential,
   settings,
 }: {
   contenders: Contender[];
+  /** Configs DeepSWE ran that Arena has never rated — the opposite gap. */
+  measured: ScoredConfig[];
+  /** What each would score at exactly the reader's Craft floor, by label. */
+  measuredPotential: Map<string, number>;
   settings: Settings;
 }) {
-  if (!contenders.length) return null;
+  if (!contenders.length && !measured.length) return null;
+
+  const winnerBb = measuredPotential.get("__winner__") ?? 0;
 
   return (
+    <div className="space-y-6">
+      {measured.length > 0 && (
+        <div className="space-y-3">
+          <p className="max-w-2xl text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+            <strong style={{ color: "var(--text-secondary)" }}>Measured, but not rated.</strong>{" "}
+            DeepSWE has run these — real pass rate, real cost, real tokens and steps — but Arena has
+            never judged their code, so there is no Craft score and no ranking. The expensive half of
+            the data exists; one human-preference rating is all that is missing.
+          </p>
+
+          {measured.slice(0, 4).map((s) => {
+            const potential = measuredPotential.get(s.label);
+            const beatsWinner = potential !== undefined && winnerBb > 0 && potential > winnerBb;
+            return (
+              <div key={s.label} className="card-inset p-4">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="flex items-center gap-2">
+                    <span className="flex shrink-0 items-center" style={{ color: "var(--text-secondary)" }}>
+                      <VendorMark organization={s.organization} size={14} />
+                    </span>
+                    <span className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                      {s.config.modelDisplay}
+                      {s.config.effort && (
+                        <span
+                          className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {s.config.effort}
+                        </span>
+                      )}
+                    </span>
+                  </span>
+                  <span className="tnum ml-auto text-xs" style={{ color: "var(--text-muted)" }}>
+                    ship <strong style={{ color: "var(--text-secondary)" }}>{pct(s.ship, 1)}</strong>{" "}
+                    · craft <strong style={{ color: "var(--warning)" }}>unrated</strong> ·{" "}
+                    {usdPrecise(s.config.meanCostUsd)}/task · {fmtTokens(s.config.meanOutputTokens)} ·{" "}
+                    {s.config.meanAgentSteps.toFixed(0)} steps
+                  </span>
+                </div>
+
+                {/* The honest floor of its potential: what it would score if its
+                    craft came in at the WORST passing grade. "Even at the
+                    minimum" is a claim the data supports; a flattering guess
+                    would not be. */}
+                {potential !== undefined && (
+                  <div
+                    className="mt-2.5 flex flex-wrap items-baseline gap-x-2 border-t pt-2.5 text-xs"
+                    style={{ borderColor: "var(--border)" }}
+                  >
+                    <span
+                      className="rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
+                      style={{
+                        background: beatsWinner
+                          ? "rgba(57,135,229,0.16)"
+                          : "rgba(255,255,255,0.06)",
+                        color: beatsWinner ? "var(--accent)" : "var(--text-muted)",
+                      }}
+                    >
+                      If rated
+                    </span>
+                    <span className="tnum" style={{ color: "var(--text-secondary)" }}>
+                      BangBuck {potential.toFixed(2)} at a bare {pct(settings.craftFloor, 0)} craft
+                    </span>
+                    <span style={{ color: "var(--text-muted)" }}>
+                      {beatsWinner
+                        ? `— that alone would beat today's winner by ${(potential / winnerBb).toFixed(2)}x`
+                        : "— not enough to take the crown even so"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {contenders.length > 0 && (
     <div className="space-y-3">
       <p className="max-w-2xl text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
         Rated at or above your {pct(settings.craftFloor, 0)} Craft floor by Arena, but never run by
@@ -116,6 +201,8 @@ export function Radar({
           </div>
         );
       })}
+    </div>
+      )}
     </div>
   );
 }

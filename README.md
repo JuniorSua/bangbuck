@@ -54,7 +54,7 @@ actually carry the judgment.
 
 ### Craft coverage — read this before trusting a row
 
-Arena rates only **17 of the 63** configurations exactly. The rest borrow the nearest reasoning
+Arena rates only **18 of the 70** configurations exactly. The rest borrow the nearest reasoning
 effort of the same model, and every table row marks this with `~`.
 
 Borrowing is defensible because the axes divide the work cleanly: effort shows up on Ship, which is
@@ -73,6 +73,30 @@ noise, and the UI says so rather than pretending it is a ranking.
 **Why tokens and steps barely matter (exponent 0.20).** Dollars are already fully captured by cost.
 Tokens and steps are proxies for wall-clock time and context-overflow risk — real, but secondary.
 At 0.20 they act as a tiebreaker between configs of similar capability and price.
+
+### Craft is relative — a fixed floor tightens as the field improves
+
+Craft is "beats the median WebDev model", so the bar moves when the board does. On 2026-09-03
+`claude-fable-5.1` entered at **1763**, the strongest rating recorded here, and dragged the median
+from 1419.1 to 1434.6. Every craft percentage fell by ~1.5 points **without any model changing**,
+and `gpt-5.6-sol [max]` — whose Elo is identical at 1617.7 — was gated out of high power when its
+craft slipped 75.8% → 74.1%.
+
+That is the relative axis working as designed, not a regression, but it is surprising enough to
+have its own test. Do not read a craft drop as a model getting worse until you have checked whether
+the median moved.
+
+### Measured, but not rated
+
+The mirror of the waiting room below, and the more painful gap: DeepSWE has the expensive half of
+the data — real pass rate, cost, tokens, steps — and a single missing human-preference rating stops
+the config being ranked at all.
+
+**gpt-6-astra** arrived this way on 2026-09-03 with **no Arena entry on either board**, holding the
+highest Ship of any configuration (74.1%). `gpt-6-astra [medium]` matches the high-power winner's
+ship exactly at 28% less cost, with ~3x fewer tokens and steps; at a *bare passing* 75% craft it
+would beat the crown by **2.32x**. `bbAtFloorCraft` computes that honest floor-of-potential — the
+worst passing grade, never a flattering guess — and the section says so.
 
 ### Rated, but not rankable
 
@@ -349,7 +373,7 @@ circle, which reads as a design choice rather than a gap.
 
 BangBuck does not run benchmarks. It reads published results and applies a cost-efficiency formula.
 
-- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 63 configurations across 113
+- **[DeepSWE](https://deepswe.datacurve.ai/)** by Datacurve — 70 configurations across 113
   long-horizon software engineering tasks. Every measured figure in the ranking comes from here.
   Benchmark harness is [Apache-2.0](https://github.com/datacurve-ai/deep-swe).
 - **[Arena WebDev](https://arena.ai/leaderboard/code)** — 107 models rated by human preference on
