@@ -49,7 +49,7 @@ export function StickyAnswer({
   return (
     <div
       aria-hidden={!shown}
-      className="pointer-events-none fixed inset-x-0 top-0 z-30"
+      className="pointer-events-none fixed inset-x-0 top-16 sm:top-[72px] z-30"
       style={{
         transform: shown ? "translateY(0)" : "translateY(-100%)",
         opacity: shown ? 1 : 0,
@@ -65,7 +65,7 @@ export function StickyAnswer({
           WebkitBackdropFilter: "blur(14px)",
         }}
       >
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-5 py-2.5">
+        <div className="mx-auto flex max-w-[1240px] items-center gap-3 px-5 sm:px-9 py-3">
           <span
             className="hidden shrink-0 text-[10px] uppercase tracking-[0.12em] sm:inline"
             style={{ color: "var(--text-muted)" }}
@@ -91,6 +91,11 @@ export function StickyAnswer({
             )}
           </span>
 
+          {w.craftMatch.kind === "family" && (
+            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Craft from {w.craftMatch.borrowedFrom === "unrated" ? "family" : w.craftMatch.borrowedFrom}
+            </span>
+          )}
           <span className="ml-auto flex shrink-0 items-center gap-3 tnum text-xs" style={{ color: "var(--text-muted)" }}>
             <span className="hidden sm:inline">
               ship {pct(w.ship, 1)} · craft {pct(w.craft ?? 0, 0)}

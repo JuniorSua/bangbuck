@@ -2,6 +2,7 @@
 
 import type { Category } from "@/lib/score";
 import { VendorMark } from "./VendorMark";
+import { CraftEvidence } from "./CraftEvidence";
 
 /**
  * One line per axis, for readers whose priority is not "best value".
@@ -20,33 +21,33 @@ export function Categories({ categories }: { categories: Category[] }) {
   if (!categories.length) return null;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="category-grid">
       {categories.map((c, i) => (
-        <div key={c.id} className="card-inset card-inset-hover p-4">
-          <div className="flex items-baseline justify-between gap-2">
+        <div key={c.id} className="card card-inset-hover category-card">
+          <div className="flex flex-col items-start">
             <span
-              className="text-[10px] font-semibold uppercase tracking-[0.12em]"
+              className="text-sm font-medium"
               style={{ color: i === 0 ? "var(--accent)" : "var(--text-muted)" }}
             >
               {c.label}
             </span>
             <span
-              className="tnum text-sm font-semibold"
+              className="category-value tnum"
               style={{ color: i === 0 ? "var(--accent)" : "var(--text-primary)" }}
             >
               {c.value}
             </span>
           </div>
 
-          <div className="mt-2 flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <span className="flex shrink-0 items-center" style={{ color: "var(--text-muted)" }}>
               <VendorMark organization={c.winner.organization} size={14} />
             </span>
-            <span className="truncate text-sm" style={{ color: "var(--text-primary)" }}>
-              {c.winner.config.modelDisplay}
-              {c.winner.config.effort && (
+            <span className="min-w-0 break-words text-base" style={{ color: "var(--text-primary)" }}>
+              {c.tiedWith && c.tiedWith.length > 1 ? `${c.tiedWith.length} configurations tied` : c.winner.config.modelDisplay}
+              {!(c.tiedWith && c.tiedWith.length > 1) && c.winner.config.effort && (
                 <span
-                  className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
+                  className="ml-2 text-xs uppercase tracking-[0.04em]"
                   style={{ color: "var(--text-muted)" }}
                 >
                   {c.winner.config.effort}
@@ -55,9 +56,19 @@ export function Categories({ categories }: { categories: Category[] }) {
             </span>
           </div>
 
-          <p className="mt-1.5 text-[11px] leading-snug" style={{ color: "var(--text-muted)" }}>
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
             {c.blurb}
           </p>
+          {c.tiedWith && c.tiedWith.length > 1 && (
+            <details className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+              <summary className="cursor-pointer">See tied configurations</summary>
+              <ul className="mt-2 space-y-1">
+                {c.tiedWith.map((s) => <li key={s.label}>{s.label}</li>)}
+              </ul>
+              <p className="mt-2">An inherited family rating does not establish differences between these efforts.</p>
+            </details>
+          )}
+          {(c.id === "value" || c.id === "craft") && <CraftEvidence config={c.winner} compact />}
         </div>
       ))}
     </div>

@@ -1,268 +1,198 @@
 @import "tailwindcss";
 
-/*
- * Dark-only. Values are the validated dark steps from the design system's
- * reference palette, chosen for the dark surface rather than flipped from light.
- */
 :root {
   color-scheme: dark;
-
-  --page: #0b0b0d;
-  --surface-1: #17171a;
-  --surface-2: #1e1e22;
-
-  --text-primary: #ffffff;
-  --text-secondary: #c3c2b7;
-  --text-muted: #898781;
-
-  --gridline: #2c2c2a;
-  --baseline: #383835;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.14);
-
-  /* Categorical slots 1-3, used only to mark the top three ranked models.
-     Everything else stays neutral ink — 18 models cannot each hold a hue that
-     survives colourblind separation, so identity rests on the direct labels.
-     These three are the documented dark-mode steps and are the only trio that
-     clears all-pairs CVD separation on this surface; do not substitute. */
-  --accent: #3987e5;
-  --rank-2: #d95926;
-  --rank-3: #199e70;
-  --accent-dim: #256abf;
-
-  --good: #0ca30c;
-  --warning: #fab219;
+  --page: #0c0d10;
+  --surface-1: #16171b;
+  --surface-2: #202126;
+  --text-primary: #f5f5f7;
+  --text-secondary: #b5b7c0;
+  --text-muted: #8b8e99;
+  --gridline: #282a31;
+  --baseline: #383b45;
+  --border: rgba(255,255,255,.075);
+  --border-strong: rgba(255,255,255,.15);
+  --accent: #6aaaff;
+  --accent-dim: #387ad0;
+  --rank-2: #e59d69;
+  --rank-3: #74c5ad;
+  --good: #77c79a;
+  --warning: #dfb777;
+  --ease: cubic-bezier(.22,1,.36,1);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-html,
+html { scroll-behavior: smooth; scroll-padding-top: 150px; }
 body {
+  margin: 0;
   background: var(--page);
   color: var(--text-primary);
-}
-
-/* A single very soft light source behind the page. Keeps the surface from
-   reading as flat black without introducing any hue of its own. */
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background-image:
-    radial-gradient(900px 600px at 50% -10%, rgba(255, 255, 255, 0.055), transparent 70%),
-    radial-gradient(600px 400px at 90% 5%, rgba(57, 135, 229, 0.05), transparent 70%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
 }
+::selection { background: #6aaaff38; color: white; }
+button, input, select, summary { font: inherit; }
+button, summary, select { cursor: pointer; }
+button, a, input, select, summary {
+  transition: color 220ms ease, background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+}
+a:hover { color: var(--text-primary); }
+button:active { transform: translateY(1px); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 6px; }
+input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 7px; }
+.tnum { font-variant-numeric: tabular-nums; }
+.tight { letter-spacing: -.035em; }
+.app-shell { max-width: 1240px; margin: auto; padding: 0 36px 48px; }
+.app-sections { display: grid; gap: 104px; }
+.app-section { min-width: 0; scroll-margin-top: 150px; }
 
-/*
- * One elevated surface treatment, used for every panel. The inset top highlight
- * is what reads as a physical edge catching the light; without it a bordered
- * rectangle on a dark background just looks like an outline.
- */
-.card {
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.012) 100%),
-    var(--surface-1);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    0 16px 40px -20px rgba(0, 0, 0, 0.9);
+.app-nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(12,13,16,.78);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border-bottom: 1px solid var(--border);
 }
+.app-nav-inner { max-width: 1240px; min-height: 72px; padding: 14px 36px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.app-nav a { text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: 28px; font-size: 13px; color: var(--text-secondary); }
+.nav-brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -.035em; }
+.hero { padding: 72px 0 40px; }
+.hero-main { display: grid; grid-template-columns: 1.15fr 1fr; align-items: end; gap: 72px; }
+.hero-title { font-size: clamp(44px,5.4vw,70px); font-weight: 600; line-height: 1.06; letter-spacing: -.055em; }
+.hero-copy { max-width: 450px; font-size: 17px; line-height: 1.75; color: var(--text-secondary); padding-bottom: 4px; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 20px 36px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+.hero-meta dt { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+.hero-meta dd { font-size: 13px; color: var(--text-secondary); }
 
-/* Nested panels sit *inside* a card, so they get depth without a second shadow. */
-.card-inset {
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.022);
-}
+.card { border: 1px solid var(--border); border-radius: 28px; background: var(--surface-1); box-shadow: 0 12px 44px -30px rgba(0,0,0,.5); }
+.card-inset { border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.018); }
+.card-inset-hover { transition: background 260ms ease, border-color 260ms ease, transform 360ms var(--ease); }
+.card-inset-hover:hover { background: rgba(255,255,255,.035); border-color: var(--border-strong); transform: translateY(-2px); }
+.card-answer { background: linear-gradient(135deg,rgba(106,170,255,.035),transparent 55%),var(--surface-1); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.section-title { display: flex; align-items: baseline; gap: 14px; }
+.section-title h2 { font-size: clamp(24px,2.5vw,30px); font-weight: 600; letter-spacing: -.035em; }
+.section-number { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.section-aside { color: var(--text-muted); font-size: 13px; text-align: right; }
+.eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .085em; text-transform: uppercase; color: var(--text-muted); }
+.effort-badge { border: 1px solid var(--border-strong); border-radius: 7px; padding: 3px 8px; font-size: 12px; letter-spacing: .06em; line-height: 1.5; }
+.answer-primary { display: grid; grid-template-columns: 1.5fr 1fr; gap: 64px; padding: 48px; }
+.answer-comparison { align-self: center; padding-left: 40px; border-left: 1px solid var(--border); }
+.answer-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 32px 40px; margin: 0 48px; padding: 32px 0; border-top: 1px solid var(--border); }
+.answer-details { border-top: 1px solid var(--border); }
+.answer-details > summary { padding: 24px 48px; list-style: none; display: flex; align-items: center; justify-content: space-between; color: var(--text-secondary); font-size: 14px; }
+.answer-details > summary::after, .update-summary > summary::after { content: '+'; font-size: 22px; font-weight: 300; transition: transform 280ms var(--ease); }
+.answer-details[open] > summary::after, .update-summary[open] > summary::after { transform: rotate(45deg); }
+.answer-details > summary::-webkit-details-marker, .update-summary > summary::-webkit-details-marker { display: none; }
+.answer-details-body { padding: 0 48px 40px; }
+.answer-details-body > .border-b { padding: 28px 0; }
+.answer-reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 40px; }
+.answer-reason { padding: 0 0 0 16px; border-left: 1px solid var(--border-strong); font-size: 14px; line-height: 1.8; }
+.update-summary { margin-bottom: 40px; padding: 0 4px; color: var(--text-secondary); font-size: 14px; }
+.update-summary > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 8px 0; }
+.update-summary .update-body { padding: 16px 0; max-width: 820px; }
+.category-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.category-card { padding: 30px; min-width: 0; }
+.category-value { font-size: 34px; letter-spacing: -.04em; font-weight: 500; line-height: 1.2; margin: 18px 0 24px; }
 
-.card-inset-hover {
-  transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    transform 180ms ease;
-}
-.card-inset-hover:hover {
-  background: rgba(255, 255, 255, 0.045);
-  border-color: var(--border-strong);
-  transform: translateY(-1px);
-}
+.seg { padding: 4px; display: inline-flex; gap: 3px; border-radius: 12px; background: rgba(255,255,255,.045); border: 1px solid var(--border); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.seg button { flex-shrink: 0; border-radius: 8px; padding: 8px 15px; font-size: 13px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+.seg button:hover { color: var(--text-primary); background: rgba(255,255,255,.03); }
+.seg button[aria-pressed="true"] { color: var(--text-primary); background: #34363e; box-shadow: 0 2px 6px #0003; }
+.seg button:focus-visible { outline-offset: -2px; }
+input[type="range"] { appearance: none; -webkit-appearance: none; height: 5px; background: var(--baseline); border-radius: 8px; margin: 14px 0; }
+input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #f5f5f7; border: 0; box-shadow: 0 2px 6px #0005; cursor: pointer; transition: transform 220ms var(--ease); }
+input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.12); }
+input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; border: 0; background: #f5f5f7; cursor: pointer; }
+.bb-bar { display: block; height: 100%; margin-left: auto; border-radius: 99px; transition: width 480ms var(--ease); }
+.row { transition: background 200ms ease, opacity 200ms ease; }
+.row:hover, .row:focus-within { background: rgba(255,255,255,.035) !important; }
+.table-scroll, .chart-scroll { overflow: auto; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #454852 transparent; }
+.table-scroll { border-radius: 24px; }
+.table-scroll th { padding: 20px 18px; font-size: 12px; letter-spacing: .04em; }
+.table-scroll td { padding: 22px 18px; }
+.table-scroll summary { font-size: 12px; margin-top: 5px; color: var(--text-muted); }
 
-/* The headline in a vertical sheen — white at the top, easing toward the page's
-   secondary tone. Modernises the big type without introducing any hue. */
-.hero-title {
-  background: linear-gradient(180deg, #ffffff 55%, #b9b8ae 130%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
+.chart-card { padding: 32px; }
+.chart-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+.chart-intro { color: var(--text-secondary); font-size: 14px; line-height: 1.7; max-width: 720px; }
+.chart-scroll { margin: 24px -12px 0; border-radius: 12px; }
+.chart-svg { width: 100%; min-width: 1080px; display: block; animation: chart-in 320ms var(--ease); }
+@keyframes chart-in { from { opacity: .4; } to { opacity: 1; } }
+.chart-label { cursor: pointer; }
+.chart-label text { transition: fill 200ms ease; }
+.chart-label:hover text, .chart-label:focus text { fill: var(--text-primary); }
+.chart-label:focus { outline: none; }
+.chart-label:focus-visible rect { stroke: var(--accent); stroke-width: 2; }
+.chart-mark { transition: opacity 240ms ease; }
+.chart-inspector { padding-top: 28px; border-top: 1px solid var(--border); margin-top: 24px; }
+.chart-inspector-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.chart-inspector label { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
+.chart-inspector select { border: 1px solid var(--border-strong); border-radius: 10px; padding: 10px 14px; background: var(--surface-2); font-size: 14px; max-width: 100%; }
+.chart-detail-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 24px; margin-top: 28px; }
+.chart-detail-grid dt { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.chart-detail-grid dd { font-size: 18px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.chart-caption { font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-top: 20px; }
 
-/* The answer card alone carries an accent hairline across its top edge — the
-   one place on the page where colour marks a *thing* rather than a rank. */
-.card-answer {
-  position: relative;
+/* Native disclosures retain their content and keyboard behavior; animation is progressive enhancement. */
+details[open] > :not(summary) { animation: disclosure-in 300ms var(--ease); }
+@keyframes disclosure-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+  details::details-content { height: 0; overflow: clip; transition: height 320ms var(--ease), content-visibility 320ms allow-discrete; }
+  details[open]::details-content { height: auto; }
 }
-.card-answer::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 2px;
-  border-radius: 18px 18px 0 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--accent) 75%, transparent) 22%,
-    var(--accent) 50%,
-    color-mix(in srgb, var(--accent) 75%, transparent) 78%,
-    transparent
-  );
-  pointer-events: none;
-}
-
-/* Sections fade up as they enter the viewport. Pure CSS scroll-driven animation:
-   progressive enhancement only — browsers without animation-timeline (and anyone
-   preferring reduced motion) simply see the content, which is the correct
-   fallback for a page whose job is to be read. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 32%;
-    }
-    @keyframes reveal-up {
-      from {
-        opacity: 0.15;
-        transform: translateY(14px);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
+    .reveal { animation: reveal-up linear both; animation-timeline: view(); animation-range: entry 0% entry 18%; }
+    @keyframes reveal-up { from { opacity: .5; transform: translateY(16px); } to { opacity: 1; transform: none; } }
   }
 }
-
-.tnum {
-  font-variant-numeric: tabular-nums;
+@media (min-width: 1200px) { .answer-stats { grid-template-columns: repeat(6,minmax(0,1fr)); gap: 24px; } }
+@media (max-width: 900px) {
+  .hero-main { gap: 32px; }
+  .answer-primary { gap: 32px; padding: 36px; }
+  .answer-stats { margin: 0 36px; }
+  .answer-comparison { padding-left: 28px; }
+  .answer-details > summary { padding: 24px 36px; }
+  .answer-details-body { padding: 0 36px 32px; }
+  .category-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .chart-detail-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
-
-.tight {
-  letter-spacing: -0.021em;
+@media (max-width: 640px) {
+  html { scroll-padding-top: 130px; }
+  .app-shell { padding: 0 20px 32px; }
+  .app-nav-inner { min-height: 64px; padding: 14px 20px; gap: 16px; }
+  .nav-links { gap: 16px; font-size: 12px; }
+  .nav-links .nav-secondary { display: none; }
+  .nav-brand { font-size: 16px; }
+  .hero { padding: 44px 0 24px; }
+  .hero-main { grid-template-columns: 1fr; gap: 24px; }
+  .hero-copy { font-size: 16px; }
+  .hero-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 28px; }
+  .app-sections { gap: 64px; }
+  .section-head { align-items: start; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+  .section-aside { text-align: left; margin-left: 28px; }
+  .card { border-radius: 22px; }
+  .answer-primary { grid-template-columns: 1fr; padding: 28px; gap: 32px; }
+  .answer-comparison { padding: 28px 0 0; border-left: 0; border-top: 1px solid var(--border); }
+  .answer-stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px 20px; margin: 0 28px; }
+  .answer-details > summary { padding: 22px 28px; }
+  .answer-details-body { padding: 0 28px 28px; }
+  .answer-reasons { grid-template-columns: 1fr; }
+  .category-grid { grid-template-columns: 1fr; gap: 16px; }
+  .category-card { padding: 26px; }
+  .category-value { margin: 12px 0 20px; }
+  .chart-card { padding: 24px 18px; }
+  .chart-toolbar { align-items: stretch; }
+  .chart-toolbar .seg { width: 100%; }
+  .chart-toolbar .seg button { padding: 8px 12px; }
+  .chart-detail-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .table-scroll td, .table-scroll th { padding: 18px 14px; }
 }
-
-/* Segmented control for the capability-floor presets. */
-.seg {
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
-  padding: 3px;
-  display: inline-flex;
-  gap: 3px;
-}
-.seg button {
-  border-radius: 7px;
-  padding: 5px 11px;
-  font-size: 12px;
-  color: var(--text-muted);
-  transition:
-    background 160ms ease,
-    color 160ms ease;
-  white-space: nowrap;
-}
-.seg button:hover {
-  color: var(--text-secondary);
-}
-.seg button[aria-pressed="true"] {
-  background: rgba(255, 255, 255, 0.09);
-  color: var(--text-primary);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
-    0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-/* Range inputs: recessive track, accent thumb. */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 3px;
-  background: var(--baseline);
-  border-radius: 3px;
-  outline: none;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  border: 2px solid var(--page);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-  transition: transform 140ms ease;
-}
-input[type="range"]:hover::-webkit-slider-thumb {
-  transform: scale(1.15);
-}
-input[type="range"]::-moz-range-thumb {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  border: 2px solid var(--page);
-}
-
-/* The BangBuck bar's fill. Static properties live here rather than inline so
-   React has one style property to diff per row instead of four. */
-.bb-bar {
-  display: block;
-  height: 100%;
-  margin-left: auto;
-  border-radius: 9999px;
-  transition: width 220ms ease;
-}
-
-/* Row hover in a fifty-row table. Faint on purpose: it is a reading aid for
-   tracking across columns, not a selection state. */
-.row {
-  transition: background 120ms ease;
-}
-.row:hover {
-  background: rgba(255, 255, 255, 0.035) !important;
-}
-
-/* Keyboard focus is the one state the design had no answer for. A ring in the
-   accent rather than the browser default, and only for keyboard users so it
-   never fires on a mouse click. */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-.seg button:focus-visible {
-  outline-offset: -1px;
-}
-
-/* Nothing should ever scroll the page sideways; a stray wide child on a phone
-   is a layout bug, not something to let the user pan around. */
-html,
-body {
-  overflow-x: clip;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  * {
-    transition-duration: 0.01ms !important;
-  }
+  html, *, *::before, *::after, *::details-content { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
 }

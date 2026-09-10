@@ -12,10 +12,11 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fetchDeepSwe } from "../lib/sources/deepswe";
 import { fetchArena } from "../lib/sources/arena";
-import { diffSnapshots, formatDiff, isEmpty } from "../lib/diff";
+import { diffSnapshots, formatDiff, isEmpty, snapshotUpdate, type SnapshotUpdate } from "../lib/diff";
 import type { Snapshot } from "../lib/types";
 
 const SNAPSHOT_PATH = resolve(process.cwd(), "data/snapshot.json");
+const UPDATE_PATH = resolve(process.cwd(), "data/update.json");
 const dryRun = process.argv.includes("--dry-run");
 
 async function main() {
@@ -52,10 +53,12 @@ async function main() {
       `(stale artifact would report $3.0281)`,
   );
 
+  let update: SnapshotUpdate | null = null;
   if (existsSync(SNAPSHOT_PATH)) {
     const prev = JSON.parse(readFileSync(SNAPSHOT_PATH, "utf8")) as Snapshot;
     const d = diffSnapshots(prev, next);
-    console.log(`\n  Changes vs committed snapshot:`);
+    update = snapshotUpdate(prev, next, d);
+    console.log(`\n  Changes vs saved snapshot:`);
     console.log(isEmpty(d) ? "    (none)" : formatDiff(d));
   } else {
     console.log("\n  No existing snapshot — this will be the first capture.");
@@ -67,6 +70,9 @@ async function main() {
   }
 
   mkdirSync(dirname(SNAPSHOT_PATH), { recursive: true });
+  // Write the summary first. The UI only displays it when capturedAt matches
+  // the snapshot, so a partial write cannot attach stale news to different data.
+  writeFileSync(UPDATE_PATH, JSON.stringify(update, null, 2) + "\n");
   writeFileSync(SNAPSHOT_PATH, JSON.stringify(next, null, 2) + "\n");
   console.log(`\n  Wrote data/snapshot.json\n  Review the diff above, then commit.\n`);
 }

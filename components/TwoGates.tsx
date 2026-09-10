@@ -31,8 +31,8 @@ export function TwoGates({ insights, settings }: { insights: Insights; settings:
       floorLabel: pct(settings.shipFloor, 1),
     },
     {
-      label: "Code worth keeping",
-      sub: "Arena WebDev, win rate",
+      label: "WebDev preference",
+      sub: "estimated vs board median",
       floor: settings.craftFloor,
       winner: w.craft ?? 0,
       ghost: ghost?.craft ?? null,
@@ -127,7 +127,7 @@ export function TwoGates({ insights, settings }: { insights: Insights; settings:
             style={{ borderColor: "var(--text-muted)" }}
             aria-hidden="true"
           />
-          {ghost.label} — the {`$${ghost.config.meanCostUsd.toFixed(2)}`} temptation. Hollow
+          {ghost.label} — passes Ship, fails Craft at your current floors. Hollow
           markers show why it loses.
         </p>
       )}

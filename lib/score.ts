@@ -299,7 +299,7 @@ export function computeRanking(snapshot: Snapshot, settings: Settings = DEFAULT_
   return {
     all: [...qualified, ...gatedOut],
     qualified,
-    insights: qualified.length ? buildInsights(scored, qualified) : null,
+    insights: qualified.length ? buildInsights(scored, qualified, settings) : null,
     settings,
     referenceElo: reference,
   };
@@ -327,7 +327,7 @@ export function valueFrontier(scored: ScoredConfig[]): ScoredConfig[] {
     .sort((x, y) => x.config.meanCostUsd - y.config.meanCostUsd);
 }
 
-function buildInsights(all: ScoredConfig[], qualified: ScoredConfig[]): Insights {
+function buildInsights(all: ScoredConfig[], qualified: ScoredConfig[], settings: Settings): Insights {
   const winner = qualified[0];
   const runnerUp = qualified[1] ?? null;
   const frontier = all.reduce((a, b) => (b.ship > a.ship ? b : a));
@@ -344,25 +344,11 @@ function buildInsights(all: ScoredConfig[], qualified: ScoredConfig[]): Insights
     ? cheaper.reduce((a, b) => (b.capability! > a.capability! ? b : a))
     : null;
 
-  // What the Craft gate cost you: the config a capability-and-price ranking alone
-  // would have crowned. Deliberately computed against a FIXED everyday ship bar
-  // rather than the active tier's, for two reasons. It has to reproduce the same
-  // answer whichever tier is selected — this is one fact about the field, not a
-  // per-tier statistic. And it must not degenerate: the cheapest config overall is
-  // gpt-5.6-luna [low], which is cheap because it barely works, so ranking raw BB
-  // with no capability bar at all names a config nobody was ever tempted by.
-  //
-  // With that bar it reproduces v1's winner exactly, which is the point: the site
-  // gets to show the answer it used to give and say why it no longer gives it.
-  const shipBar = TIER_PRESETS.find((t) => t.id === "everyday")!.shipFloor;
-  const contenders = all.filter((s) => s.ship >= shipBar && s.craft !== null);
-  const ignoringCraft = contenders.length
-    ? contenders.reduce((a, b) => (b.bb > a.bb ? b : a))
-    : null;
-  const bestExcludedOnCraft =
-    ignoringCraft && ignoringCraft !== winner && ignoringCraft.craft! < winner.craft!
-      ? ignoringCraft
-      : null;
+  // Only describe a Craft veto when this config passes the active Ship floor
+  // and would outrank the winner if the active Craft gate were removed.
+  const excluded = all.filter((s) => s.ship >= settings.shipFloor && s.failed === "craft");
+  const ignoringCraft = excluded.sort((a, b) => b.bb - a.bb)[0];
+  const bestExcludedOnCraft = ignoringCraft && ignoringCraft.bb > winner.bb ? ignoringCraft : null;
 
   return {
     winner,
@@ -450,7 +436,7 @@ export function bbAtFloorCraft(
   ranking: Ranking,
   settings: Settings,
 ): number | null {
-  if (config.craft !== null) return null;
+  if (config.craft !== null || config.ship < settings.shipFloor) return null;
   const base = {
     minOutputTokens: Math.min(...ranking.all.map((s) => s.config.meanOutputTokens)),
     minAgentSteps: Math.min(...ranking.all.map((s) => s.config.meanAgentSteps)),
@@ -506,6 +492,8 @@ export interface Category {
   winner: ScoredConfig;
   /** The winning value, preformatted. */
   value: string;
+  /** Equal measured values must not become an effort-specific quality claim. */
+  tiedWith?: ScoredConfig[];
 }
 
 export function categoryWinners(ranking: Ranking): Category[] {
@@ -543,9 +531,10 @@ export function categoryWinners(ranking: Ranking): Category[] {
     },
     {
       id: "craft",
-      label: "Best code",
-      blurb: "humans prefer its work most often",
+      label: "WebDev preference",
+      blurb: "highest estimated preference against the board median",
       winner: pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)),
+      tiedWith: q.filter((s) => s.craft === pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)).craft),
       value: `${((pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)).craft ?? 0) * 100).toFixed(0)}%`,
     },
     {
@@ -594,18 +583,20 @@ export interface CraftRegime {
  * threshold and the answer changes identity — and those thresholds are few and
  * far apart, which is worth showing rather than asserting.
  *
- * Breakpoints can only occur AT a craft value present in the data: between two
- * adjacent values no config enters or leaves, so the qualified set is fixed.
- * Evaluating at each distinct value therefore gives exact bands in ~30 passes
- * rather than approximating with a fine scan.
+ * A config exits immediately AFTER its own Craft value because equality passes.
+ * Evaluating at the next representable float gives exact half-open intervals,
+ * including the final interval where nothing qualifies.
  */
 export function craftFloorRegimes(snapshot: Snapshot, settings: Settings): CraftRegime[] {
   const base = computeRanking(snapshot, { ...settings, craftFloor: 0 });
   const values = [...new Set(base.all.map((s) => s.craft).filter((c): c is number => c !== null))]
     .sort((a, b) => a - b);
-  if (!values.length) return [];
+  if (!values.length) return [{ from: 0, to: 1, winner: null, qualifiedCount: 0 }];
 
-  const points = [0, ...values];
+  // Equality passes the gate. A model leaves at the next representable float,
+  // not at its own Craft score. Sampling there keeps each interval [from, to)
+  // consistent with computeRanking, including the final no-winner interval.
+  const points = [0, ...values.filter((v) => v < 1).map(nextFloat)];
   const out: CraftRegime[] = [];
 
   for (let i = 0; i < points.length; i++) {
@@ -619,6 +610,15 @@ export function craftFloorRegimes(snapshot: Snapshot, settings: Settings): Craft
     else out.push({ from, to, winner, qualifiedCount: r.qualified.length });
   }
   return out;
+}
+
+/** Smallest representable number strictly above a nonnegative finite value. */
+function nextFloat(value: number): number {
+  if (value === 0) return Number.MIN_VALUE;
+  const view = new DataView(new ArrayBuffer(8));
+  view.setFloat64(0, value);
+  view.setBigUint64(0, view.getBigUint64(0) + BigInt(1));
+  return view.getFloat64(0);
 }
 
 /** The raw WebDev Elo behind a config's Craft score. */

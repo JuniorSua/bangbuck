@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import snapshot from "../data/snapshot.json";
+import snapshot from "./fixtures/2026-09-05.json";
 import {
   bbAtFloorCraft,
   categoryWinners,
@@ -30,7 +30,7 @@ const EVERYDAY = {
 };
 
 /**
- * Golden tests. These encode the user's judgment call and were verified by hand
+ * Historical regression fixture: September 5, 2026. These encode the user's judgment call and were verified by hand
  * against the live leaderboards before any code was written. If the formula is
  * retuned, these numbers are what must be consciously re-agreed — not quietly
  * updated to match whatever the code now does.
@@ -131,11 +131,12 @@ describe("the Craft gate — the reason this version exists", () => {
     expect(luna.craft!).toBeLessThan(DEFAULT_SETTINGS.craftFloor);
   });
 
-  it("names it as the best config the gate threw out", () => {
-    // Surfacing this is the site's argument: the cheap option was considered and
-    // rejected for a stated reason, not simply missing.
-    expect(r.insights!.bestExcludedOnCraft!.label).toBe("gpt-5.6-luna [max]");
-    expect(r.insights!.winnerPreferredOverExcluded).toBeCloseTo(0.7, 1);
+  it("names a Craft exclusion that passes the active high-power Ship floor", () => {
+    const excluded = r.insights!.bestExcludedOnCraft!;
+    expect(excluded.label).toBe("gemini-3.8-flash [high]");
+    expect(excluded.failed).toBe("craft");
+    expect(excluded.ship).toBeGreaterThanOrEqual(DEFAULT_SETTINGS.shipFloor);
+    expect(excluded.bb).toBeGreaterThan(r.qualified[0].bb);
   });
 
   it("would still crown luna if Craft were only weighted, not gated", () => {
@@ -169,6 +170,7 @@ describe("craftFloorRegimes", () => {
       "claude-opus-5 [medium]",
       "kimi-k3 [max]",
       "claude-opus-5 [xhigh]",
+      undefined, // Above every measured Craft score, nothing qualifies.
     ]);
   });
 

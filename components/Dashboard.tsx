@@ -12,15 +12,18 @@ import {
 } from "@/lib/score";
 import type { Snapshot } from "@/lib/types";
 import { WinnerCard } from "./WinnerCard";
-import { Controls } from "./Controls";
+import { Controls, TierSelector } from "./Controls";
 import { RankTable } from "./RankTable";
 import { ScatterChart } from "./ScatterChart";
 import { DataProvenance } from "./DataProvenance";
+import { AppNav } from "./AppNav";
 import { Hero } from "./Hero";
 import { SectionHead } from "./SectionHead";
 import { StickyAnswer } from "./StickyAnswer";
 import { Radar } from "./Radar";
 import { Categories } from "./Categories";
+import { UpdateSummary } from "./UpdateSummary";
+import type { SnapshotUpdate } from "@/lib/diff";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -55,7 +58,7 @@ function readSettings(search: string): Settings {
  * to argue with it properly. The URL is written with replaceState so dragging a
  * slider does not fill the back button with intermediate states.
  */
-export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
+export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: SnapshotUpdate | null }) {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const ranking = useMemo(() => computeRanking(snapshot, settings), [snapshot, settings]);
   const contenders = useMemo(() => unrankedContenders(snapshot, settings), [snapshot, settings]);
@@ -90,38 +93,42 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
       if (settings[k] !== DEFAULT_SETTINGS[k]) q.set(SHORT[k], String(Number(settings[k].toFixed(4))));
     }
     const next = q.toString();
-    window.history.replaceState(null, "", next ? `?${next}` : window.location.pathname);
+    window.history.replaceState(null, "", `${window.location.pathname}${next ? `?${next}` : ""}${window.location.hash}`);
   }, [settings]);
 
   // Watched by the sticky bar, which reveals itself once this scrolls past.
   const answerRef = useRef<HTMLElement>(null);
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-10 sm:py-14">
+    <>
+    <AppNav />
+    <main id="top" className="app-shell">
       <StickyAnswer ranking={ranking} watch={answerRef} />
       <Hero snapshot={snapshot} />
+      <UpdateSummary update={update} capturedAt={snapshot.capturedAt} />
 
       {/* One argument in order, not five widgets: the answer, the bar it had to
           clear, what paying more buys, everything that lost, and the receipts. */}
-      <div className="space-y-14">
-        <section ref={answerRef}>
-          <SectionHead n={1} title="The answer" aside="at the bar set below" />
+      <div className="app-sections">
+        <section id="answer" className="app-section" ref={answerRef}>
+          <SectionHead n={1} title="The answer" aside="at your selected tier" />
+          <TierSelector settings={settings} onChange={setSettings} />
           <WinnerCard insights={ranking.insights} settings={settings} />
         </section>
 
         {categories.length > 0 && (
-          <section className="reveal">
+          <section className="app-section reveal">
             <SectionHead n={2} title="Best in each category" aside="all clear both bars" />
             <Categories categories={categories} />
           </section>
         )}
 
-        <section className="reveal">
+        <section className="app-section reveal">
           <SectionHead n={3} title="Set your bar" aside="the formula is a judgment call" />
           <Controls settings={settings} onChange={setSettings} />
         </section>
 
-        <section className="reveal">
+        <section id="compare" className="app-section reveal">
           <SectionHead
             n={4}
             title="What paying more buys"
@@ -130,7 +137,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           <ScatterChart ranking={ranking} />
         </section>
 
-        <section className="reveal">
+        <section id="rankings" className="app-section reveal">
           <SectionHead
             n={5}
             title="The whole field"
@@ -140,7 +147,7 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
         </section>
 
         {(contenders.length > 0 || measured.length > 0) && (
-          <section className="reveal">
+          <section className="app-section reveal">
             <SectionHead
               n={6}
               title="Not rankable yet"
@@ -155,16 +162,17 @@ export function Dashboard({ snapshot }: { snapshot: Snapshot }) {
           </section>
         )}
 
-        <section className="reveal">
+        <section id="sources" className="app-section reveal">
           <SectionHead n={7} title="Receipts" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>
       </div>
 
-      <footer className="mt-10 border-t pt-6 text-xs" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>
+      <footer className="mt-24 border-t pt-8 text-sm" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>
         BangBuck reads published benchmarks and applies one opinionated formula. Disagree? The
         sliders are right there.
       </footer>
     </main>
+    </>
   );
 }

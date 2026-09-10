@@ -1,0 +1,14 @@
+{
+  "rank": 1,
+  "modelDisplayName": "gpt-6-astra-max",
+  "rating": 1796.1945298745854,
+  "ratingLower": 1777.5986039968625,
+  "ratingUpper": 1814.7904557523086,
+  "votes": 1810,
+  "organization": "OpenAI",
+  "license": "Proprietary",
+  "modelUrl": "https://openai.com/index/gpt-6-astra/",
+  "inputPricePerMillion": 10,
+  "outputPricePerMillion": 50,
+  "contextLength": 1050000
+}

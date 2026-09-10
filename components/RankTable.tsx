@@ -79,7 +79,7 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
 
   return (
     <section>
-      <div className="mb-3 flex flex-wrap items-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="relative min-w-0 flex-1 sm:max-w-xs">
           <input
             ref={inputRef}
@@ -88,7 +88,7 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter by model or vendor…"
             aria-label="Filter configurations by model or vendor"
-            className="w-full rounded-lg border px-3 py-1.5 pr-8 text-sm outline-none"
+            className="w-full rounded-xl border px-4 py-3 pr-9 text-sm"
             style={{
               borderColor: "var(--border)",
               background: "rgba(255,255,255,0.03)",
@@ -131,7 +131,7 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
       {/* max-h + sticky thead: fifty rows is longer than any viewport, and a
           header that scrolls away turns the lower two-thirds into unlabelled
           numbers. */}
-      <div className="card max-h-[70vh] overflow-auto">
+      <div className="card table-scroll max-h-[75vh]">
         <table className="w-full text-sm">
           <thead
             className="sticky top-0 z-10"
@@ -185,7 +185,7 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
         <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
           <strong style={{ color: "var(--text-secondary)" }}>Ship</strong> = share of 113 real repo
           tasks finished (DeepSWE). <strong style={{ color: "var(--text-secondary)" }}>Craft</strong>{" "}
-          = how often humans prefer its web code (Arena WebDev).{" "}
+          = estimated WebDev preference against the board median (Arena WebDev).{" "}
           <span className="font-mono">~</span> marks a craft score borrowed from the nearest sibling
           effort — Arena rates only{" "}
           {ranking.all.filter((s) => s.craftMatch.kind === "exact").length} of {ranking.all.length}{" "}
@@ -204,7 +204,7 @@ function Row({ s, isWinner, topBb }: { s: ScoredConfig; isWinner: boolean; topBb
       className="row border-b last:border-0"
       style={{
         borderColor: "var(--border)",
-        opacity: dim ? 0.42 : 1,
+        opacity: dim ? 0.75 : 1,
         background: isWinner ? "rgba(57,135,229,0.08)" : undefined,
       }}
     >
@@ -239,6 +239,19 @@ function Row({ s, isWinner, topBb }: { s: ScoredConfig; isWinner: boolean; topBb
             </span>
           )}
         </span>
+        <details className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+          <summary className="cursor-pointer">Evidence &amp; task usage</summary>
+          <div className="mt-2 space-y-1 whitespace-normal">
+            <p>{s.failed === "unrated" ? "No voted WebDev rating" : s.failed
+              ? `Below your ${s.failed === "both" ? "Ship and Craft floors" : `${s.failed} floor`}`
+              : "Clears both floors by point estimate"}</p>
+            <p>Ship 95% interval: {pct(c.ciLo, 1)}–{pct(c.ciHi, 1)}</p>
+            {s.craftMatch.kind !== "none" && <p>
+              Craft {s.craftMatch.kind === "family" ? "estimated from" : "matched directly to"} {s.craftMatch.entry.modelDisplayName}
+            </p>}
+            <p>{tokens(c.meanOutputTokens)} output tokens · {steps(c.meanAgentSteps)} agent steps</p>
+          </div>
+        </details>
       </td>
       {/* The number and its share of the best score, together. Fifty rows of
           bare figures do not rank themselves; a bar the eye can run down does
@@ -322,6 +335,7 @@ function Th({
 }) {
   return (
     <th
+      aria-sort={sortable ? active ? desc ? "descending" : "ascending" : "none" : undefined}
       className={`px-3 py-2.5 text-xs font-medium uppercase tracking-[0.08em] ${
         align === "left" ? "text-left" : "text-right"
       } ${hideOnPhone ? "hidden sm:table-cell" : ""}`}

@@ -4,7 +4,7 @@ import "./globals.css";
 const DESCRIPTION =
   "Which AI coding model gives you the most work per dollar? Every model has to clear two bars — " +
   "finish the job on DeepSWE, and write code humans actually prefer on Arena's WebDev board — " +
-  "then measured cost per task decides. Not list price.";
+  "then balance capability, measured cost, output tokens, and agent steps.";
 
 export const metadata: Metadata = {
   // Absolute URLs for the social card. Vercel injects its production hostname,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 // telling the browser means form controls and the mobile address bar match
 // instead of flashing white on load.
 export const viewport: Viewport = {
-  themeColor: "#0b0b0d",
+  themeColor: "#0c0d10",
   colorScheme: "dark",
 };
 

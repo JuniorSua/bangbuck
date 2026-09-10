@@ -1,4 +1,5 @@
 import snapshot from "@/data/snapshot.json";
+import update from "@/data/update.json";
 import { Dashboard } from "@/components/Dashboard";
 import type { Snapshot } from "@/lib/types";
 
@@ -7,5 +8,5 @@ import type { Snapshot } from "@/lib/types";
 export const dynamic = "force-static";
 
 export default function Page() {
-  return <Dashboard snapshot={snapshot as unknown as Snapshot} />;
+  return <Dashboard snapshot={snapshot as unknown as Snapshot} update={update} />;
 }

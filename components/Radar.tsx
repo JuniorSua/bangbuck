@@ -37,21 +37,22 @@ export function Radar({
   const winnerBb = measuredPotential.get("__winner__") ?? 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {measured.length > 0 && (
-        <div className="space-y-3">
-          <p className="max-w-2xl text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+        <div className="space-y-5">
+          <p className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
             <strong style={{ color: "var(--text-secondary)" }}>Measured, but not rated.</strong>{" "}
             DeepSWE has run these — real pass rate, real cost, real tokens and steps — but Arena has
-            never judged their code, so there is no Craft score and no ranking. The expensive half of
+            published no voted family rating, so there is no Craft score and no ranking. The expensive half of
             the data exists; one human-preference rating is all that is missing.
           </p>
 
-          {measured.slice(0, 4).map((s) => {
+          {measured.map((s) => {
             const potential = measuredPotential.get(s.label);
-            const beatsWinner = potential !== undefined && winnerBb > 0 && potential > winnerBb;
+            const passesShip = s.ship >= settings.shipFloor;
+            const beatsWinner = passesShip && potential !== undefined && winnerBb > 0 && potential > winnerBb;
             return (
-              <div key={s.label} className="card-inset p-4">
+              <div key={s.label} className="card-inset p-7">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="flex items-center gap-2">
                     <span className="flex shrink-0 items-center" style={{ color: "var(--text-secondary)" }}>
@@ -81,7 +82,10 @@ export function Radar({
                     craft came in at the WORST passing grade. "Even at the
                     minimum" is a claim the data supports; a flattering guess
                     would not be. */}
-                {potential !== undefined && (
+                {!passesShip && <p className="mt-2 text-sm" style={{ color: "var(--warning)" }}>
+                  Below your {pct(settings.shipFloor, 1)} Ship floor; a Craft rating alone cannot qualify it.
+                </p>}
+                {passesShip && potential !== undefined && (
                   <div
                     className="mt-2.5 flex flex-wrap items-baseline gap-x-2 border-t pt-2.5 text-xs"
                     style={{ borderColor: "var(--border)" }}
@@ -114,8 +118,8 @@ export function Radar({
       )}
 
       {contenders.length > 0 && (
-    <div className="space-y-3">
-      <p className="max-w-2xl text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+    <div className="space-y-5">
+      <p className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
         Rated at or above your {pct(settings.craftFloor, 0)} Craft floor by Arena, but never run by
         DeepSWE. They cannot be ranked here — not because they lost, but because the formula divides
         by <em>measured</em> cost per task and nobody has measured theirs. List price is shown for
@@ -129,7 +133,7 @@ export function Radar({
           note?.claimedShip !== undefined && note.claimedShip < settings.shipFloor;
 
         return (
-          <div key={c.entry.modelDisplayName} className="card-inset p-4">
+          <div key={c.entry.modelDisplayName} className="card-inset p-7">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <span className="flex items-center gap-2">
                 <span className="flex shrink-0 items-center" style={{ color: "var(--text-secondary)" }}>

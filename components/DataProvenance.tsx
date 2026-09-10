@@ -8,7 +8,7 @@ import { shortDate } from "@/lib/format";
 export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
   return (
     <section>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <Source
           name="DeepSWE"
           href={snapshot.deepswe.sourceUrl}
@@ -53,7 +53,7 @@ function Source({
   asOf: string;
 }) {
   return (
-    <div className="card-inset card-inset-hover p-4">
+    <div className="card-inset card-inset-hover p-7">
       <a
         href={href}
         target="_blank"
@@ -63,7 +63,7 @@ function Source({
       >
         {name} ↗
       </a>
-      <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+      <p className="mt-4 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
         {detail}
       </p>
       <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
