@@ -92,8 +92,8 @@ export function StickyAnswer({
           </span>
 
           {w.craftMatch.kind === "family" && (
-            <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-              Craft from {w.craftMatch.borrowedFrom === "unrated" ? "family" : w.craftMatch.borrowedFrom}
+            <span className="hidden text-xs sm:inline" style={{ color: "var(--text-muted)" }}>
+              craft rating from {w.craftMatch.borrowedFrom === "unrated" ? "its family" : `${w.craftMatch.borrowedFrom} effort`}
             </span>
           )}
           <span className="ml-auto flex shrink-0 items-center gap-3 tnum text-xs" style={{ color: "var(--text-muted)" }}>

@@ -97,6 +97,9 @@ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-of
 .category-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
 .category-card { padding: 30px; min-width: 0; }
 .category-value { font-size: 34px; letter-spacing: -.04em; font-weight: 500; line-height: 1.2; margin: 18px 0 24px; }
+.category-alt { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; }
+.category-alt > :last-child { margin-left: auto; }
+.update-teaser { margin-left: 12px; color: var(--accent); font-size: 13px; }
 
 .seg { padding: 4px; display: inline-flex; gap: 3px; border-radius: 12px; background: rgba(255,255,255,.045); border: 1px solid var(--border); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .seg button { flex-shrink: 0; border-radius: 8px; padding: 8px 15px; font-size: 13px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
@@ -113,8 +116,13 @@ input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius
 .table-scroll, .chart-scroll { overflow: auto; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #454852 transparent; }
 .table-scroll { border-radius: 24px; }
 .table-scroll th { padding: 20px 18px; font-size: 12px; letter-spacing: .04em; }
-.table-scroll td { padding: 22px 18px; }
-.table-scroll summary { font-size: 12px; margin-top: 5px; color: var(--text-muted); }
+.table-scroll td { padding: 14px 18px; }
+.row-details { margin-top: 2px; }
+.row-details > summary { font-size: 11px; color: var(--text-muted); list-style: none; opacity: .55; }
+.row-details > summary::before { content: '›'; display: inline-block; margin-right: 4px; transition: transform 200ms var(--ease); }
+.row-details[open] > summary::before { transform: rotate(90deg); }
+.row-details > summary::-webkit-details-marker { display: none; }
+.row:hover .row-details > summary, .row:focus-within .row-details > summary, .row-details[open] > summary { opacity: 1; }
 
 .chart-card { padding: 32px; }
 .chart-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
@@ -191,7 +199,8 @@ details[open] > :not(summary) { animation: disclosure-in 300ms var(--ease); }
   .chart-toolbar .seg { width: 100%; }
   .chart-toolbar .seg button { padding: 8px 12px; }
   .chart-detail-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .table-scroll td, .table-scroll th { padding: 18px 14px; }
+  .table-scroll td, .table-scroll th { padding: 12px 14px; }
+  .row-details > summary { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   html, *, *::before, *::after, *::details-content { scroll-behavior: auto !important; animation: none !important; transition: none !important; }

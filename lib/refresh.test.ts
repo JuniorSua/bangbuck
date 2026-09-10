@@ -98,6 +98,27 @@ describe("new recommendations retain their evidence limits", () => {
     expect(category.tiedWith!.every((row) => row.craft === category.winner.craft)).toBe(true);
   });
 
+  it("names the best alternative from a different model on every card but value", () => {
+    const cats = categoryWinners(computeRanking(after, DEFAULT_SETTINGS));
+    expect(cats.find((c) => c.id === "value")!.alternative).toBeNull();
+    for (const c of cats.filter((x) => x.id !== "value")) {
+      expect(c.alternative).not.toBeNull();
+      expect(c.alternative!.config.config.modelDisplay).not.toBe(c.winner.config.modelDisplay);
+      expect(c.alternative!.config.qualified).toBe(true);
+    }
+    // Astra sweeps cheapest; the next model is the old high-power winner.
+    const cheapest = cats.find((c) => c.id === "cheapest")!;
+    expect(cheapest.winner.label).toBe("gpt-6-astra [medium]");
+    expect(cheapest.alternative!.config.label).toBe("claude-opus-5 [high]");
+    expect(cheapest.alternative!.value).toBe("$6.08");
+  });
+
+  it("has no alternative when only one model qualifies", () => {
+    const solo = computeRanking(after, { ...DEFAULT_SETTINGS, shipFloor: 0.74 });
+    expect(new Set(solo.qualified.map((s) => s.config.modelDisplay)).size).toBe(1);
+    expect(categoryWinners(solo).every((c) => c.alternative === null)).toBe(true);
+  });
+
   it("cannot promise a crown to an unrated config below the active Ship floor", () => {
     const ranking = computeRanking(before);
     const low = ranking.all.find((row) => row.label === "gpt-6-astra [low]")!;

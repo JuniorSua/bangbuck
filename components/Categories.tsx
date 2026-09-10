@@ -59,6 +59,19 @@ export function Categories({ categories }: { categories: Category[] }) {
           <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
             {c.blurb}
           </p>
+          {/* The one line that differs when a single config sweeps the board. */}
+          {c.alternative && !(c.tiedWith && c.tiedWith.length > 1) && (
+            <p className="category-alt tnum" style={{ color: "var(--text-muted)" }}>
+              <span>Next model</span>
+              <span style={{ color: "var(--text-secondary)" }}>
+                {c.alternative.config.config.modelDisplay}
+                {c.alternative.config.config.effort && (
+                  <span className="ml-1 text-[10px] uppercase tracking-[0.04em]">{c.alternative.config.config.effort}</span>
+                )}
+              </span>
+              <span>{c.alternative.value}</span>
+            </p>
+          )}
           {c.tiedWith && c.tiedWith.length > 1 && (
             <details className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
               <summary className="cursor-pointer">See tied configurations</summary>

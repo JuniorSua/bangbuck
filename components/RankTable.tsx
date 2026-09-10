@@ -18,6 +18,9 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
   const [sort, setSort] = useState<SortKey>("bb");
   const [desc, setDesc] = useState(true);
   const [query, setQuery] = useState("");
+  // Mirrors the chart's Qualified/All switch: most readers only want the rows
+  // that could actually be picked, and sixty-three dimmed ones bury them.
+  const [scope, setScope] = useState<"qualified" | "all">("all");
   const inputRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -32,12 +35,13 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
    */
   const filtered = useMemo(() => {
     const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-    if (!terms.length) return ranking.all;
-    return ranking.all.filter((s) => {
+    const rows = scope === "qualified" ? ranking.qualified : ranking.all;
+    if (!terms.length) return rows;
+    return rows.filter((s) => {
       const hay = `${s.label} ${s.organization}`.toLowerCase();
       return terms.every((t) => hay.includes(t));
     });
-  }, [ranking.all, query]);
+  }, [ranking.all, ranking.qualified, query, scope]);
 
   // "/" focuses the filter, the convention every search-in-page UI shares. Only
   // when the reader is not already typing somewhere else.
@@ -106,11 +110,19 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
             </button>
           )}
         </div>
-        <span className="tnum shrink-0 text-xs" style={{ color: "var(--text-muted)" }}>
-          {query
-            ? `${sorted.length} of ${ranking.all.length}`
-            : `${ranking.qualified.length} of ${ranking.all.length} clear both floors`}
-        </span>
+        <div className="seg" role="group" aria-label="Rows shown">
+          <button aria-pressed={scope === "qualified"} onClick={() => setScope("qualified")}>
+            Qualified · {ranking.qualified.length}
+          </button>
+          <button aria-pressed={scope === "all"} onClick={() => setScope("all")}>
+            All · {ranking.all.length}
+          </button>
+        </div>
+        {query && (
+          <span className="tnum shrink-0 text-xs" style={{ color: "var(--text-muted)" }}>
+            {sorted.length} match{sorted.length === 1 ? "" : "es"}
+          </span>
+        )}
         {!query && (
           <span
             className="ml-auto hidden shrink-0 items-center gap-1.5 text-xs sm:flex"
@@ -167,7 +179,9 @@ export function RankTable({ ranking }: { ranking: Ranking }) {
             {sorted.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-3 py-10 text-center text-sm" style={{ color: "var(--text-muted)" }}>
-                  Nothing matches &ldquo;{query}&rdquo;. Try a vendor name, or part of a model name.
+                  {query
+                    ? <>Nothing matches &ldquo;{query}&rdquo;{scope === "qualified" ? " among qualifiers" : ""}. Try a vendor name, or part of a model name.</>
+                    : "Nothing clears both floors. Lower a floor above."}
                 </td>
               </tr>
             )}
@@ -239,8 +253,8 @@ function Row({ s, isWinner, topBb }: { s: ScoredConfig; isWinner: boolean; topBb
             </span>
           )}
         </span>
-        <details className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
-          <summary className="cursor-pointer">Evidence &amp; task usage</summary>
+        <details className="row-details text-xs" style={{ color: "var(--text-secondary)" }}>
+          <summary className="cursor-pointer" aria-label={`Details for ${s.label}`}>Details</summary>
           <div className="mt-2 space-y-1 whitespace-normal">
             <p>{s.failed === "unrated" ? "No voted WebDev rating" : s.failed
               ? `Below your ${s.failed === "both" ? "Ship and Craft floors" : `${s.failed} floor`}`

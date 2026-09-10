@@ -494,73 +494,63 @@ export interface Category {
   value: string;
   /** Equal measured values must not become an effort-specific quality claim. */
   tiedWith?: ScoredConfig[];
+  /**
+   * Best qualifier from a different model family, with its value. One config
+   * tends to sweep several categories; without this, five cards repeat one
+   * name and tell the reader nothing they did not get from the winner card.
+   * Also null for the "value" card, which already says how far ahead it is.
+   */
+  alternative: { config: ScoredConfig; value: string } | null;
 }
 
 export function categoryWinners(ranking: Ranking): Category[] {
   const q = ranking.qualified;
   if (!q.length) return [];
 
-  const pick = (better: (a: ScoredConfig, b: ScoredConfig) => boolean) =>
-    q.reduce((best, c) => (better(c, best) ? c : best));
-
   const tok = (n: number) => `${(n / 1000).toFixed(1)}k`;
   const usd = (n: number) => `$${n.toFixed(2)}`;
   const pc = (n: number) => `${(n * 100).toFixed(1)}%`;
 
-  return [
-    {
-      id: "value",
-      label: "Best value",
-      blurb: "most work per dollar, all axes counted",
-      winner: pick((a, b) => a.bb > b.bb),
-      value: pick((a, b) => a.bb > b.bb).bb.toFixed(2),
-    },
-    {
-      id: "cheapest",
-      label: "Cheapest",
-      blurb: "lowest measured cost that still clears both bars",
-      winner: pick((a, b) => a.config.meanCostUsd < b.config.meanCostUsd),
-      value: usd(pick((a, b) => a.config.meanCostUsd < b.config.meanCostUsd).config.meanCostUsd),
-    },
-    {
-      id: "capable",
-      label: "Most capable",
-      blurb: "finishes the most tasks, price no object",
-      winner: pick((a, b) => a.ship > b.ship),
-      value: pc(pick((a, b) => a.ship > b.ship).ship),
-    },
-    {
-      id: "craft",
-      label: "WebDev preference",
-      blurb: "highest estimated preference against the board median",
-      winner: pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)),
-      tiedWith: q.filter((s) => s.craft === pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)).craft),
-      value: `${((pick((a, b) => (a.craft ?? 0) > (b.craft ?? 0)).craft ?? 0) * 100).toFixed(0)}%`,
-    },
-    {
-      id: "lean",
-      label: "Leanest",
-      blurb: "fewest output tokens per task",
-      winner: pick((a, b) => a.config.meanOutputTokens < b.config.meanOutputTokens),
-      value: tok(
-        pick((a, b) => a.config.meanOutputTokens < b.config.meanOutputTokens).config.meanOutputTokens,
-      ),
-    },
-    {
-      id: "fastest",
-      label: "Fastest",
-      blurb: "least wall-clock time per task",
-      winner: pick(
-        (a, b) => (a.config.meanDurationSeconds ?? Infinity) < (b.config.meanDurationSeconds ?? Infinity),
-      ),
-      value: `${(
-        (pick(
-          (a, b) =>
-            (a.config.meanDurationSeconds ?? Infinity) < (b.config.meanDurationSeconds ?? Infinity),
-        ).config.meanDurationSeconds ?? 0) / 60
-      ).toFixed(1)} min`,
-    },
+  const specs: {
+    id: string;
+    label: string;
+    blurb: string;
+    metric: (s: ScoredConfig) => number;
+    higherIsBetter: boolean;
+    format: (v: number) => string;
+  }[] = [
+    { id: "value", label: "Best value", blurb: "most work per dollar, all axes counted",
+      metric: (s) => s.bb, higherIsBetter: true, format: (v) => v.toFixed(2) },
+    { id: "cheapest", label: "Cheapest", blurb: "lowest measured cost that still clears both bars",
+      metric: (s) => s.config.meanCostUsd, higherIsBetter: false, format: usd },
+    { id: "capable", label: "Most capable", blurb: "finishes the most tasks, price no object",
+      metric: (s) => s.ship, higherIsBetter: true, format: pc },
+    { id: "craft", label: "WebDev preference", blurb: "highest estimated preference against the board median",
+      metric: (s) => s.craft ?? 0, higherIsBetter: true, format: (v) => `${(v * 100).toFixed(0)}%` },
+    { id: "lean", label: "Leanest", blurb: "fewest output tokens per task",
+      metric: (s) => s.config.meanOutputTokens, higherIsBetter: false, format: tok },
+    { id: "fastest", label: "Fastest", blurb: "least wall-clock time per task",
+      metric: (s) => s.config.meanDurationSeconds ?? Infinity, higherIsBetter: false,
+      format: (v) => `${(v / 60).toFixed(1)} min` },
   ];
+
+  return specs.map((spec) => {
+    const better = (a: ScoredConfig, b: ScoredConfig) =>
+      spec.higherIsBetter ? spec.metric(a) > spec.metric(b) : spec.metric(a) < spec.metric(b);
+    const winner = q.reduce((best, c) => (better(c, best) ? c : best));
+    const others = q.filter((s) => familyKey(s.config.model) !== familyKey(winner.config.model));
+    const runner = others.length ? others.reduce((best, c) => (better(c, best) ? c : best)) : null;
+    return {
+      id: spec.id,
+      label: spec.label,
+      blurb: spec.blurb,
+      winner,
+      value: spec.format(spec.metric(winner)),
+      // Only Craft can tie in practice: siblings inherit one family rating.
+      ...(spec.id === "craft" ? { tiedWith: q.filter((s) => s.craft === winner.craft) } : {}),
+      alternative: runner && spec.id !== "value" ? { config: runner, value: spec.format(spec.metric(runner)) } : null,
+    };
+  });
 }
 
 /** One band of Craft floors over which the winner does not change. */
