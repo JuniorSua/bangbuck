@@ -24,6 +24,7 @@ import { Radar } from "./Radar";
 import { Categories } from "./Categories";
 import { UpdateSummary } from "./UpdateSummary";
 import type { SnapshotUpdate } from "@/lib/diff";
+import { awaitingMeasurement } from "@/lib/notes";
 
 /** Compact query-string form, so only knobs moved off default appear in the URL. */
 const KEYS: (keyof Settings)[] = ["shipFloor", "craftFloor", "craftWeight", "beta", "gamma"];
@@ -68,6 +69,10 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
   // if its Craft came in at exactly the reader's floor — the honest floor of
   // its potential rather than a flattering guess.
   const measured = useMemo(() => unratedMeasured(ranking), [ranking]);
+  const releases = useMemo(
+    () => awaitingMeasurement(new Set(snapshot.deepswe.configs.map((c) => c.modelDisplay))),
+    [snapshot],
+  );
   const measuredPotential = useMemo(() => {
     const m = new Map<string, number>();
     for (const s of measured) {
@@ -146,16 +151,17 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
           <RankTable ranking={ranking} />
         </section>
 
-        {(contenders.length > 0 || measured.length > 0) && (
+        {(contenders.length > 0 || measured.length > 0 || releases.length > 0) && (
           <section className="app-section reveal">
             <SectionHead
               n={6}
               title="Not rankable yet"
-              aside={`${measured.length + contenders.length} missing half their data`}
+              aside={`${measured.length + contenders.length + releases.length} missing data`}
             />
             <Radar
               contenders={contenders}
               measured={measured}
+              releases={releases}
               measuredPotential={measuredPotential}
               settings={settings}
             />

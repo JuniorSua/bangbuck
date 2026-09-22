@@ -37,11 +37,16 @@ export interface SnapshotUpdate {
   previousCapturedAt: string;
   tiers: SnapshotDiff["tiers"];
   newWebdev: string[];
+  /** Measured cost-per-task moves; absent in summaries written before it existed. */
+  costChanges?: { label: string; before: number; after: number }[];
 }
 
 export function snapshotUpdate(before: Snapshot, after: Snapshot, diff = diffSnapshots(before, after)): SnapshotUpdate {
   return { capturedAt: after.capturedAt, previousCapturedAt: before.capturedAt,
-    tiers: diff.tiers, newWebdev: diff.arena.find((board) => board.board === "WebDev")?.added ?? [] };
+    tiers: diff.tiers, newWebdev: diff.arena.find((board) => board.board === "WebDev")?.added ?? [],
+    costChanges: diff.changed.filter((c) => c.field === "meanCostUsd")
+      .map(({ label, before, after }) => ({ label, before, after }))
+      .sort((a, b) => a.label.split(" [")[0].localeCompare(b.label.split(" [")[0]) || a.after - b.after) };
 }
 
 export function isEmpty(d: SnapshotDiff): boolean {

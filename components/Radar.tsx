@@ -1,7 +1,7 @@
 "use client";
 
 import type { Contender, ScoredConfig, Settings } from "@/lib/score";
-import { noteFor } from "@/lib/notes";
+import { noteFor, type Release } from "@/lib/notes";
 import { pct, usdPrecise, tokens as fmtTokens } from "@/lib/format";
 import { canonicalVendor } from "@/lib/vendors";
 import { VendorMark } from "./VendorMark";
@@ -22,22 +22,46 @@ import { VendorMark } from "./VendorMark";
 export function Radar({
   contenders,
   measured,
+  releases,
   measuredPotential,
   settings,
 }: {
   contenders: Contender[];
   /** Configs DeepSWE ran that Arena has never rated — the opposite gap. */
   measured: ScoredConfig[];
+  /** Launched too recently for either source; no data at all yet. */
+  releases: Release[];
   /** What each would score at exactly the reader's Craft floor, by label. */
   measuredPotential: Map<string, number>;
   settings: Settings;
 }) {
-  if (!contenders.length && !measured.length) return null;
+  if (!contenders.length && !measured.length && !releases.length) return null;
 
   const winnerBb = measuredPotential.get("__winner__") ?? 0;
 
   return (
     <div className="space-y-10">
+      {releases.length > 0 && (
+        <p className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <strong style={{ color: "var(--text-secondary)" }}>Too new to measure.</strong>{" "}
+          {releases.map((r, i) => (
+            <span key={r.model}>
+              {i > 0 && ", "}
+              <a
+                href={r.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {r.model}
+              </a>
+            </span>
+          ))}{" "}
+          are out, but neither DeepSWE nor Arena WebDev has measured them yet, so there is no Ship, Craft
+          or cost per task to rank.
+        </p>
+      )}
       {measured.length > 0 && (
         <div className="space-y-5">
           <p className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>

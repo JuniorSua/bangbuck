@@ -4,6 +4,7 @@ import astraRating from "./fixtures/astra-webdev.json";
 import current from "../data/snapshot.json";
 import { diffSnapshots, formatDiff, isEmpty, snapshotUpdate } from "./diff";
 import { bbAtFloorCraft, categoryWinners, computeRanking, craftFloorRegimes, DEFAULT_SETTINGS, TIER_PRESETS } from "./score";
+import { awaitingMeasurement, JUST_RELEASED } from "./notes";
 import type { Snapshot } from "./types";
 
 const before = previous as Snapshot;
@@ -43,6 +44,16 @@ describe("Arena-only refresh regression", () => {
     expect(diff.arena[0].removed).toContain("gpt-6-astra-max");
     expect(diff.tiers[0].afterWinner).toBe("claude-opus-5 [high]");
     expect(diff.craftMatches.every((match) => match.after === "unrated")).toBe(true);
+  });
+
+  it("carries measured cost moves into the public summary, cheapest effort first", () => {
+    const cheaper = structuredClone(after);
+    for (const c of cheaper.deepswe.configs) if (c.modelDisplay === "gpt-6-astra") c.meanCostUsd *= 0.7;
+    const update = snapshotUpdate(after, cheaper);
+    expect(update.costChanges!.map((c) => c.label)).toEqual(
+      ["low", "medium", "high", "xhigh", "max"].map((e) => `gpt-6-astra [${e}]`));
+    expect(update.costChanges!.every((c) => c.after < c.before)).toBe(true);
+    expect(snapshotUpdate(before, after).costChanges).toEqual([]);
   });
 
   it("ignores capture-time-only changes", () => {
@@ -179,5 +190,13 @@ describe("current snapshot contract — independent of historical winners", () =
     expect(ranking.qualified.map((row) => row.bb)).toEqual(
       ranking.qualified.map((row) => row.bb).sort((a, b) => b - a),
     );
+  });
+});
+
+describe("just-released notes", () => {
+  it("lists only models DeepSWE has not measured, and retires each once it has", () => {
+    const measured = new Set((current as Snapshot).deepswe.configs.map((c) => c.modelDisplay));
+    expect(awaitingMeasurement(measured)).toEqual(JUST_RELEASED.filter((r) => !measured.has(r.model)));
+    expect(awaitingMeasurement(new Set([...measured, "claude-opus-5.5"])).map((r) => r.model)).not.toContain("claude-opus-5.5");
   });
 });

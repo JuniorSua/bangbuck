@@ -38,3 +38,24 @@ export const MODEL_NOTES: ModelNote[] = [
 
 export const noteFor = (model: string): ModelNote | undefined =>
   MODEL_NOTES.find((n) => n.model === model);
+
+/**
+ * Frontier releases neither source has reached yet. Without this line a reader
+ * who heard about a launch this morning would assume the page missed it. Each
+ * entry retires itself once DeepSWE measures a config with the same model slug.
+ */
+export interface Release {
+  /** Matches DeepSWE's modelDisplay once measured. */
+  model: string;
+  released: string;
+  source: string;
+}
+
+export const JUST_RELEASED: Release[] = [
+  { model: "claude-opus-5.5", released: "2026-09-22", source: "https://www.anthropic.com/claude-opus-5-5" },
+  { model: "gpt-6-sol", released: "2026-09-22", source: "https://developers.openai.com/api/docs/pricing" },
+  { model: "gpt-6-luna", released: "2026-09-22", source: "https://developers.openai.com/api/docs/pricing" },
+];
+
+export const awaitingMeasurement = (measuredModels: Set<string>): Release[] =>
+  JUST_RELEASED.filter((r) => !measuredModels.has(r.model));

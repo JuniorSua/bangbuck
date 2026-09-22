@@ -5,15 +5,16 @@ Each configuration must pass two explicit floors before its BangBuck score can c
 
 ## Current snapshot
 
-At the **September 10, 2026 capture**, Astra medium leads high power and Astra low leads everyday.
+At the **September 22, 2026 capture**, Astra medium leads high power and Astra low leads everyday.
 Both inherit the Arena WebDev rating for **Astra max**; these effort levels do not have direct
 WebDev ratings. The page names that source, reports its votes and rating interval, and distinguishes
 estimated preference from measured task completion.
 
 Run `npx tsx scripts/tiers.ts` to calculate the current answers from `data/snapshot.json`.
 The page and category cards compute their results from that same snapshot. Historical observations
-are preserved in [the earlier notes](docs/history-before-2026-09-10.md), and the September 10 review
-is in [the reassessment](docs/analysis-2026-09-10.md).
+are preserved in [the earlier notes](docs/history-before-2026-09-10.md), the September 10 review
+is in [the reassessment](docs/analysis-2026-09-10.md), and the September 22 refresh with an outside
+check against other coding boards is in [its notes](docs/analysis-2026-09-22.md).
 
 ## Formula and defaults
 
