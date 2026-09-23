@@ -5,7 +5,7 @@ Each configuration must pass two explicit floors before its BangBuck score can c
 
 ## Current snapshot
 
-At the **September 22, 2026 capture**, Astra medium leads high power and Astra low leads everyday.
+At the **September 23, 2026 capture**, Astra medium leads high power and Astra low leads everyday.
 Both inherit the Arena WebDev rating for **Astra max**; these effort levels do not have direct
 WebDev ratings. The page names that source, reports its votes and rating interval, and distinguishes
 estimated preference from measured task completion.
@@ -14,7 +14,8 @@ Run `npx tsx scripts/tiers.ts` to calculate the current answers from `data/snaps
 The page and category cards compute their results from that same snapshot. Historical observations
 are preserved in [the earlier notes](docs/history-before-2026-09-10.md), the September 10 review
 is in [the reassessment](docs/analysis-2026-09-10.md), and the September 22 refresh with an outside
-check against other coding boards is in [its notes](docs/analysis-2026-09-22.md).
+check against other coding boards is in [its notes](docs/analysis-2026-09-22.md). The September 23
+[Artificial Analysis second opinion](docs/analysis-2026-09-23.md) adds a third, independent source.
 
 ## Formula and defaults
 
@@ -101,7 +102,7 @@ npx tsx scripts/sensitivity.ts
 
 The app is a static Next.js page importing the saved snapshot. It makes no source requests while a
 visitor uses it. Refresh scripts own source fetching; unavailable WebDev evidence aborts refresh.
-General-chat data is optional and never drives the ranking.
+General-chat and Artificial Analysis data are optional and never drive the ranking.
 
 Historical expected winners use `lib/fixtures/2026-09-05.json`. The Astra rating fixture isolates the
 Arena-only graduation. Current-snapshot tests assert integrity and qualification rules without
@@ -117,5 +118,8 @@ time; it does not reflect custom query parameters.
   cost, output tokens, agent steps, and duration. [Benchmark repository](https://github.com/datacurve-ai/deep-swe).
 - [Arena WebDev](https://arena.ai/leaderboard/code): human-preference ratings for web development.
 - [Arena chat](https://arena.ai/leaderboard): context and list pricing only.
+- [Artificial Analysis](https://artificialanalysis.ai/): independent Intelligence Index, Terminal-Bench,
+  Coding Agent Index, cost to run, and speed. A second opinion shown beside the ranking, never scored:
+  its cost per task covers a mixed suite, not repo tasks. Read from public pages; no API key.
 
 BangBuck applies an opinionated formula to published evidence; it does not run these benchmarks.

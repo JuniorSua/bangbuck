@@ -53,6 +53,51 @@ export interface ArenaBoard {
   entries: ArenaEntry[];
 }
 
+/** One model at one effort, as Artificial Analysis measured it on its own suite. */
+export interface AaModel {
+  slug: string;
+  /** Model name without effort, e.g. "GPT-6 Astra". */
+  name: string;
+  creator: string | null;
+  /** AA's release slug, e.g. "gpt-6-astra" — shared by every effort. */
+  family: string;
+  effort: string | null;
+  releaseDate: string | null;
+  /** Intelligence Index, 0..100. */
+  intelligence: number;
+  /** Terminal-Bench 4.0 in AA's harness, 0..1. */
+  terminalBench: number | null;
+  priceIn: number | null;
+  priceOut: number | null;
+  /** USD per task on AA's suite — not a DeepSWE repo task. */
+  costPerTask: number | null;
+  outputTokensPerTask: number | null;
+  /** Median output tokens/s, medium prompt. */
+  outputSpeed: number | null;
+}
+
+/** One model running inside its own coding agent (Claude Code, Codex, ...). */
+export interface AaAgentRow {
+  agent: string;
+  creator: string | null;
+  /** e.g. "GPT-6 Astra (max)". */
+  model: string;
+  /** Coding Agent Index, 0..100. */
+  score: number;
+  costPerTask: number | null;
+  /** AA's own DeepSWE v1.1 run in this agent, 0..1. */
+  deepswe: number | null;
+  terminalBench: number | null;
+}
+
+export interface AaData {
+  sourceUrl: string;
+  /** Current, measured (not estimated) models, best first. */
+  models: AaModel[];
+  /** Coding Agent Index rows, best first. */
+  codingAgents: AaAgentRow[];
+}
+
 export interface Snapshot {
   /** When this snapshot was captured by scripts/refresh.ts. */
   capturedAt: string;
@@ -71,4 +116,6 @@ export interface Snapshot {
    * the Craft axis, and a config with no entry here cannot be ranked.
    */
   arenaWebdev: ArenaBoard | null;
+  /** Independent second opinion. Shown beside the ranking, never scored. */
+  artificialAnalysis?: AaData | null;
 }

@@ -23,6 +23,7 @@ import { StickyAnswer } from "./StickyAnswer";
 import { Radar } from "./Radar";
 import { Categories } from "./Categories";
 import { UpdateSummary } from "./UpdateSummary";
+import { SecondOpinion } from "./SecondOpinion";
 import type { SnapshotUpdate } from "@/lib/diff";
 import { awaitingMeasurement } from "@/lib/notes";
 
@@ -128,14 +129,21 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
           </section>
         )}
 
+        {snapshot.artificialAnalysis && (
+          <section id="second-opinion" className="app-section reveal">
+            <SectionHead n={3} title="Second opinion" aside="Artificial Analysis, independent tests" />
+            <SecondOpinion aa={snapshot.artificialAnalysis} pick={ranking.qualified[0]} />
+          </section>
+        )}
+
         <section className="app-section reveal">
-          <SectionHead n={3} title="Set your bar" aside="the formula is a judgment call" />
+          <SectionHead n={4} title="Set your bar" aside="the formula is a judgment call" />
           <Controls settings={settings} onChange={setSettings} />
         </section>
 
         <section id="compare" className="app-section reveal">
           <SectionHead
-            n={4}
+            n={5}
             title="What paying more buys"
             aside={`${ranking.qualified.length} of ${ranking.all.length} still standing`}
           />
@@ -144,7 +152,7 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
 
         <section id="rankings" className="app-section reveal">
           <SectionHead
-            n={5}
+            n={6}
             title="The whole field"
             aside="dimmed rows failed a floor"
           />
@@ -154,7 +162,7 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
         {(contenders.length > 0 || measured.length > 0 || releases.length > 0) && (
           <section className="app-section reveal">
             <SectionHead
-              n={6}
+              n={7}
               title="Not rankable yet"
               aside={`${measured.length + contenders.length + releases.length} missing data`}
             />
@@ -162,6 +170,7 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
               contenders={contenders}
               measured={measured}
               releases={releases}
+              aa={snapshot.artificialAnalysis ?? null}
               measuredPotential={measuredPotential}
               settings={settings}
             />
@@ -169,7 +178,7 @@ export function Dashboard({ snapshot, update }: { snapshot: Snapshot; update: Sn
         )}
 
         <section id="sources" className="app-section reveal">
-          <SectionHead n={7} title="Receipts" aside="nothing here is measured by us" />
+          <SectionHead n={8} title="Receipts" aside="nothing here is measured by us" />
           <DataProvenance snapshot={snapshot} />
         </section>
       </div>

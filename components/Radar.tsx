@@ -2,6 +2,8 @@
 
 import type { Contender, ScoredConfig, Settings } from "@/lib/score";
 import { noteFor, type Release } from "@/lib/notes";
+import { aaAgentFor, aaFor, aaRank } from "@/lib/aa";
+import type { AaData } from "@/lib/types";
 import { pct, usdPrecise, tokens as fmtTokens } from "@/lib/format";
 import { canonicalVendor } from "@/lib/vendors";
 import { VendorMark } from "./VendorMark";
@@ -23,6 +25,7 @@ export function Radar({
   contenders,
   measured,
   releases,
+  aa,
   measuredPotential,
   settings,
 }: {
@@ -31,6 +34,8 @@ export function Radar({
   measured: ScoredConfig[];
   /** Launched too recently for either source; no data at all yet. */
   releases: Release[];
+  /** Artificial Analysis, for what is known about the releases so far. */
+  aa: AaData | null;
   /** What each would score at exactly the reader's Craft floor, by label. */
   measuredPotential: Map<string, number>;
   settings: Settings;
@@ -42,25 +47,35 @@ export function Radar({
   return (
     <div className="space-y-10">
       {releases.length > 0 && (
-        <p className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-          <strong style={{ color: "var(--text-secondary)" }}>Too new to measure.</strong>{" "}
-          {releases.map((r, i) => (
-            <span key={r.model}>
-              {i > 0 && ", "}
-              <a
-                href={r.source}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {r.model}
-              </a>
-            </span>
-          ))}{" "}
-          are out, but neither DeepSWE nor Arena WebDev has measured them yet, so there is no Ship, Craft
-          or cost per task to rank.
-        </p>
+        <div className="max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <p>
+            <strong style={{ color: "var(--text-secondary)" }}>Too new to rank.</strong> DeepSWE has not
+            run these yet, so there is no Ship or cost per repo task.
+            {aa && " Artificial Analysis has already tested them on its own suite:"}
+          </p>
+          <ul className="mt-2 space-y-1.5 tnum">
+            {releases.map((r) => {
+              const m = aa ? aaFor(aa, r.model) : undefined;
+              const agent = aa ? aaAgentFor(aa, r.model) : undefined;
+              return (
+                <li key={r.model}>
+                  <a href={r.source} target="_blank" rel="noopener noreferrer"
+                    className="underline underline-offset-2" style={{ color: "var(--text-secondary)" }}>
+                    {r.model}
+                  </a>
+                  {m && aa && <>
+                    {" "}{m.effort && <span className="font-mono text-[10px] uppercase">{m.effort}</span>} ·
+                    intelligence {m.intelligence.toFixed(1)} (#{aaRank(aa, m)})
+                    {m.terminalBench !== null && <> · Terminal-Bench {pct(m.terminalBench, 1)}</>}
+                    {m.costPerTask !== null && <> · {usdPrecise(m.costPerTask)} per AA task</>}
+                  </>}
+                  {agent && <> · in {agent.agent}: {agent.deepswe !== null && <>DeepSWE {pct(agent.deepswe, 1)}, </>}
+                    {agent.costPerTask !== null && usdPrecise(agent.costPerTask)}/task</>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
       {measured.length > 0 && (
         <div className="space-y-5">

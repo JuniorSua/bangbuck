@@ -27,6 +27,9 @@ export const VENDOR_ALIASES: Record<string, Vendor> = {
   Muse: "Meta",
   Zhipu: "Z.ai",
   "Moonshot AI": "Moonshot",
+  // Artificial Analysis spellings.
+  "Z AI": "Z.ai",
+  Kimi: "Moonshot",
 };
 
 /** Resolve any source-data organization string to a canonical vendor, or null. */

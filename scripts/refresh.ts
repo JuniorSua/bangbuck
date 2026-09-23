@@ -1,5 +1,5 @@
 /**
- * Re-scrapes DeepSWE + arena.ai and rewrites data/snapshot.json.
+ * Re-scrapes DeepSWE, arena.ai and Artificial Analysis, then rewrites data/snapshot.json.
  *
  * This is the ONLY thing that touches the network. The website itself is fully
  * static and reads the committed snapshot, so a broken scrape shows up here in the
@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fetchDeepSwe } from "../lib/sources/deepswe";
 import { fetchArena } from "../lib/sources/arena";
+import { fetchArtificialAnalysis } from "../lib/sources/artificial-analysis";
 import { diffSnapshots, formatDiff, isEmpty, snapshotUpdate, type SnapshotUpdate } from "../lib/diff";
 import type { Snapshot } from "../lib/types";
 
@@ -45,7 +46,20 @@ async function main() {
     console.log("           continuing without it — ranking is unaffected");
   }
 
-  const next: Snapshot = { capturedAt: new Date().toISOString(), deepswe, arena, arenaWebdev };
+  // A second opinion, never scored — so, like Chat, it may degrade.
+  process.stdout.write("  AA       ... ");
+  let artificialAnalysis: Snapshot["artificialAnalysis"] = null;
+  try {
+    artificialAnalysis = await fetchArtificialAnalysis();
+    const top = artificialAnalysis.models[0];
+    console.log(`${artificialAnalysis.models.length} models, ${artificialAnalysis.codingAgents.length} coding agents; ` +
+      `smartest ${top.name} [${top.effort}] ${top.intelligence.toFixed(1)}`);
+  } catch (err) {
+    console.log(`FAILED (${(err as Error).message})`);
+    console.log("           continuing without it — ranking is unaffected");
+  }
+
+  const next: Snapshot = { capturedAt: new Date().toISOString(), deepswe, arena, arenaWebdev, artificialAnalysis };
 
   const luna = deepswe.configs.find((c) => c.model === "gpt-5-6-luna" && c.effort === "max");
   console.log(

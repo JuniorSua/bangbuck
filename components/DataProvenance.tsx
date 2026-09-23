@@ -8,7 +8,7 @@ import { shortDate } from "@/lib/format";
 export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
   return (
     <section>
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2">
         <Source
           name="DeepSWE"
           href={snapshot.deepswe.sourceUrl}
@@ -21,6 +21,14 @@ export function DataProvenance({ snapshot }: { snapshot: Snapshot }) {
             href={snapshot.arenaWebdev.sourceUrl}
             detail={`${snapshot.arenaWebdev.entries.length} models, human votes on web dev. Supplies Craft — never cost.`}
             asOf="Human-preference Elo"
+          />
+        )}
+        {snapshot.artificialAnalysis && (
+          <Source
+            name="Artificial Analysis"
+            href={snapshot.artificialAnalysis.sourceUrl}
+            detail={`${snapshot.artificialAnalysis.models.length} current models, ${snapshot.artificialAnalysis.codingAgents.length} coding agents, one shared test suite. Second opinion only — never scored.`}
+            asOf="Intelligence, Terminal-Bench, cost, speed"
           />
         )}
         {snapshot.arena && (

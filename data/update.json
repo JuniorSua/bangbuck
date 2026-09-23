@@ -1,38 +1,9 @@
 {
-  "capturedAt": "2026-09-22T21:49:21.325Z",
-  "previousCapturedAt": "2026-09-10T15:30:26.478Z",
+  "capturedAt": "2026-09-23T18:54:06.232Z",
+  "previousCapturedAt": "2026-09-22T21:49:21.325Z",
   "tiers": [],
   "newWebdev": [
-    "grok-4.7-xhigh",
-    "claude-fable-5-high",
-    "deepseek-v4.1-flash-max",
-    "mimo-v2.6-pro"
+    "gpt-6-sol-max"
   ],
-  "costChanges": [
-    {
-      "label": "gpt-6-astra [low]",
-      "before": 2.188762706637168,
-      "after": 1.595223439159292
-    },
-    {
-      "label": "gpt-6-astra [medium]",
-      "before": 4.379527705752213,
-      "after": 3.0754742975663714
-    },
-    {
-      "label": "gpt-6-astra [high]",
-      "before": 5.723721956194691,
-      "after": 3.9237237909292038
-    },
-    {
-      "label": "gpt-6-astra [xhigh]",
-      "before": 6.52377356460177,
-      "after": 4.429117203539823
-    },
-    {
-      "label": "gpt-6-astra [max]",
-      "before": 12.369032401327434,
-      "after": 7.497827996681416
-    }
-  ]
+  "costChanges": []
 }
